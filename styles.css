@@ -1,0 +1,456 @@
+/* Variables CSS para colores de la página */
+:root {
+    --color-primary: #F2B705;
+    --color-secondary: #F27505;
+    --color-accent: #D93D04;
+    --color-dark: #34100B;
+    --color-dark-red: #8C0E03;
+    --color-white: #FFFFFF;
+    --color-light: #F5F5F5;
+}
+
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-dark);
+    color: var(--color-white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Barra de navegación */
+.navbar {
+    background-color: var(--color-dark);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo h1 {
+    font-size: 2rem;
+    color: var(--color-primary);
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-nav {
+    padding: 0.6rem 1.5rem;
+    border: 2px solid var(--color-secondary);
+    background-color: transparent;
+    color: var(--color-white);
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-nav:hover {
+    background-color: var(--color-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(242, 117, 5, 0.3);
+}
+
+.btn-primary {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 90vh;
+    min-height: 600px;
+    background-image: url('https://i.ytimg.com/vi/MGl94QWpvl0/maxresdefault.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(52, 16, 11, 0.85) 0%, rgba(140, 14, 3, 0.75) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    color: var(--color-white);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1.2s ease;
+}
+
+.btn-hero {
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(242, 117, 5, 0.4);
+    animation: fadeInUp 1.4s ease;
+}
+
+.btn-hero:hover {
+    background-color: var(--color-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(217, 61, 4, 0.5);
+}
+
+/* Sección Nuestro concepto */
+.concept {
+    padding: 5rem 0;
+    background-color: var(--color-dark);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-primary);
+}
+
+.concept-description {
+    text-align: center;
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    color: var(--color-light);
+    line-height: 1.8;
+}
+
+.concept-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.concept-card {
+    background: linear-gradient(135deg, rgba(242, 117, 5, 0.1) 0%, rgba(217, 61, 4, 0.1) 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid rgba(242, 117, 5, 0.3);
+    transition: all 0.3s ease;
+}
+
+.concept-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--color-secondary);
+    box-shadow: 0 10px 30px rgba(242, 117, 5, 0.3);
+    background: linear-gradient(135deg, rgba(242, 117, 5, 0.2) 0%, rgba(217, 61, 4, 0.2) 100%);
+}
+
+.concept-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.concept-card h3 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.concept-card p {
+    color: var(--color-light);
+    line-height: 1.6;
+}
+
+/* Sección de platos destacados */
+.featured-dishes {
+    padding: 5rem 0;
+    background: linear-gradient(180deg, var(--color-dark) 0%, rgba(52, 16, 11, 0.95) 100%);
+}
+
+.dishes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.dish-card {
+    background-color: rgba(52, 16, 11, 0.8);
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid rgba(242, 117, 5, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dish-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--color-secondary);
+    box-shadow: 0 15px 40px rgba(242, 117, 5, 0.4);
+}
+
+.dish-image {
+    width: 100%;
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease;
+}
+
+.dish-card:hover .dish-image {
+    transform: scale(1.1);
+}
+
+.dish-content {
+    padding: 1.5rem;
+}
+
+.dish-content h3 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 0.8rem;
+}
+
+.dish-content p {
+    color: var(--color-light);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.dish-price {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--color-secondary);
+    text-align: right;
+}
+
+/* Sección CTA final */
+.cta-final {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-dark-red) 100%);
+    text-align: center;
+}
+
+.cta-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-white);
+}
+
+.cta-text {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    color: var(--color-light);
+    line-height: 1.8;
+}
+
+.btn-cta {
+    padding: 1.2rem 3.5rem;
+    font-size: 1.3rem;
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(242, 183, 5, 0.4);
+}
+
+.btn-cta:hover {
+    background-color: var(--color-white);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(242, 183, 5, 0.6);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--color-dark);
+    padding: 3rem 0 1rem;
+    border-top: 2px solid rgba(242, 117, 5, 0.2);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-info h3 {
+    color: var(--color-primary);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.footer-info p {
+    color: var(--color-light);
+    margin-bottom: 0.5rem;
+}
+
+.footer-social h4 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.social-link {
+    color: var(--color-light);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    padding: 0.3rem 0;
+}
+
+.social-link:hover {
+    color: var(--color-secondary);
+    padding-left: 0.5rem;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(242, 117, 5, 0.1);
+    color: var(--color-light);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .nav-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-nav {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .concept-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dishes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-title {
+        font-size: 2rem;
+    }
+
+    .cta-text {
+        font-size: 1rem;
+    }
+
+    .hero {
+        min-height: 500px;
+        background-attachment: scroll;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .btn-hero {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
+
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+}
