@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  // Hamburger menu toggle (responsive navbar)
+  // Hamburger menu
   function setupNavMenu() {
     var nav = document.getElementById('navbar');
     var toggle = document.getElementById('nav-toggle');
@@ -42,7 +42,7 @@
     });
   }
 
-  // Image fallback: on error, hide broken img and show placeholder
+  // Image fallback
   function setupImageFallback() {
     document.querySelectorAll('.hero-img, .dish-img-wrap img').forEach(function (img) {
       img.addEventListener('error', function () {
@@ -53,7 +53,7 @@
     });
   }
 
-  // Smooth scroll for in-page links
+  // Smooth scroll
   function setupSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(function (link) {
       var href = link.getAttribute('href');
@@ -68,7 +68,7 @@
     });
   }
 
-  // Optional: scroll-into-view animations for sections
+  // Scroll-into-view animations
   function setupScrollAnimations() {
     var observer = new IntersectionObserver(
       function (entries) {
