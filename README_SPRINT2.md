@@ -2,7 +2,7 @@
 
 ## Qué se implementó
 
-- Entidad **Food** (modelo) con: `id`, `name`, `description`, `price`, `imageUrl`, `category`, `available`.
+- Entidad **Producto** (modelo) con: `id`, `name`, `description`, `price`, `imageUrl`, `category`, `available`.
 - **Fake DB** en memoria usando `Map` con **seed inicial de 10 comidas** e IDs únicos (`FOOD-001`…`FOOD-010`).
 - Arquitectura por capas:
   - **Repository**: consultas al `Map` (sin lógica de UI).

@@ -1,7 +1,7 @@
-import { Food } from '../models/Food.js';
+import { Producto } from '../models/Food.js';
 
 const seedFoods = [
-  new Food({
+  new Producto({
     id: 'FOOD-001',
     name: 'The Beast Burger',
     description: 'Doble carne smash, cheddar, tocino ahumado, cebolla caramelizada y salsa Muk.',
@@ -11,7 +11,7 @@ const seedFoods = [
     category: 'Burgers',
     available: true,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-002',
     name: 'Nuclear Ramen',
     description: 'Ramen picante nivel extremo con cerdo braseado, huevo y aceite de chili.',
@@ -21,7 +21,7 @@ const seedFoods = [
     category: 'Ramen',
     available: true,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-003',
     name: 'Titan Fried Chicken',
     description: 'Pollo crujiente XL con glaseado spicy-honey y pepinillos.',
@@ -31,7 +31,7 @@ const seedFoods = [
     category: 'Chicken',
     available: true,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-004',
     name: 'Muk Loaded Fries',
     description: 'Papas fritas con queso, chili con carne, jalapeños y crema agria.',
@@ -41,7 +41,7 @@ const seedFoods = [
     category: 'Sides',
     available: true,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-005',
     name: 'Giant BBQ Ribs',
     description: 'Costillas BBQ a fuego lento con maíz a la mantequilla y ensalada coleslaw.',
@@ -51,7 +51,7 @@ const seedFoods = [
     category: 'BBQ',
     available: true,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-006',
     name: 'Cheese Volcano Nachos',
     description: 'Nachos gigantes con queso derretido, guacamole, pico de gallo y frijoles.',
@@ -61,7 +61,7 @@ const seedFoods = [
     category: 'Mex',
     available: true,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-007',
     name: 'Korean Hot Wings',
     description: 'Alitas coreanas con gochujang, sésamo tostado y cebollín.',
@@ -71,7 +71,7 @@ const seedFoods = [
     category: 'Chicken',
     available: false,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-008',
     name: 'Truffle Mushroom Burger',
     description: 'Carne Angus, hongos salteados, mayo de trufa y rúcula.',
@@ -81,7 +81,7 @@ const seedFoods = [
     category: 'Burgers',
     available: true,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-009',
     name: 'Chocolate Lava Cake',
     description: 'Bizcocho tibio con centro de chocolate fundido y helado de vainilla.',
@@ -91,7 +91,7 @@ const seedFoods = [
     category: 'Desserts',
     available: true,
   }),
-  new Food({
+  new Producto({
     id: 'FOOD-010',
     name: 'Citrus Soda (1L)',
     description: 'Bebida cítrica artesanal, servida bien fría.',
