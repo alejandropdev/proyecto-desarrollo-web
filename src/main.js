@@ -7,12 +7,27 @@ const repository = new FoodRepository({ db: foodDb });
 const service = new FoodService({ repository });
 const controller = new FoodController({ service });
 
-const foods = controller.listFoods();
-console.log(foods);
+function listFoods() {
+  return controller.listFoods();
+}
 
-const idReal = foods[0]?.id;
-console.log(controller.getFoodDetail(idReal));
+function getFoodDetail(id) {
+  return controller.getFoodDetail(id);
+}
 
-console.log(service.getFoodsByCategory('Burgers'));
-console.log(service.searchFoods('burger'));
+function getFoodsByCategory(category) {
+  return service.getFoodsByCategory(category);
+}
+
+function searchFoods(query) {
+  return service.searchFoods(query);
+}
+
+console.log(listFoods());
+
+const idReal = service.getAllFoods()[0]?.id;
+console.log(getFoodDetail(idReal));
+
+console.log(getFoodsByCategory('Burgers'));
+console.log(searchFoods('burger'));
 
