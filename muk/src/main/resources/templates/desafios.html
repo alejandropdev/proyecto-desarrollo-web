@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desafíos — MUK. Restaurante</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/styles.css}" href="/styles.css">
+  <link rel="stylesheet" th:href="@{/src/css/desafios.css}" href="/src/css/desafios.css">
+</head>
+<body class="page-desafios">
+  <div th:replace="~{fragments/layout :: navbar-site}"></div>
+
+  <main>
+    <header class="desafios-hero">
+      <h1>DESAFÍOS MUK</h1>
+      <p>Supera los límites. Gana gloria. Entra en el salón de la fama.</p>
+    </header>
+    <div class="desafios-content">
+      <h2>EL GIGANTE</h2>
+      <p>Termina nuestro plato más grande en menos de 45 minutos y tu comida va gratis. Tu foto cuelga en la pared y entras al salón de la fama MUK.</p>
+      <h2>REGLAS</h2>
+      <p>Sin ayuda externa. Sin pausas largas. El juez tiene la última palabra. Si no lo logras, pagas el plato completo.</p>
+      <h2>¿TE ATREVES?</h2>
+      <p>Reserva tu intento en el restaurante. Solo los más hambrientos sobreviven.</p>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/layout :: footer-site}"></div>
+  <script th:src="@{/script.js}" src="/script.js"></script>
+</body>
+</html>

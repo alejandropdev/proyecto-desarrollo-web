@@ -1,0 +1,7 @@
+.page-desafios { min-height: 100vh; display: flex; flex-direction: column; }
+.desafios-hero { background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 100%); color: var(--cream); padding: 3rem 1.5rem; text-align: center; }
+.desafios-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+.desafios-hero p { opacity: 0.9; font-size: 1rem; }
+.desafios-content { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+.desafios-content h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--brown-dark); margin: 2rem 0 1rem; }
+.desafios-content p { color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6; }

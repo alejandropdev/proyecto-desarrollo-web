@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${pageTitle} ?: 'MUK. Restaurante'">MUK. Restaurante</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 text-stone-900 min-h-screen flex flex-col">
+
+  <!-- Fragment: Navbar -->
+  <header th:fragment="navbar" class="bg-amber-900 text-amber-50 shadow-md">
+    <nav class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <a th:href="@{/productos}" class="text-2xl font-bold tracking-tight">MUK.</a>
+      <ul class="flex flex-wrap items-center gap-6">
+        <li><a th:href="@{/productos}" class="hover:text-amber-200 font-medium">Productos</a></li>
+        <li><a th:href="@{/productos/new}" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded font-medium">Nuevo producto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Fragment: Site Navbar (original UI: INICIO, MENÚ, DESAFÍOS, UBICACIÓN) -->
+  <header th:fragment="navbar-site" class="navbar" id="navbar" aria-label="Navegación principal">
+    <div class="navbar-inner">
+      <a th:href="@{/}" href="/" class="logo">MUK.</a>
+      <ul class="nav-links">
+        <li><a th:href="@{/}" href="/" th:classappend="${currentPage == 'index'} ? 'active'">INICIO</a></li>
+        <li><a th:href="@{/menu}" href="/menu" th:classappend="${currentPage == 'menu'} ? 'active'">MENÚ</a></li>
+        <li><a th:href="@{/desafios}" href="/desafios" th:classappend="${currentPage == 'desafios'} ? 'active'">DESAFÍOS</a></li>
+        <li><a th:href="@{/ubicacion}" href="/ubicacion" th:classappend="${currentPage == 'ubicacion'} ? 'active'">UBICACIÓN</a></li>
+      </ul>
+      <div class="nav-actions" id="nav-actions">
+        <a th:href="@{/login}" href="/login" class="btn btn-outline">INICIAR SESIÓN</a>
+        <a th:href="@{/registro}" href="/registro" class="btn btn-orange">CREAR CUENTA</a>
+      </div>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu" role="navigation">
+      <div class="nav-menu-inner">
+        <a th:href="@{/}" href="/" class="nav-menu-link">INICIO</a>
+        <a th:href="@{/menu}" href="/menu" class="nav-menu-link">MENÚ</a>
+        <a th:href="@{/desafios}" href="/desafios" class="nav-menu-link">DESAFÍOS</a>
+        <a th:href="@{/ubicacion}" href="/ubicacion" class="nav-menu-link">UBICACIÓN</a>
+        <div class="nav-menu-actions">
+          <a th:href="@{/login}" href="/login" class="btn btn-outline btn-block">INICIAR SESIÓN</a>
+          <a th:href="@{/registro}" href="/registro" class="btn btn-orange btn-block">CREAR CUENTA</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Fragment: Site Footer (original UI) -->
+  <footer th:fragment="footer-site" class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">MUK.</span>
+        <p class="footer-desc">La experiencia definitiva de Mukbang. Comida gigante, sabor extremo y la gloria eterna del desafío.</p>
+        <div class="footer-social" aria-label="Redes sociales">
+          <a href="#" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 2.1 0 3.8-1.2 3.8-1.2"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>COMPAÑÍA</h4>
+          <a href="#">Nosotros</a>
+          <a href="#">Franquicias</a>
+          <a href="#">Carreras</a>
+        </div>
+        <div class="footer-col">
+          <h4>SOPORTE</h4>
+          <a href="#">Contacto</a>
+          <a href="#">FAQs</a>
+          <a href="#">Aviso Legal</a>
+        </div>
+        <div class="footer-col footer-col-hours">
+          <h4>HORARIO</h4>
+          <p>Lunes - Domingo</p>
+          <p>12:00 PM - 12:00 AM</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 MUK RESTAURANT GROUP. TODOS LOS DERECHOS RESERVADOS.</p>
+    </div>
+  </footer>
+
+  <!-- Fragment: Footer -->
+  <footer th:fragment="footer" class="bg-amber-900 text-amber-50 py-8 mt-auto">
+    <div class="container mx-auto px-4 flex flex-wrap justify-between gap-8">
+      <div class="max-w-xs">
+        <span class="text-xl font-bold">MUK.</span>
+        <p class="mt-2 text-amber-100 text-sm">La experiencia definitiva de Mukbang. Comida gigante, sabor extremo.</p>
+      </div>
+      <div class="flex gap-8">
+        <div>
+          <h4 class="font-semibold uppercase text-sm">Compañía</h4>
+          <ul class="mt-2 space-y-1 text-sm text-amber-100">
+            <li><a href="#" class="hover:text-white">Nosotros</a></li>
+            <li><a href="#" class="hover:text-white">Contacto</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold uppercase text-sm">Horario</h4>
+          <p class="mt-2 text-sm text-amber-100">Lunes - Domingo 12:00 - 00:00</p>
+        </div>
+      </div>
+    </div>
+    <div class="container mx-auto px-4 mt-6 pt-4 border-t border-amber-700 text-center text-sm text-amber-200">
+      © 2026 MUK RESTAURANT GROUP. Todos los derechos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>

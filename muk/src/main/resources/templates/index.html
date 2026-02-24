@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUK. — Restaurante Mukbang</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/styles.css}" href="/styles.css">
+</head>
+<body>
+  <div th:replace="~{fragments/layout :: navbar-site}"></div>
+
+  <main>
+    <section class="hero">
+      <div class="hero-bg">
+        <img src="https://images.unsplash.com/photo-1646781621977-7540bee82942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Giant Mukbang Feast" class="hero-img">
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">EL TAMAÑO<br>SÍ IMPORTA</h1>
+        <p class="hero-subtitle">¿Tienes lo que se necesita para vencer al gigante? Atrévete con los desafíos Muk y entra en nuestro salón de la fama.</p>
+        <a th:href="@{/desafios}" href="/desafios" class="btn btn-hero">Ver Desafíos</a>
+      </div>
+    </section>
+
+    <section class="concept">
+      <div class="concept-inner">
+        <h2 class="concept-title">CONCEPTO MUK</h2>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <div class="concept-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <h3>EXTREMO</h3>
+            <p>Porciones diseñadas para desafiar hasta al más hambriento.</p>
+          </article>
+          <article class="concept-card">
+            <div class="concept-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            </div>
+            <h3>LA GLORIA</h3>
+            <p>Completa el desafío y entra en el salón de la fama.</p>
+          </article>
+          <article class="concept-card">
+            <div class="concept-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <h3>SABOR</h3>
+            <p>Ingredientes premium y recetas que no olvidarás.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div th:replace="~{fragments/layout :: footer-site}"></div>
+  <script th:src="@{/script.js}" src="/script.js"></script>
+</body>
+</html>

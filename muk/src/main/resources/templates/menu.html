@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú MUK — MUK. Restaurante</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/styles.css}" href="/styles.css">
+  <link rel="stylesheet" th:href="@{/src/css/menu.css}" href="/src/css/menu.css">
+</head>
+<body class="page-menu">
+  <div th:replace="~{fragments/layout :: navbar-site}"></div>
+
+  <main>
+    <header class="menu-hero">
+      <div class="menu-hero-inner">
+        <h1>MENÚ MUK</h1>
+        <p>Descubre nuestros platos gigantes, desafíos épicos y sabores extremos</p>
+      </div>
+    </header>
+
+    <div class="menu-toolbar">
+      <div class="view-toggle">
+        <button type="button" data-view="tarjetas" class="active" aria-pressed="true"><span aria-hidden="true">⊞</span> TARJETAS</button>
+        <button type="button" data-view="tabla" aria-pressed="false"><span aria-hidden="true">⊟</span> TABLA</button>
+      </div>
+      <div class="filter-pills" id="filter-pills">
+        <a th:href="@{/menu}" th:classappend="${selectedCategory == null} ? 'active'" class="filter-pill-link">TODOS</a>
+        <a th:each="cat : ${categories}" th:href="@{/menu(category=${cat})}" th:text="${cat}" th:classappend="${selectedCategory != null && selectedCategory == cat} ? 'active'" class="filter-pill-link">Category</a>
+      </div>
+    </div>
+
+    <section id="menu-cards-section" class="menu-content" aria-label="Vista de tarjetas del menú">
+      <div class="menu-cards" id="menu-cards">
+        <article th:each="food : ${foods}" class="menu-card">
+          <img class="menu-card-img" th:src="${food.imageUrl}" th:alt="${food.name}">
+          <div class="menu-card-body">
+            <span class="menu-card-badge" th:text="${food.category}">Category</span>
+            <h3 class="menu-card-name" th:text="${food.name}">Name</h3>
+            <p class="menu-card-desc" th:text="${food.description}">Description</p>
+            <div class="menu-card-divider"></div>
+            <div class="menu-card-footer">
+              <span class="menu-card-price">$<span th:text="${food.price != null ? #numbers.formatInteger(food.price, 0, 'POINT') : '0'}">0</span> COP</span>
+              <a th:href="@{/comida/{id}(id=${food.id})}" class="btn btn-orange">VER DETALLE</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="menu-tabla-section" class="menu-tabla-wrap hidden" aria-label="Vista en tabla del menú">
+      <table class="menu-tabla">
+        <thead>
+          <tr>
+            <th>IMAGEN</th>
+            <th>NOMBRE</th>
+            <th>CATEGORÍA</th>
+            <th>PRECIO</th>
+            <th>ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="food : ${foods}">
+            <td><img class="menu-tabla-img" th:src="${food.imageUrl}" alt=""></td>
+            <td>
+              <span class="menu-tabla-name" th:text="${food.name}"></span>
+              <span class="menu-tabla-desc" th:text="${food.description}"></span>
+            </td>
+            <td><span class="menu-card-badge" th:text="${food.category}"></span></td>
+            <td class="menu-tabla-price">$<span th:text="${food.price != null ? #numbers.formatInteger(food.price, 0, 'POINT') : '0'}"></span> COP</td>
+            <td><a th:href="@{/comida/{id}(id=${food.id})}" class="btn btn-orange">VER DETALLE</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <div th:replace="~{fragments/layout :: footer-site}"></div>
+  <script th:src="@{/script.js}" src="/script.js"></script>
+  <script th:inline="javascript">
+    (function() {
+      var cardsSection = document.getElementById('menu-cards-section');
+      var tableSection = document.getElementById('menu-tabla-section');
+      var buttons = document.querySelectorAll('.view-toggle button');
+      if (!cardsSection || !tableSection || !buttons.length) return;
+      buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var view = this.getAttribute('data-view');
+          if (!view) return;
+          buttons.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+          this.classList.add('active'); this.setAttribute('aria-pressed', 'true');
+          cardsSection.classList.toggle('hidden', view !== 'tarjetas');
+          tableSection.classList.toggle('hidden', view !== 'tabla');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
