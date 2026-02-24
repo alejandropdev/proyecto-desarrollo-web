@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ubicación — MUK. Restaurante</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="src/css/ubicacion.css">
+</head>
+<body class="page-ubicacion">
+  <nav class="navbar" id="navbar" aria-label="Navegación principal">
+    <div class="navbar-inner">
+      <a href="index.html" class="logo">MUK.</a>
+      <ul class="nav-links">
+        <li><a href="index.html">INICIO</a></li>
+        <li><a href="menu.html">MENÚ</a></li>
+        <li><a href="desafios.html">DESAFÍOS</a></li>
+        <li><a href="ubicacion.html" class="active">UBICACIÓN</a></li>
+      </ul>
+      <div class="nav-actions" id="nav-actions">
+        <a href="login.html" class="btn btn-outline">INICIAR SESIÓN</a>
+        <a href="registro.html" class="btn btn-orange">CREAR CUENTA</a>
+      </div>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu" role="navigation" aria-label="Menú de navegación">
+      <div class="nav-menu-inner">
+        <a href="index.html" class="nav-menu-link">INICIO</a>
+        <a href="menu.html" class="nav-menu-link">MENÚ</a>
+        <a href="desafios.html" class="nav-menu-link">DESAFÍOS</a>
+        <a href="ubicacion.html" class="nav-menu-link active">UBICACIÓN</a>
+        <div class="nav-menu-actions" id="nav-menu-actions">
+          <a href="login.html" class="btn btn-outline btn-block">INICIAR SESIÓN</a>
+          <a href="registro.html" class="btn btn-orange btn-block">CREAR CUENTA</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <header class="ubicacion-hero">
+      <div class="ubicacion-hero-inner">
+        <h1>UBICACIÓN</h1>
+        <p>Encuéntranos y vive la experiencia Muk en persona</p>
+      </div>
+    </header>
+
+    <section class="ubicacion-main" aria-labelledby="visitanos-title">
+      <div class="ubicacion-grid">
+        <div class="ubicacion-map-wrap">
+          <iframe
+            title="Mapa: MUK Restaurante, Bogotá"
+            src="https://maps.google.com/maps?q=Calle+72+%23+10-34,+Bogot%C3%A1,+Colombia&output=embed"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+        <div class="ubicacion-info">
+          <h2 id="visitanos-title">VISÍTANOS</h2>
+          <div class="ubicacion-row">
+            <div class="ubicacion-row-icon direccion" aria-hidden="true">📍</div>
+            <div class="ubicacion-row-content">
+              <label>DIRECCIÓN</label>
+              <p>Calle 72 # 10-34<br>Chapinero, Bogotá<br>Colombia</p>
+            </div>
+          </div>
+          <div class="ubicacion-row">
+            <div class="ubicacion-row-icon horario" aria-hidden="true">🕐</div>
+            <div class="ubicacion-row-content">
+              <label>HORARIO</label>
+              <p>Lunes a Jueves: 12:00 PM - 10:00 PM<br>Viernes a Sábado: 12:00 PM - 12:00 AM<br>Domingo: 12:00 PM - 9:00 PM</p>
+            </div>
+          </div>
+          <div class="ubicacion-row">
+            <div class="ubicacion-row-icon telefono" aria-hidden="true">📞</div>
+            <div class="ubicacion-row-content">
+              <label>TELÉFONO</label>
+              <p>+57 (1) 234-5678<br>+57 310 123 4567</p>
+            </div>
+          </div>
+          <div class="ubicacion-row">
+            <div class="ubicacion-row-icon email" aria-hidden="true">✉️</div>
+            <div class="ubicacion-row-content">
+              <label>EMAIL</label>
+              <p>info@muk.com.co<br>reservas@muk.com.co</p>
+            </div>
+          </div>
+          <a href="#" class="btn btn-orange">RESERVAR MESA</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="ubicacion-amenities" aria-label="Servicios">
+      <div class="amenities-grid">
+        <article class="amenity-card">
+          <span class="amenity-card-icon" aria-hidden="true">🚗</span>
+          <h3>PARQUEADERO</h3>
+          <p>Parqueadero privado disponible para nuestros clientes</p>
+        </article>
+        <article class="amenity-card">
+          <span class="amenity-card-icon" aria-hidden="true">♿</span>
+          <h3>ACCESIBILIDAD</h3>
+          <p>Instalaciones completamente accesibles</p>
+        </article>
+        <article class="amenity-card">
+          <span class="amenity-card-icon" aria-hidden="true">📶</span>
+          <h3>WIFI GRATIS</h3>
+          <p>Internet de alta velocidad para todos nuestros clientes</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">MUK.</span>
+        <p class="footer-desc">La experiencia definitiva de Mukbang. Comida gigante, sabor extremo y la gloria eterna del desafío.</p>
+        <div class="footer-social" aria-label="Redes sociales">
+          <a href="#" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 2.1 0 3.8-1.2 3.8-1.2"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>COMPAÑÍA</h4>
+          <a href="#">Nosotros</a>
+          <a href="#">Franquicias</a>
+          <a href="#">Carreras</a>
+        </div>
+        <div class="footer-col">
+          <h4>SOPORTE</h4>
+          <a href="#">Contacto</a>
+          <a href="#">FAQs</a>
+          <a href="#">Aviso Legal</a>
+        </div>
+        <div class="footer-col footer-col-hours">
+          <h4>HORARIO</h4>
+          <p>Lunes - Domingo</p>
+          <p>12:00 PM - 12:00 AM</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 MUK RESTAURANT GROUP. TODOS LOS DERECHOS RESERVADOS.</p>
+    </div>
+  </footer>
+
+  <script src="src/js/ubicacion.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

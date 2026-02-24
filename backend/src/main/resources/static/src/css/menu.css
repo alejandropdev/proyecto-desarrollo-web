@@ -1,0 +1,274 @@
+/* Página menú: hero, toggle, filtros, tarjetas y tabla */
+body.page-menu {
+  background: var(--cream);
+  color: var(--text-dark);
+}
+body.page-menu main {
+  padding-top: 5rem;
+}
+
+.page-menu .navbar {
+  background: var(--brown-dark);
+}
+
+/* Hero */
+.menu-hero {
+  background: var(--brown-dark);
+  padding: 60px 80px;
+  width: 100%;
+}
+.menu-hero-inner {
+  max-width: 80rem;
+  margin: 0 auto;
+  border-left: 6px solid var(--orange);
+  padding-left: 1.5rem;
+}
+.menu-hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  color: var(--yellow);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+.menu-hero p {
+  font-size: 18px;
+  color: var(--orange);
+}
+
+/* View toggle */
+.menu-toolbar {
+  max-width: 80rem;
+  margin: 40px auto;
+  padding: 0 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+.view-toggle {
+  display: flex;
+  border: 1.5px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.view-toggle button {
+  padding: 10px 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.875rem;
+  border: none;
+  background: var(--white);
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+.view-toggle button + button {
+  border-left: 1.5px solid #ddd;
+}
+.view-toggle button.active {
+  background: var(--orange);
+  color: var(--white);
+  border-color: var(--orange);
+}
+.view-toggle button:hover:not(.active) {
+  background: var(--cream);
+}
+
+/* Category pills */
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.filter-pills button {
+  padding: 8px 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  border: 1.5px solid #ddd;
+  background: var(--white);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.filter-pills button:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+.filter-pills button.active {
+  background: var(--orange);
+  color: var(--white);
+  border-color: var(--orange);
+}
+
+/* Cards grid */
+.menu-content {
+  padding: 40px 80px;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+.menu-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+@media (max-width: 1024px) {
+  .menu-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .menu-hero { padding: 40px 1.5rem; }
+  .menu-toolbar { padding: 0 1.5rem; margin: 24px auto; }
+  .menu-content { padding: 24px 1.5rem; }
+  .menu-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.menu-card {
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.menu-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+.menu-card-img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+.menu-card-body {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.menu-card-badge {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--brown-dark);
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  align-self: flex-start;
+}
+.menu-card-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+.menu-card-desc {
+  font-size: 0.875rem;
+  color: var(--orange);
+  margin-bottom: 1rem;
+  flex: 1;
+}
+.menu-card-divider {
+  height: 1px;
+  background: #eee;
+  margin-bottom: 1rem;
+}
+.menu-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.menu-card-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--orange);
+}
+.menu-card-footer .btn-orange {
+  padding: 8px 16px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Table view */
+.menu-tabla-wrap {
+  background: var(--cream);
+  padding: 40px 80px;
+  overflow-x: auto;
+}
+@media (max-width: 768px) {
+  .menu-tabla-wrap { padding: 24px 1rem; }
+}
+.menu-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+.menu-tabla thead {
+  background: var(--brown-dark);
+  color: var(--white);
+}
+.menu-tabla th {
+  padding: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  text-align: left;
+}
+.menu-tabla td {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+.menu-tabla tbody tr:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+.menu-tabla-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.menu-tabla-name {
+  font-weight: 700;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.menu-tabla-desc {
+  font-size: 0.875rem;
+  color: var(--orange);
+}
+.menu-tabla-price {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--orange);
+}
+.menu-tabla .btn-orange {
+  padding: 8px 16px;
+  font-size: 0.75rem;
+}
+
+.hidden {
+  display: none !important;
+}
