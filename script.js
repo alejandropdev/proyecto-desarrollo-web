@@ -1,51 +1,96 @@
-// Función para redirigir al login
-function redirectToLogin() {
-    window.location.href = 'login.html';
-}
+(function () {
+  'use strict';
 
-// Smooth scroll para navegación interna (opcional)
-document.addEventListener('DOMContentLoaded', function() {
-    // Agregar smooth scroll a todos los enlaces internos
-    const links = document.querySelectorAll('a[href^="#"]');
-    
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href !== '#' && href.length > 1) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            }
-        });
+  // Menú hamburguesa
+  function setupNavMenu() {
+    var nav = document.getElementById('navbar');
+    var toggle = document.getElementById('nav-toggle');
+    var menu = document.getElementById('nav-menu');
+    if (!nav || !toggle || !menu) return;
+
+    function openMenu() {
+      nav.classList.add('is-open');
+      document.body.classList.add('menu-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Cerrar menú');
+    }
+
+    function closeMenu() {
+      nav.classList.remove('is-open');
+      document.body.classList.remove('menu-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú');
+    }
+
+    function toggleMenu() {
+      if (nav.classList.contains('is-open')) closeMenu();
+      else openMenu();
+    }
+
+    toggle.addEventListener('click', toggleMenu);
+
+    menu.querySelectorAll('.nav-menu-link').forEach(function (link) {
+      link.addEventListener('click', closeMenu);
     });
 
-    // Animación de entrada para las secciones al hacer scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-
-    // Observar las secciones principales
-    const sections = document.querySelectorAll('.concept, .featured-dishes, .cta-final');
-    sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(30px)';
-        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(section);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) closeMenu();
     });
-});
 
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 768 && nav.classList.contains('is-open')) closeMenu();
+    });
+  }
+
+  // Fallback de imagen
+  function setupImageFallback() {
+    document.querySelectorAll('.hero-img, .dish-img-wrap img').forEach(function (img) {
+      img.addEventListener('error', function () {
+        this.setAttribute('data-error', 'true');
+        var wrap = this.closest('.hero-bg') || this.closest('.dish-img-wrap');
+        if (wrap) wrap.classList.add('fallback');
+      });
+    });
+  }
+
+  // Scroll suave a anclas
+  function setupSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+      var href = link.getAttribute('href');
+      if (href === '#' || href.length <= 1) return;
+      link.addEventListener('click', function (e) {
+        var target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  }
+
+  // Animaciones al entrar en vista
+  function setupScrollAnimations() {
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    ['concept', 'featured', 'cta'].forEach(function (id) {
+      var section = document.querySelector('.' + id);
+      if (section) observer.observe(section);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    setupNavMenu();
+    setupImageFallback();
+    setupSmoothScroll();
+    setupScrollAnimations();
+  });
+})();
