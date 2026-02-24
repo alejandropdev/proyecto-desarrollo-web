@@ -1,4 +1,4 @@
-// Controlador: orquesta uso del servicio para listar y filtrar.
+// Controller: View → Controller → Service → Repository. Only talks to Service.
 
 export class FoodController {
   constructor({ service }) {
@@ -15,6 +15,10 @@ export class FoodController {
 
   getFoodsByCategory(category) {
     return this.service.getFoodsByCategory(category);
+  }
+
+  searchFoods(query) {
+    return this.service.searchFoods(query);
   }
 }
 

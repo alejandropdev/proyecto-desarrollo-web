@@ -1,14 +1,7 @@
 /**
- * Página de una sola comida: lee id de la URL y muestra su información usando el MVC.
+ * View: Página detalle comida. Flow View → Controller → Service → Repository; solo usa foodController.
  */
-import { foodDb } from '../data/fakeDb.js';
-import { FoodRepository } from '../repositories/FoodRepository.js';
-import { FoodService } from '../services/FoodService.js';
-import { FoodController } from '../controllers/FoodController.js';
-
-const repository = new FoodRepository({ db: foodDb });
-const service = new FoodService({ repository });
-const controller = new FoodController({ service });
+import { foodController } from '../bootstrap.js';
 
 function formatPrice(n) {
   return '$' + Number(n).toLocaleString('es-CO') + ' COP';
@@ -44,7 +37,7 @@ function init() {
     return;
   }
 
-  const food = controller.getFoodDetail(id);
+  const food = foodController.getFoodDetail(id);
   if (!food) {
     if (errorBlock) {
       errorBlock.textContent = 'Comida no encontrada.';

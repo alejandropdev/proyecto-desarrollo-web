@@ -1,4 +1,4 @@
-// Servicio: validación y delegación al repositorio.
+// Service: View → Controller → Service → Repository. Only talks to Repository.
 
 function requireNonEmptyString(value, fieldName) {
   if (typeof value !== 'string' || value.trim().length === 0) {

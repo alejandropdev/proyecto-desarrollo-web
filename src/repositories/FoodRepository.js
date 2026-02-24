@@ -1,4 +1,4 @@
-// Repositorio: acceso al fake DB (Map) y consultas.
+// Repository: View → Controller → Service → Repository. Only talks to data (db).
 
 function toPlainFood(food) {
   if (!food) return null;

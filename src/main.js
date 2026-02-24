@@ -1,32 +1,25 @@
-// Entrada: monta MVC y prueba por consola.
-import { foodDb } from './data/fakeDb.js';
-import { FoodRepository } from './repositories/FoodRepository.js';
-import { FoodService } from './services/FoodService.js';
-import { FoodController } from './controllers/FoodController.js';
-
-const repository = new FoodRepository({ db: foodDb });
-const service = new FoodService({ repository });
-const controller = new FoodController({ service });
+// View entry: uses only the controller. Flow is View → Controller → Service → Repository.
+import { foodController } from './bootstrap.js';
 
 function listFoods() {
-  return controller.listFoods();
+  return foodController.listFoods();
 }
 
 function getFoodDetail(id) {
-  return controller.getFoodDetail(id);
+  return foodController.getFoodDetail(id);
 }
 
 function getFoodsByCategory(category) {
-  return service.getFoodsByCategory(category);
+  return foodController.getFoodsByCategory(category);
 }
 
 function searchFoods(query) {
-  return service.searchFoods(query);
+  return foodController.searchFoods(query);
 }
 
 console.log(listFoods());
 
-const idReal = service.getAllFoods()[0]?.id;
+const idReal = foodController.listFoods()[0]?.id;
 console.log(getFoodDetail(idReal));
 
 console.log(getFoodsByCategory('Burgers'));

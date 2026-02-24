@@ -1,15 +1,7 @@
 /**
- * Página menú: obtiene datos del MVC (fakeDb) y pinta tarjetas/tabla.
+ * View: Página menú. Flow View → Controller → Service → Repository; solo usa foodController.
  */
-import { foodDb } from '../data/fakeDb.js';
-import { FoodRepository } from '../repositories/FoodRepository.js';
-import { FoodService } from '../services/FoodService.js';
-import { FoodController } from '../controllers/FoodController.js';
-
-// Capas MVC
-const repository = new FoodRepository({ db: foodDb });
-const service = new FoodService({ repository });
-const controller = new FoodController({ service });
+import { foodController } from '../bootstrap.js';
 
 // Convierte producto del modelo a formato de vista
 function toItem(food) {
@@ -181,7 +173,7 @@ function render() {
 
 // Inicializa: obtiene datos del controlador y pinta
 function init() {
-  const list = controller.listFoods();
+  const list = foodController.listFoods();
   state.items = list.map(toItem).filter(Boolean);
   renderPills();
   render();
