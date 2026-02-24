@@ -1,3 +1,4 @@
+// Entrada: monta MVC y prueba por consola.
 import { foodDb } from './data/fakeDb.js';
 import { FoodRepository } from './repositories/FoodRepository.js';
 import { FoodService } from './services/FoodService.js';

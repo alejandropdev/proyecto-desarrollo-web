@@ -1,3 +1,5 @@
+// Repositorio: acceso al fake DB (Map) y consultas.
+
 function toPlainFood(food) {
   if (!food) return null;
   if (typeof food.toObject === 'function') return food.toObject();

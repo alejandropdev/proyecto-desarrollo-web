@@ -1,3 +1,5 @@
+// Servicio: validación y delegación al repositorio.
+
 function requireNonEmptyString(value, fieldName) {
   if (typeof value !== 'string' || value.trim().length === 0) {
     throw new Error(`${fieldName} must be a non-empty string`);

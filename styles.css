@@ -5,6 +5,16 @@
     --muk-red: #D93D04;
     --muk-dark-red: #8C0E03;
     --muk-white: #ffffff;
+    /* Paleta de marca */
+    --brown-dark: #2d0a0a;
+    --brown-mid: #3d1208;
+    --yellow: #f5c800;
+    --orange: #e07018;
+    --orange-hover: #c55e10;
+    --cream: #f5f0e8;
+    --white: #ffffff;
+    --text-dark: #1a0a00;
+    --text-muted: #8b4513;
 }
 
 ::selection {
@@ -77,6 +87,9 @@ body.menu-open {
 
 .nav-links {
     display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 @media (min-width: 768px) {
@@ -89,14 +102,19 @@ body.menu-open {
     .nav-links a {
         font-weight: 700;
         font-size: 0.875rem;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--muk-gold);
+        color: var(--muk-white);
         text-decoration: none;
     }
 
     .nav-links a:hover {
         opacity: 0.85;
+    }
+
+    .nav-links a.active {
+        color: var(--yellow);
+        border-bottom: 2px solid var(--orange);
     }
 }
 
@@ -261,6 +279,53 @@ body.menu-open {
 
 .btn-primary:hover {
     filter: brightness(1.1);
+}
+
+/* Botón principal naranja */
+.btn-orange {
+    padding: 0.5rem 1.5rem;
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+}
+.btn-orange:hover {
+    background: var(--orange-hover);
+}
+
+/* Botones de la barra de navegación */
+.nav-actions .btn-outline {
+    border: 2px solid var(--muk-white);
+    color: var(--muk-white);
+}
+.nav-actions .btn-outline:hover {
+    opacity: 0.9;
+}
+
+/* Enlace activo del menú */
+.nav-links a.active {
+    color: var(--yellow);
+    border-bottom: 2px solid var(--orange);
+}
+.nav-menu-link.active {
+    color: var(--yellow);
+    border-bottom-color: var(--orange);
+}
+
+.nav-user {
+    font-weight: 600;
+    color: var(--muk-white);
+    margin-right: 0.75rem;
+}
+.nav-user strong {
+    color: var(--yellow);
 }
 
 /* ----- Hero ----- */
@@ -749,7 +814,7 @@ body.menu-open {
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muk-white);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
 .footer-col a {

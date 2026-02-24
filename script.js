@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  // Hamburger menu
+  // Menú hamburguesa
   function setupNavMenu() {
     var nav = document.getElementById('navbar');
     var toggle = document.getElementById('nav-toggle');
@@ -42,7 +42,7 @@
     });
   }
 
-  // Image fallback
+  // Fallback de imagen
   function setupImageFallback() {
     document.querySelectorAll('.hero-img, .dish-img-wrap img').forEach(function (img) {
       img.addEventListener('error', function () {
@@ -53,7 +53,7 @@
     });
   }
 
-  // Smooth scroll
+  // Scroll suave a anclas
   function setupSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(function (link) {
       var href = link.getAttribute('href');
@@ -68,7 +68,7 @@
     });
   }
 
-  // Scroll-into-view animations
+  // Animaciones al entrar en vista
   function setupScrollAnimations() {
     var observer = new IntersectionObserver(
       function (entries) {

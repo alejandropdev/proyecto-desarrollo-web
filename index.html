@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muk - Restaurante Muk-bang</title>
+    <title>MUK. — Restaurante Mukbang</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -12,15 +13,16 @@
     <!-- Navbar -->
     <nav class="navbar" id="navbar" aria-label="Navegación principal">
         <div class="navbar-inner">
-            <a href="#" class="logo">Muk.</a>
-            <div class="nav-links">
-                <a href="#">Menú</a>
-                <a href="#">Desafíos</a>
-                <a href="#">Ubicación</a>
-            </div>
-            <div class="nav-actions">
-                <button type="button" class="btn btn-outline">Iniciar sesión</button>
-                <button type="button" class="btn btn-primary">Crear cuenta</button>
+            <a href="index.html" class="logo">MUK.</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">INICIO</a></li>
+                <li><a href="menu.html">MENÚ</a></li>
+                <li><a href="desafios.html">DESAFÍOS</a></li>
+                <li><a href="ubicacion.html">UBICACIÓN</a></li>
+            </ul>
+            <div class="nav-actions" id="nav-actions">
+                <a href="login.html" class="btn btn-outline">INICIAR SESIÓN</a>
+                <a href="registro.html" class="btn btn-orange">CREAR CUENTA</a>
             </div>
             <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
                 <span class="nav-toggle-bar"></span>
@@ -30,12 +32,13 @@
         </div>
         <div class="nav-menu" id="nav-menu" role="navigation" aria-label="Menú de navegación">
             <div class="nav-menu-inner">
-                <a href="#" class="nav-menu-link">Menú</a>
-                <a href="#" class="nav-menu-link">Desafíos</a>
-                <a href="#" class="nav-menu-link">Ubicación</a>
-                <div class="nav-menu-actions">
-                    <button type="button" class="btn btn-outline btn-block">Iniciar sesión</button>
-                    <button type="button" class="btn btn-primary btn-block">Crear cuenta</button>
+                <a href="index.html" class="nav-menu-link active">INICIO</a>
+                <a href="menu.html" class="nav-menu-link">MENÚ</a>
+                <a href="desafios.html" class="nav-menu-link">DESAFÍOS</a>
+                <a href="ubicacion.html" class="nav-menu-link">UBICACIÓN</a>
+                <div class="nav-menu-actions" id="nav-menu-actions">
+                    <a href="login.html" class="btn btn-outline btn-block">INICIAR SESIÓN</a>
+                    <a href="registro.html" class="btn btn-orange btn-block">CREAR CUENTA</a>
                 </div>
             </div>
         </div>
@@ -51,7 +54,7 @@
             <div class="hero-content">
                 <h1 class="hero-title">EL TAMAÑO<br>SÍ IMPORTA</h1>
                 <p class="hero-subtitle">¿Tienes lo que se necesita para vencer al gigante? Atrévete con los desafíos Muk y entra en nuestro salón de la fama.</p>
-                <button type="button" class="btn btn-hero">Ver Desafíos</button>
+                <a href="desafios.html" class="btn btn-hero">Ver Desafíos</a>
             </div>
             <div class="hero-scroll">
                 <span class="scroll-bar"></span>
@@ -135,7 +138,7 @@
             <div class="cta-inner">
                 <h2 class="cta-title">¿LISTO PARA EL RETO?</h2>
                 <p class="cta-text">Reserva tu mesa hoy mismo y únete a los cientos de valientes que intentaron conquistar a Muk.</p>
-                <button type="button" class="btn btn-cta">¡RESERVAR AHORA!</button>
+                <a href="ubicacion.html" class="btn btn-cta">¡RESERVAR AHORA!</a>
             </div>
         </section>
     </main>
@@ -155,19 +158,19 @@
             </div>
             <div class="footer-links">
                 <div class="footer-col">
-                    <h4>Compañía</h4>
+                    <h4>COMPAÑÍA</h4>
                     <a href="#">Nosotros</a>
                     <a href="#">Franquicias</a>
                     <a href="#">Carreras</a>
                 </div>
                 <div class="footer-col">
-                    <h4>Soporte</h4>
+                    <h4>SOPORTE</h4>
                     <a href="#">Contacto</a>
                     <a href="#">FAQs</a>
                     <a href="#">Aviso Legal</a>
                 </div>
                 <div class="footer-col footer-col-hours">
-                    <h4>Horario</h4>
+                    <h4>HORARIO</h4>
                     <p>Lunes - Domingo</p>
                     <p>12:00 PM - 12:00 AM</p>
                 </div>
