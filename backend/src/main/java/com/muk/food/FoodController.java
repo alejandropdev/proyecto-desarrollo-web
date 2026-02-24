@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * REST API for menu/foods. Mirrors the frontend FoodController (list, get by id, by category, search).
- * Base path /api so it does not conflict with static index.html, menu.html, etc.
- */
 @RestController
 @RequestMapping("/api/foods")
 @CrossOrigin(origins = "*", maxAge = 3600)
