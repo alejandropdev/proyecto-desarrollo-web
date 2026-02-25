@@ -1,32 +1,108 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Desafíos — MUK. Restaurante</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" th:href="@{/styles.css}" href="/styles.css">
-  <link rel="stylesheet" th:href="@{/src/css/desafios.css}" href="/src/css/desafios.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muk. | Desafíos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="page-desafios">
-  <div th:replace="~{fragments/layout :: navbar-site}"></div>
+<body style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background-color:#FAF7F0;">
 
-  <main>
-    <header class="desafios-hero">
-      <h1>DESAFÍOS MUK</h1>
-      <p>Supera los límites. Gana gloria. Entra en el salón de la fama.</p>
-    </header>
-    <div class="desafios-content">
-      <h2>EL GIGANTE</h2>
-      <p>Termina nuestro plato más grande en menos de 45 minutos y tu comida va gratis. Tu foto cuelga en la pared y entras al salón de la fama MUK.</p>
-      <h2>REGLAS</h2>
-      <p>Sin ayuda externa. Sin pausas largas. El juez tiene la última palabra. Si no lo logras, pagas el plato completo.</p>
-      <h2>¿TE ATREVES?</h2>
-      <p>Reserva tu intento en el restaurante. Solo los más hambrientos sobreviven.</p>
+<div th:replace="fragments/layout :: navbar-site"></div>
+
+<main class="pt-16 md:pt-20 min-h-screen" style="background-color:#FAF7F0">
+
+  <!-- HERO -->
+  <section class="px-4 sm:px-8 lg:px-16 py-16 sm:py-20" style="background-color:#8C0E03">
+    <div class="max-w-7xl mx-auto text-center">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black mb-6 uppercase tracking-tighter" style="color:#F2B705">DESAFÍOS ÉPICOS</h1>
+      <p class="text-base sm:text-lg md:text-xl font-bold max-w-3xl mx-auto" style="color:white;opacity:0.9">Conquista los retos de Muk. Si lo logras, tu comida es gratis y tu nombre entra al salón de la fama.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-12">
+        <div class="p-6 sm:p-8 rounded-3xl shadow-2xl" style="background-color:#F2B705">
+          <div class="text-3xl sm:text-4xl font-black mb-2" style="color:#8C0E03">5KG</div>
+          <div class="font-black uppercase tracking-widest" style="color:#34100B">DE COMIDA</div>
+        </div>
+        <div class="p-6 sm:p-8 rounded-3xl shadow-2xl" style="background-color:#F2B705">
+          <div class="text-3xl sm:text-4xl font-black mb-2" style="color:#8C0E03">30</div>
+          <div class="font-black uppercase tracking-widest" style="color:#34100B">MINUTOS</div>
+        </div>
+        <div class="p-6 sm:p-8 rounded-3xl shadow-2xl" style="background-color:#F2B705">
+          <div class="text-3xl sm:text-4xl font-black mb-2" style="color:#8C0E03">$0</div>
+          <div class="font-black uppercase tracking-widest" style="color:#34100B">SI GANAS</div>
+        </div>
+      </div>
     </div>
-  </main>
+  </section>
 
-  <div th:replace="~{fragments/layout :: footer-site}"></div>
-  <script th:src="@{/script.js}" src="/script.js"></script>
+  <!-- LISTA -->
+  <section class="px-4 sm:px-8 lg:px-16 py-16 sm:py-20">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mb-10 sm:mb-14 text-center uppercase tracking-tighter" style="color:#34100B">DESAFÍOS DEL MES</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+        <div class="rounded-3xl overflow-hidden shadow-2xl" style="background-color:#F2B705">
+          <div class="h-56 relative">
+            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=80" alt="Beast Burger" class="w-full h-full object-cover" />
+            <div class="absolute top-4 left-4 px-4 py-2 text-xs font-black rounded-full text-white" style="background-color:#8C0E03">5KG</div>
+          </div>
+          <div class="p-7">
+            <h3 class="text-2xl font-black uppercase" style="color:#34100B">BEAST BURGER</h3>
+            <p class="mt-2 font-bold" style="color:#34100B;opacity:0.85">Termina la burger gigante + papas XL en 30 minutos.</p>
+            <div class="mt-5 flex items-center justify-between">
+              <span class="text-sm font-black uppercase" style="color:#8C0E03">Tiempo: 30 min</span>
+              <a th:href="@{/menu}" class="text-sm font-black uppercase" style="color:#34100B">Ver menú</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-3xl overflow-hidden shadow-2xl" style="background-color:#F2B705">
+          <div class="h-56 relative">
+            <img src="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=1200&q=80" alt="Nuclear Ramen" class="w-full h-full object-cover" />
+            <div class="absolute top-4 left-4 px-4 py-2 text-xs font-black rounded-full text-white" style="background-color:#8C0E03">PICANTE</div>
+          </div>
+          <div class="p-7">
+            <h3 class="text-2xl font-black uppercase" style="color:#34100B">NUCLEAR RAMEN</h3>
+            <p class="mt-2 font-bold" style="color:#34100B;opacity:0.85">Si terminas el ramen y aguantas el nivel, ganas.</p>
+            <div class="mt-5 flex items-center justify-between">
+              <span class="text-sm font-black uppercase" style="color:#8C0E03">Tiempo: 20 min</span>
+              <a th:href="@{/menu}" class="text-sm font-black uppercase" style="color:#34100B">Ver menú</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-3xl overflow-hidden shadow-2xl" style="background-color:#F2B705">
+          <div class="h-56 relative">
+            <img src="https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=1200&q=80" alt="Titan Wings" class="w-full h-full object-cover" />
+            <div class="absolute top-4 left-4 px-4 py-2 text-xs font-black rounded-full text-white" style="background-color:#8C0E03">12 XL</div>
+          </div>
+          <div class="p-7">
+            <h3 class="text-2xl font-black uppercase" style="color:#34100B">TITAN WINGS</h3>
+            <p class="mt-2 font-bold" style="color:#34100B;opacity:0.85">12 alitas XL + salsa infernal sin beber agua.</p>
+            <div class="mt-5 flex items-center justify-between">
+              <span class="text-sm font-black uppercase" style="color:#8C0E03">Tiempo: 15 min</span>
+              <a th:href="@{/menu}" class="text-sm font-black uppercase" style="color:#34100B">Ver menú</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-14 text-center">
+        <a th:href="@{/ubicacion}">
+          <button class="px-12 py-5 text-lg font-black rounded-full text-white uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-2xl" style="background-color:#D93D04">IR A UBICACIÓN</button>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<div th:replace="fragments/layout :: footer-site"></div>
+
+<script th:src="@{/script.js}" src="/script.js"></script>
 </body>
 </html>
