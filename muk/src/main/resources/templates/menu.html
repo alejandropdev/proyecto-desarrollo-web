@@ -103,7 +103,12 @@
 
               <!-- Nombre (máx 2 líneas, sin plugin) -->
               <h3 class="text-[#2A0B07] font-black text-3xl leading-tight uppercase"
-                  style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; min-height:72px;"
+                  style="display:-webkit-box;
+                         -webkit-line-clamp:2;
+                         line-clamp:2;               /* ← add this */
+                         -webkit-box-orient:vertical;
+                         overflow:hidden;
+                         min-height:72px;"
                   th:text="${dish.name}">
                 Nombre
               </h3>
@@ -116,7 +121,12 @@
 
               <!-- Descripción (máx 3 líneas, sin plugin) -->
               <p class="text-[#2A0B07]/80 font-semibold mt-3"
-                 style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden; min-height:72px;"
+                 style="display:-webkit-box;
+                         -webkit-line-clamp:3;
+                         line-clamp:3;               /* ← add this */
+                         -webkit-box-orient:vertical;
+                         overflow:hidden;
+                         min-height:72px;"
                  th:text="${dish.description}">
                 Descripción
               </p>
