@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${producto.id != null} ? 'Editar producto' : 'Nuevo producto'">Formulario producto — MUK.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 text-stone-900 min-h-screen flex flex-col">
+  <div th:replace="~{fragments/layout :: navbar}"></div>
+
+  <main class="flex-1 container mx-auto px-4 py-8 max-w-2xl">
+    <h1 class="text-3xl font-bold text-amber-900 mb-6" th:text="${producto.id != null} ? 'Editar producto' : 'Nuevo producto'">Formulario</h1>
+
+    <form th:action="@{/productos}" th:object="${producto}" method="post" class="space-y-4">
+      <input type="hidden" th:field="*{id}">
+      <div>
+        <label for="name" class="block text-sm font-medium text-stone-700 mb-1">Nombre</label>
+        <input type="text" id="name" th:field="*{name}" required
+               class="w-full border border-stone-300 rounded px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+      </div>
+      <div>
+        <label for="description" class="block text-sm font-medium text-stone-700 mb-1">Descripción</label>
+        <textarea id="description" th:field="*{description}" rows="3"
+                  class="w-full border border-stone-300 rounded px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"></textarea>
+      </div>
+      <div>
+        <label for="price" class="block text-sm font-medium text-stone-700 mb-1">Precio (COP)</label>
+        <input type="number" id="price" th:field="*{price}" min="0" required
+               class="w-full border border-stone-300 rounded px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+      </div>
+      <div>
+        <label for="imageUrl" class="block text-sm font-medium text-stone-700 mb-1">URL imagen</label>
+        <input type="url" id="imageUrl" th:field="*{imageUrl}"
+               class="w-full border border-stone-300 rounded px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+      </div>
+      <div>
+        <label for="category" class="block text-sm font-medium text-stone-700 mb-1">Categoría</label>
+        <input type="text" id="category" th:field="*{category}"
+               class="w-full border border-stone-300 rounded px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="available" th:field="*{available}" class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">
+        <label for="available" class="text-sm font-medium text-stone-700">Disponible</label>
+      </div>
+      <div class="flex gap-3 pt-4">
+        <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-medium px-6 py-2 rounded">Guardar</button>
+        <a th:href="@{/productos}" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-medium px-6 py-2 rounded">Cancelar</a>
+      </div>
+    </form>
+  </main>
+
+  <div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comida no encontrada — MUK. Restaurante</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/styles.css}" href="/styles.css">
+  <link rel="stylesheet" th:href="@{/src/css/comida.css}" href="/src/css/comida.css">
+</head>
+<body class="page-comida">
+  <div th:replace="~{fragments/layout :: navbar-site}"></div>
+
+  <main>
+    <div class="comida-content">
+      <p class="comida-back"><a th:href="@{/menu}" href="/menu">← Volver al menú</a></p>
+      <p class="comida-error" role="alert">Comida no encontrada.</p>
+      <a th:href="@{/menu}" href="/menu" class="btn btn-orange">Ver menú</a>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/layout :: footer-site}"></div>
+  <script th:src="@{/script.js}" src="/script.js"></script>
+</body>
+</html>

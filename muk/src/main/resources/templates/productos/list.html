@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos — MUK.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 text-stone-900 min-h-screen flex flex-col">
+  <div th:replace="~{fragments/layout :: navbar}"></div>
+
+  <main class="flex-1 container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-amber-900 mb-6">Productos</h1>
+
+    <p th:if="${message}" th:text="${message}" class="mb-4 p-3 bg-green-100 text-green-800 rounded"></p>
+
+    <!-- Filtros -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <a th:href="@{/productos}" class="px-4 py-2 rounded font-medium"
+         th:classappend="${selectedCategory == null && (searchQuery == null || searchQuery.isEmpty())} ? 'bg-amber-500 text-white' : 'bg-white border border-stone-300 hover:bg-stone-100'">Todos</a>
+      <a th:each="cat : ${categories}"
+         th:href="@{/productos(category=${cat})}"
+         th:text="${cat}"
+         th:classappend="${selectedCategory == cat} ? 'bg-amber-500 text-white' : 'bg-white border border-stone-300 hover:bg-stone-100'"
+         class="px-4 py-2 rounded font-medium"></a>
+    </div>
+
+    <form th:action="@{/productos}" method="get" class="mb-6 flex gap-2">
+      <input type="text" name="q" th:value="${searchQuery}" placeholder="Buscar por nombre"
+             class="border border-stone-300 rounded px-3 py-2 flex-1 max-w-xs">
+      <button type="submit" class="bg-stone-700 text-white px-4 py-2 rounded hover:bg-stone-800">Buscar</button>
+    </form>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-stone-200 rounded-lg shadow">
+        <thead class="bg-amber-900 text-amber-50">
+          <tr>
+            <th class="text-left py-3 px-4">Imagen</th>
+            <th class="text-left py-3 px-4">Nombre</th>
+            <th class="text-left py-3 px-4">Categoría</th>
+            <th class="text-left py-3 px-4">Precio</th>
+            <th class="text-left py-3 px-4">Disponible</th>
+            <th class="text-left py-3 px-4">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="p : ${productos}" class="border-t border-stone-200 hover:bg-amber-50/50">
+            <td class="py-3 px-4"><img th:src="${p.imageUrl}" th:alt="${p.name}" class="w-16 h-16 object-cover rounded"></td>
+            <td class="py-3 px-4 font-medium" th:text="${p.name}">Nombre</td>
+            <td class="py-3 px-4"><span th:text="${p.category}" class="text-sm text-stone-600"></span></td>
+            <td class="py-3 px-4">$<span th:text="${p.price != null ? #numbers.formatInteger(p.price, 0, 'POINT') : '0'}"></span> COP</td>
+            <td class="py-3 px-4"><span th:if="${p.available != null && p.available}">Sí</span><span th:unless="${p.available != null && p.available}">No</span></td>
+            <td class="py-3 px-4 flex gap-2">
+              <a th:href="@{/productos/{id}(id=${p.id})}" class="text-amber-700 hover:underline text-sm">Ver</a>
+              <a th:href="@{/productos/edit/{id}(id=${p.id})}" class="text-blue-600 hover:underline text-sm">Editar</a>
+              <a th:href="@{/productos/delete/{id}(id=${p.id})}" class="text-red-600 hover:underline text-sm" onclick="return confirm('¿Eliminar este producto?');">Eliminar</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p th:if="${#lists.isEmpty(productos)}" class="mt-4 text-stone-500">No hay productos.</p>
+  </main>
+
+  <div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>
