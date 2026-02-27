@@ -35,9 +35,9 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public void delete(Long id) {
-        repository.delete(id);
-    }
+public void delete(Long id) {
+    if (id != null) repository.delete(id);
+}
 
     @Override
     public List<Producto> findByCategory(String category) {
