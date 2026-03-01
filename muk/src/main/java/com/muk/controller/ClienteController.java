@@ -68,4 +68,69 @@ public class ClienteController {
                 })
                 .orElse("clientes/notfound");
     }
+
+    /**
+     * GET /login - Muestra formulario de login
+     */
+    @GetMapping("/login")
+    public String loginForm() {
+        return "login";
+    }
+
+    /**
+     * POST /login - Procesa el login buscando el cliente por email
+     */
+    @PostMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password,
+                        RedirectAttributes redirectAttributes, Model model) {
+        return clienteService.findByEmail(email)
+                .map(cliente -> {
+                    // ahora validamos también la contraseña en texto plano
+                    if (password != null && password.equals(cliente.getPassword())) {
+                        redirectAttributes.addFlashAttribute("message", "¡Bienvenido " + cliente.getNombre() + "!");
+                        return "redirect:/menu";
+                    } else {
+                        model.addAttribute("error", "Credenciales inválidas.");
+                        return "login";
+                    }
+                })
+                .orElseGet(() -> {
+                    model.addAttribute("error", "Email no registrado.");
+                    return "login";
+                });
+    }
+
+    /**
+     * GET /registro - Muestra formulario de registro
+     */
+    @GetMapping("/registro")
+    public String registroForm(Model model) {
+        model.addAttribute("cliente", new Cliente());
+        return "registro";
+    }
+
+    /**
+     * POST /registro - Registra un nuevo cliente
+     */
+    @PostMapping("/registro")
+    public String registro(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
+        if (cliente.getEmail() == null || cliente.getEmail().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "El email es requerido.");
+            return "redirect:/clientes/registro";
+        }
+        if (cliente.getPassword() == null || cliente.getPassword().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "La contraseña es requerida.");
+            return "redirect:/clientes/registro";
+        }
+
+        // Verificar si el email ya existe
+        if (clienteService.findByEmail(cliente.getEmail()).isPresent()) {
+            redirectAttributes.addFlashAttribute("error", "El email ya está registrado.");
+            return "redirect:/clientes/registro";
+        }
+
+        clienteService.registro(cliente);
+        redirectAttributes.addFlashAttribute("message", "¡Cuenta creada! Ahora inicia sesión.");
+        return "redirect:/clientes/login";
+    }
 }

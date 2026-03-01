@@ -30,6 +30,23 @@ public class ClienteRepository {
         return Optional.ofNullable(db.get(id));
     }
 
+    public Optional<Cliente> findByEmail(String email) {
+        if (email == null) return Optional.empty();
+        return db.values().stream()
+                .filter(c -> email.equals(c.getEmail()))
+                .findFirst();
+    }
+
+    /**
+     * Alternativa que busca por email y contraseña.
+     */
+    public Optional<Cliente> findByEmailAndPassword(String email, String password) {
+        if (email == null || password == null) return Optional.empty();
+        return db.values().stream()
+                .filter(c -> email.equals(c.getEmail()) && password.equals(c.getPassword()))
+                .findFirst();
+    }
+
     /**
      * Crea (id == null) o actualiza. En creación asigna el siguiente id.
      */
@@ -51,8 +68,9 @@ public class ClienteRepository {
 
     private static List<Cliente> seedData() {
         return List.of(
-                new Cliente(1L, "Gladis", "López", "gladis.lopez@example.com", "3001234567", "Calle 1 #2-3"),
-                new Cliente(2L, "Gloria", "Sánchez", "gloria.sanchez@example.com", "3109876543", "Carrera 4 #5-6")
+                // contraseñas en texto plano para pruebas
+                new Cliente(1L, "Gladis", "López", "gladis.lopez@example.com", "3001234567", "Calle 1 #2-3", "pass123"),
+                new Cliente(2L, "Gloria", "Sánchez", "gloria.sanchez@example.com", "3109876543", "Carrera 4 #5-6", "qwerty")
         );
     }
 }

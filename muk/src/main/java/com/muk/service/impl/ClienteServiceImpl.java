@@ -38,4 +38,20 @@ public class ClienteServiceImpl implements ClienteService {
     public void delete(Long id) {
         repository.delete(id);
     }
+
+    @Override
+    public Optional<Cliente> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<Cliente> findByEmailAndPassword(String email, String password) {
+        return repository.findByEmailAndPassword(email, password);
+    }
+
+    @Override
+    public Cliente registro(Cliente cliente) {
+        if (cliente == null) return null;
+        return repository.save(cliente);
+    }
 }
