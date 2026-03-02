@@ -4,182 +4,206 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Muk. | Registro</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --muk-bg: #faf7f0;
+        --muk-brown: #34100b;
+        --muk-red: #8c0e03;
+        --muk-yellow: #f2b705;
+        --muk-orange: #f27405;
+        --muk-deep-orange: #d93d04;
+      }
+
+      body {
+        font-family: Inter, sans-serif;
+        background: var(--muk-bg);
+      }
+
+      /* NAVBAR igual que login */
+      .muk-navbar {
+        background: var(--muk-brown);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .muk-logo {
+        color: var(--muk-yellow) !important;
+        font-weight: 900;
+        letter-spacing: 2px;
+      }
+
+      .muk-link-nav {
+        color: #faf7f0 !important;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+
+      .muk-link-nav:hover {
+        color: var(--muk-yellow) !important;
+      }
+
+      .muk-btn-nav {
+        background: var(--muk-orange);
+        color: white;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 0.4rem 1.2rem;
+      }
+
+      .muk-btn-nav:hover {
+        background: var(--muk-deep-orange);
+      }
+
+      /* FORM */
+      .muk-card {
+        border-radius: 1.8rem;
+        box-shadow: 0 20px 45px rgba(52, 16, 11, 0.15);
+      }
+
+      .muk-input {
+        border: 3px solid var(--muk-yellow);
+        border-radius: 1rem;
+        padding: 0.9rem;
+        font-weight: 600;
+      }
+
+      .muk-input:focus {
+        border-color: var(--muk-deep-orange);
+        box-shadow: 0 0 0 0.2rem rgba(217, 61, 4, 0.25);
+      }
+
+      .muk-btn-main {
+        background: var(--muk-orange);
+        color: white;
+        border-radius: 999px;
+        font-weight: 800;
+        padding: 0.9rem;
+      }
+
+      .muk-btn-main:hover {
+        background: var(--muk-deep-orange);
+      }
+    </style>
   </head>
-  <body
-    style="
-      font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        Segoe UI,
-        Roboto,
-        Arial,
-        sans-serif;
-      background-color: #faf7f0;
-    "
-  >
-    <div th:replace="fragments/layout :: navbar-site"></div>
 
-    <main
-      class="pt-16 md:pt-20 min-h-screen flex items-center justify-center px-4 sm:px-8 py-14"
-      style="background-color: #faf7f0"
-    >
-      <div
-        class="w-full max-w-md rounded-3xl shadow-2xl p-8 sm:p-10"
-        style="background-color: white"
-      >
-        <h1
-          class="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-center"
-          style="color: #34100b"
+  <body>
+    <nav class="navbar navbar-expand-lg muk-navbar py-3">
+      <div class="container">
+        <a class="navbar-brand muk-logo" href="/">Muk.</a>
+
+        <button
+          class="navbar-toggler bg-light"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarMuk"
         >
-          Crear cuenta
-        </h1>
-        <p
-          class="text-center font-bold mt-2"
-          style="color: #8c0e03; opacity: 0.8"
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarMuk"
         >
-          Únete al salón de la fama de Muk.
-        </p>
-
-        <form
-          class="mt-8 space-y-5"
-          method="post"
-          th:action="@{/clientes/registro}"
-        >
-          <div>
-            <label
-              class="block text-xs font-black uppercase tracking-widest mb-2"
-              style="color: #8c0e03"
-              >Nombre</label
-            >
-            <input
-              type="text"
-              name="nombre"
-              placeholder="Tu nombre"
-              class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
-              style="border-color: #f2b705"
-              required
-            />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-black uppercase tracking-widest mb-2"
-              style="color: #8c0e03"
-              >Apellido</label
-            >
-            <input
-              type="text"
-              name="apellido"
-              placeholder="Tu apellido"
-              class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
-              style="border-color: #f2b705"
-            />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-black uppercase tracking-widest mb-2"
-              style="color: #8c0e03"
-              >Correo</label
-            >
-            <input
-              type="email"
-              name="email"
-              placeholder="tucorreo@ejemplo.com"
-              class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
-              style="border-color: #f2b705"
-              required
-            />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-black uppercase tracking-widest mb-2"
-              style="color: #8c0e03"
-              >Teléfono</label
-            >
-            <input
-              type="tel"
-              name="telefono"
-              placeholder="Tu teléfono"
-              class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
-              style="border-color: #f2b705"
-            />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-black uppercase tracking-widest mb-2"
-              style="color: #8c0e03"
-              >Dirección</label
-            >
-            <input
-              type="text"
-              name="direccion"
-              placeholder="Tu dirección"
-              class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
-              style="border-color: #f2b705"
-            />
-          </div>
-          <div>
-            <label
-              class="block text-xs font-black uppercase tracking-widest mb-2"
-              style="color: #8c0e03"
-              >Contraseña</label
-            >
-            <input
-              type="password"
-              name="password"
-              placeholder="••••••••"
-              class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
-              style="border-color: #f2b705"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            class="w-full py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl transition-all hover:brightness-110"
-            style="background-color: #f27405"
+          <ul
+            class="navbar-nav align-items-lg-center gap-lg-4 text-center mt-3 mt-lg-0"
           >
-            Crear cuenta
-          </button>
+            <li class="nav-item">
+              <a class="nav-link muk-link-nav" href="/">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link muk-link-nav" href="/productos">Productos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link muk-link-nav" href="/clientes/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn muk-btn-nav ms-lg-2" href="/clientes/registro">
+                Registrarse
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-          <div
-            class="text-center text-sm font-bold"
-            style="color: #34100b; opacity: 0.8"
-          >
-            ¿Ya tienes cuenta?
-            <a
-              th:href="@{/clientes/login}"
-              class="font-black underline"
-              style="color: #d93d04"
-              >Iniciar sesión</a
-            >
-          </div>
+    <main class="min-vh-100 d-flex align-items-center">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card muk-card p-4">
+              <h2 class="text-center fw-bold mb-3" style="color: #34100b">
+                Crear cuenta
+              </h2>
 
-          <div
-            th:if="${error}"
-            class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-4"
-          >
-            <p th:text="${error}"></p>
+              <form method="post" th:action="@{/clientes/registro}">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <input
+                      type="text"
+                      name="nombre"
+                      class="form-control muk-input"
+                      placeholder="Nombre"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <input
+                      type="text"
+                      name="apellido"
+                      class="form-control muk-input"
+                      placeholder="Apellido"
+                    />
+                  </div>
+                  <div class="col-12">
+                    <input
+                      type="email"
+                      name="email"
+                      class="form-control muk-input"
+                      placeholder="Correo"
+                      required
+                    />
+                  </div>
+                  <div class="col-12">
+                    <input
+                      type="password"
+                      name="password"
+                      class="form-control muk-input"
+                      placeholder="Contraseña"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" class="btn muk-btn-main w-100 mt-4">
+                  Crear cuenta
+                </button>
+              </form>
+
+              <p class="text-center mt-3">
+                ¿Ya tienes cuenta?
+                <a
+                  href="/clientes/login"
+                  style="color: #d93d04; font-weight: 700"
+                >
+                  Iniciar sesión
+                </a>
+              </p>
+            </div>
           </div>
-          <div
-            th:if="${message}"
-            class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mt-4"
-          >
-            <p th:text="${message}"></p>
-          </div>
-        </form>
+        </div>
       </div>
     </main>
 
-    <div th:replace="fragments/layout :: footer-site"></div>
-
-    <script th:src="@{/script.js}" src="/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
