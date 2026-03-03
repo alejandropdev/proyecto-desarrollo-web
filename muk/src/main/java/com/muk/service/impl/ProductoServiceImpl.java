@@ -2,6 +2,7 @@ package com.muk.service.impl;
 
 import com.muk.entities.Producto;
 import com.muk.repository.ProductoRepository;
+import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private ProductoRepository repository;
 
+    @Autowired
+    private CategoriaService categoriaService;
+
     @Override
     public List<Producto> findAll() {
         return repository.findAll();
@@ -31,6 +35,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public Producto save(Producto producto) {
         if (producto == null) return null;
+        categoriaService.addIfMissing(producto.getCategory());
         return repository.save(producto);
     }
 
