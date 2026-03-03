@@ -13,12 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * Módulo Administrador: CRUD de Platos.
- *
- * Nota: En el backend la entidad se llama "Producto" (porque así venía el proyecto),
- * pero en la UI y en las rutas lo manejamos como "Plato" para el flujo del restaurante.
- *
- * Regla de la rúbrica: el controlador SOLO habla con el Service (nunca con Repository).
- */
+ * */
 @Controller
 @RequestMapping("/admin/platos")
 public class AdminPlatoController {
@@ -57,11 +52,11 @@ public class AdminPlatoController {
     }
 
     @GetMapping("/nuevo")
-    public String newForm(Model model) {
-        model.addAttribute("plato", new Producto());
-        model.addAttribute("currentPage", "admin-nuevo");
-        return "admin/platos/form";
-    }
+public String newForm(Model model) {
+    loadCategories(model);
+    model.addAttribute("plato", new Producto());
+    return "admin/platos/form";
+}
 
     /**
      * Un solo endpoint para Create/Update.
@@ -87,21 +82,29 @@ public class AdminPlatoController {
                 .orElse("admin/platos/notfound");
     }
 
-    @GetMapping("/{id}/editar")
-    public String editForm(@PathVariable Long id, Model model) {
-        model.addAttribute("currentPage", "admin-platos");
-        return productoService.findById(id)
-                .map(p -> {
-                    model.addAttribute("plato", p);
-                    return "admin/platos/form";
-                })
-                .orElse("redirect:/admin/platos");
-    }
-
-    @GetMapping("/{id}/eliminar")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        productoService.delete(id);
-        redirectAttributes.addFlashAttribute("message", "Plato eliminado.");
-        return "redirect:/admin/platos";
-    }
+   @GetMapping("/{id}/editar")
+public String editForm(@PathVariable Long id, Model model) {
+    loadCategories(model);
+    return productoService.findById(id)
+            .map(p -> {
+                model.addAttribute("plato", p);
+                return "admin/platos/form";
+            })
+            .orElse("redirect:/admin/platos");
+}
+@PostMapping("/{id}/eliminar")
+public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    productoService.delete(id);
+    redirectAttributes.addFlashAttribute("message", "Plato eliminado.");
+    return "redirect:/admin/platos";
+}
+ private void loadCategories(Model model) {
+    List<String> categories = productoService.findAll().stream()
+            .map(Producto::getCategory)
+            .filter(c -> c != null && !c.isEmpty())
+            .distinct()
+            .sorted()
+            .toList();
+    model.addAttribute("categories", categories);
+}
 }
