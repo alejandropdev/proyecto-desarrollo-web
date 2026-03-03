@@ -1,6 +1,7 @@
 package com.muk.controller;
 
 import com.muk.entities.Producto;
+import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Módulo Administrador: CRUD de Platos.
@@ -20,6 +20,9 @@ public class AdminPlatoController {
 
     @Autowired
     private ProductoService productoService;
+
+    @Autowired
+    private CategoriaService categoriaService;
 
     @GetMapping
     public String list(
@@ -36,12 +39,7 @@ public class AdminPlatoController {
             platos = productoService.findAll();
         }
 
-        List<String> categories = productoService.findAll().stream()
-                .map(Producto::getCategory)
-                .filter(c -> c != null && !c.isEmpty())
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+        List<String> categories = categoriaService.findAll();
 
         model.addAttribute("platos", platos);
         model.addAttribute("categories", categories);
@@ -99,12 +97,7 @@ public String delete(@PathVariable Long id, RedirectAttributes redirectAttribute
     return "redirect:/admin/platos";
 }
  private void loadCategories(Model model) {
-    List<String> categories = productoService.findAll().stream()
-            .map(Producto::getCategory)
-            .filter(c -> c != null && !c.isEmpty())
-            .distinct()
-            .sorted()
-            .toList();
+    List<String> categories = categoriaService.findAll();
     model.addAttribute("categories", categories);
 }
 }

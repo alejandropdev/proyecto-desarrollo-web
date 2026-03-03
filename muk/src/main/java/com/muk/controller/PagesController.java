@@ -1,6 +1,7 @@
 package com.muk.controller;
 
 import com.muk.entities.Producto;
+import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Serves the original site pages: landing, menu, comida detail, desafios, ubicacion, login, registro.
@@ -19,6 +19,9 @@ public class PagesController {
 
     @Autowired
     private ProductoService productoService;
+
+    @Autowired
+    private CategoriaService categoriaService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -39,12 +42,7 @@ public class PagesController {
         } else {
             foods = productoService.findAll();
         }
-        List<String> categories = productoService.findAll().stream()
-                .map(Producto::getCategory)
-                .filter(c -> c != null && !c.isEmpty())
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+        List<String> categories = categoriaService.findAll();
         model.addAttribute("foods", foods);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", category);
