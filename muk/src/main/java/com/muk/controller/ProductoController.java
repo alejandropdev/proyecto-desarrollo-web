@@ -1,6 +1,7 @@
 package com.muk.controller;
 
 import com.muk.entities.Producto;
+import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controlador CRUD de productos. Rutas base /productos.
@@ -20,6 +20,9 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+
+    @Autowired
+    private CategoriaService categoriaService;
 
     @GetMapping
     public String list(
@@ -34,12 +37,7 @@ public class ProductoController {
         } else {
             products = productoService.findAll();
         }
-        List<String> categories = productoService.findAll().stream()
-                .map(Producto::getCategory)
-                .filter(c -> c != null && !c.isEmpty())
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+        List<String> categories = categoriaService.findAll();
         model.addAttribute("productos", products);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", category);
@@ -50,6 +48,7 @@ public class ProductoController {
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("producto", new Producto());
+        model.addAttribute("categories", categoriaService.findAll());
         return "productos/form";
     }
 
@@ -65,6 +64,7 @@ public class ProductoController {
         return productoService.findById(id)
                 .map(p -> {
                     model.addAttribute("producto", p);
+                    model.addAttribute("categories", categoriaService.findAll());
                     return "productos/form";
                 })
                 .orElse("redirect:/productos");
