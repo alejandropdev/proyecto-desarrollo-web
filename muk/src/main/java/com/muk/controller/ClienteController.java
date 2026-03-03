@@ -88,7 +88,7 @@ public class ClienteController {
                     // ahora validamos también la contraseña en texto plano
                     if (password != null && password.equals(cliente.getPassword())) {
                         redirectAttributes.addFlashAttribute("message", "¡Bienvenido " + cliente.getNombre() + "!");
-                        return "redirect:/menu";
+                        return "redirect:/clientes/perfil?email=" + java.net.URLEncoder.encode(cliente.getEmail(), java.nio.charset.StandardCharsets.UTF_8);
                     } else {
                         model.addAttribute("error", "Credenciales inválidas.");
                         return "login";
@@ -132,5 +132,89 @@ public class ClienteController {
         clienteService.registro(cliente);
         redirectAttributes.addFlashAttribute("message", "¡Cuenta creada! Ahora inicia sesión.");
         return "redirect:/clientes/login";
+    }
+
+    /**
+     * GET /perfil - Muestra la página de perfil del usuario (identificado por email en query).
+     * Sin sesión: se pasa el email como parámetro tras el login.
+     */
+    @GetMapping("/perfil")
+    public String perfil(@RequestParam(required = false) String email, Model model, RedirectAttributes redirectAttributes) {
+        if (email == null || email.isBlank()) {
+            redirectAttributes.addFlashAttribute("error", "Debes iniciar sesión para ver tu perfil.");
+            return "redirect:/clientes/login";
+        }
+        return clienteService.findByEmail(email.trim())
+                .map(cliente -> {
+                    model.addAttribute("cliente", cliente);
+                    model.addAttribute("currentPage", "perfil");
+                    return "clientes/perfil";
+                })
+                .orElseGet(() -> {
+                    redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
+                    return "redirect:/clientes/login";
+                });
+    }
+
+    /**
+     * GET /perfil/editar - Muestra el formulario para editar el perfil.
+     */
+    @GetMapping("/perfil/editar")
+    public String perfilEditarForm(@RequestParam(required = false) String email, Model model, RedirectAttributes redirectAttributes) {
+        if (email == null || email.isBlank()) {
+            redirectAttributes.addFlashAttribute("error", "Debes iniciar sesión para editar tu perfil.");
+            return "redirect:/clientes/login";
+        }
+        return clienteService.findByEmail(email.trim())
+                .map(cliente -> {
+                    model.addAttribute("cliente", cliente);
+                    model.addAttribute("currentPage", "perfil");
+                    return "clientes/perfil-editar";
+                })
+                .orElseGet(() -> {
+                    redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
+                    return "redirect:/clientes/login";
+                });
+    }
+
+    /**
+     * POST /perfil/editar - Actualiza el perfil del cliente.
+     */
+    @PostMapping("/perfil/editar")
+    public String perfilEditar(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
+        if (cliente.getId() == null) {
+            redirectAttributes.addFlashAttribute("error", "Datos inválidos.");
+            return "redirect:/clientes/login";
+        }
+        // Si la contraseña viene vacía, mantener la actual
+        if (cliente.getPassword() == null || cliente.getPassword().isBlank()) {
+            clienteService.findById(cliente.getId()).ifPresent(existing ->
+                    cliente.setPassword(existing.getPassword()));
+        }
+        clienteService.save(cliente);
+        redirectAttributes.addFlashAttribute("message", "Perfil actualizado.");
+        String email = cliente.getEmail() != null ? cliente.getEmail() : "";
+        return "redirect:/clientes/perfil?email=" + java.net.URLEncoder.encode(email, java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * GET /perfil/eliminar - Elimina la cuenta del cliente (identificado por email).
+     */
+    @GetMapping("/perfil/eliminar")
+    public String perfilEliminar(@RequestParam(required = false) String email, RedirectAttributes redirectAttributes) {
+        if (email == null || email.isBlank()) {
+            redirectAttributes.addFlashAttribute("error", "Debes iniciar sesión para eliminar tu cuenta.");
+            return "redirect:/clientes/login";
+        }
+        return clienteService.findByEmail(email.trim())
+                .map(cliente -> {
+                    clienteService.delete(cliente.getId());
+                    redirectAttributes.addFlashAttribute("message", "Tu cuenta ha sido eliminada.");
+                    return "redirect:/clientes/login";
+                })
+                .orElseGet(() -> {
+                    redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
+                    return "redirect:/clientes/login";
+                });
     }
 }

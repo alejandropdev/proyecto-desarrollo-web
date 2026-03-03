@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Muk. | Mi perfil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    style="
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        Segoe UI,
+        Roboto,
+        Arial,
+        sans-serif;
+      background-color: #faf7f0;
+    "
+  >
+    <div th:replace="fragments/layout :: navbar-site"></div>
+
+    <main
+      class="pt-16 md:pt-20 min-h-screen flex items-center justify-center px-4 sm:px-8 py-14"
+      style="background-color: #faf7f0"
+    >
+      <div
+        class="w-full max-w-md rounded-3xl shadow-2xl p-8 sm:p-10"
+        style="background-color: white"
+      >
+        <h1
+          class="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-center"
+          style="color: #34100b"
+        >
+          Mi perfil
+        </h1>
+        <p
+          class="text-center font-bold mt-2"
+          style="color: #8c0e03; opacity: 0.8"
+        >
+          Tus datos en Muk.
+        </p>
+
+        <div class="mt-8 space-y-4">
+          <div>
+            <span
+              class="block text-xs font-black uppercase tracking-widest mb-1"
+              style="color: #8c0e03"
+              >Nombre</span
+            >
+            <p class="font-bold" style="color: #34100b" th:text="${cliente.nombre}">—</p>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black uppercase tracking-widest mb-1"
+              style="color: #8c0e03"
+              >Apellido</span
+            >
+            <p class="font-bold" style="color: #34100b" th:text="${cliente.apellido}">—</p>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black uppercase tracking-widest mb-1"
+              style="color: #8c0e03"
+              >Correo</span
+            >
+            <p class="font-bold" style="color: #34100b" th:text="${cliente.email}">—</p>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black uppercase tracking-widest mb-1"
+              style="color: #8c0e03"
+              >Teléfono</span
+            >
+            <p class="font-bold" style="color: #34100b" th:text="${cliente.telefono} ?: '—'">—</p>
+          </div>
+          <div>
+            <span
+              class="block text-xs font-black uppercase tracking-widest mb-1"
+              style="color: #8c0e03"
+              >Dirección</span
+            >
+            <p class="font-bold" style="color: #34100b" th:text="${cliente.direccion} ?: '—'">—</p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col gap-3">
+          <a
+            th:href="@{/clientes/perfil/editar(email=${cliente.email})}"
+            class="w-full py-4 font-black rounded-full uppercase tracking-widest text-center shadow-xl transition-all hover:brightness-110"
+            style="background-color: #f27405; color: white"
+          >
+            Editar perfil
+          </a>
+          <a
+            th:href="@{/clientes/perfil/eliminar(email=${cliente.email})}"
+            class="w-full py-4 font-bold rounded-full uppercase tracking-widest text-center border-2 transition-all hover:opacity-90"
+            style="border-color: #8c0e03; color: #8c0e03"
+            onclick="return confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.');"
+          >
+            Eliminar cuenta
+          </a>
+        </div>
+
+        <div class="mt-6 text-center">
+          <a
+            th:href="@{/menu}"
+            class="font-bold underline"
+            style="color: #d93d04"
+            >Volver al menú</a
+          >
+        </div>
+
+        <div
+          th:if="${message}"
+          class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mt-4"
+        >
+          <p th:text="${message}"></p>
+        </div>
+      </div>
+    </main>
+
+    <div th:replace="fragments/layout :: footer-site"></div>
+
+    <script th:src="@{/script.js}" src="/script.js"></script>
+  </body>
+</html>
