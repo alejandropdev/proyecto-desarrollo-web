@@ -2,18 +2,20 @@ package com.muk.controller;
 
 import com.muk.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Endpoints para consultar y registrar categorías.
+ * Controlador MVC para listar y crear categorías.
  */
-@RestController
+@Controller
 @RequestMapping("/categorias")
 public class CategoriaController {
 
@@ -21,20 +23,29 @@ public class CategoriaController {
     private CategoriaService categoriaService;
 
     @GetMapping
-    public List<String> list() {
-        return categoriaService.findAll();
+    public String list(Model model) {
+        List<String> categories = categoriaService.findAll();
+        model.addAttribute("categories", categories);
+        model.addAttribute("currentPage", "categorias");
+        return "categorias/list";
+    }
+
+    @GetMapping("/new")
+    public String newForm(Model model) {
+        model.addAttribute("currentPage", "categorias");
+        return "categorias/form";
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> create(@RequestParam String name) {
+    public String save(@RequestParam String name, RedirectAttributes redirectAttributes) {
         String normalized = name == null ? "" : name.trim();
         if (normalized.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El nombre de categoría es obligatorio."));
+            redirectAttributes.addFlashAttribute("error", "El nombre de categoría es obligatorio.");
+            return "redirect:/categorias/new";
         }
+
         categoriaService.addIfMissing(normalized);
-        Map<String, String> body = new LinkedHashMap<>();
-        body.put("message", "Categoría registrada.");
-        body.put("category", normalized);
-        return ResponseEntity.status(HttpStatus.CREATED).body(body);
+        redirectAttributes.addFlashAttribute("message", "Categoría registrada.");
+        return "redirect:/categorias";
     }
 }
