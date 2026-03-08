@@ -3,20 +3,19 @@ package com.muk.service.impl;
 import com.muk.entities.Cliente;
 import com.muk.repository.ClienteRepository;
 import com.muk.service.ClienteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Implementación del servicio de clientes. Delega al repositorio.
- */
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
-    @Autowired
-    private ClienteRepository repository;
+    private final ClienteRepository repository;
+
+    public ClienteServiceImpl(ClienteRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public List<Cliente> findAll() {
@@ -36,7 +35,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void delete(Long id) {
-        repository.delete(id);
+        if (id != null) {
+            repository.deleteById(id);
+        }
     }
 
     @Override

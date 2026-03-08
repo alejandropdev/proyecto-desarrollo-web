@@ -2,57 +2,48 @@ package com.muk.service.impl;
 
 import com.muk.entities.Producto;
 import com.muk.repository.ProductoRepository;
-import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Implementación del servicio. Única capa que llama al repositorio.
- */
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
-    @Autowired
-    private ProductoRepository repository;
+    private final ProductoRepository productoRepository;
 
-    @Autowired
-    private CategoriaService categoriaService;
+    public ProductoServiceImpl(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
+    }
 
     @Override
     public List<Producto> findAll() {
-        return repository.findAll();
+        return productoRepository.findAll();
     }
 
     @Override
     public Optional<Producto> findById(Long id) {
-        return id == null ? Optional.empty() : repository.findById(id);
+        return productoRepository.findById(id);
     }
 
     @Override
     public Producto save(Producto producto) {
-        if (producto == null) return null;
-        categoriaService.addIfMissing(producto.getCategory());
-        return repository.save(producto);
+        return productoRepository.save(producto);
     }
 
     @Override
-public void delete(Long id) {
-    if (id != null) repository.delete(id);
-}
-
-    @Override
-    public List<Producto> findByCategory(String category) {
-        if (category == null || category.isBlank()) return List.of();
-        return repository.findByCategory(category.trim());
+    public void delete(Long id) {
+        productoRepository.deleteById(id);
     }
 
     @Override
-    public List<Producto> searchByName(String query) {
-        if (query == null || query.isBlank()) return List.of();
-        return repository.searchByName(query.trim());
+    public List<Producto> findByCategory(String categoria) {
+        return productoRepository.findByCategoriaIgnoreCase(categoria);
+    }
+
+    @Override
+    public List<Producto> searchByName(String q) {
+        return productoRepository.findByNombreContainingIgnoreCase(q);
     }
 }
