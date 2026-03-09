@@ -13,8 +13,9 @@ public class Producto {
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;
 
-    @Column(nullable = false, length = 50)
-    private String categoria;
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
     @Column(nullable = false)
     private Double precio;
@@ -26,9 +27,10 @@ public class Producto {
     private String descripcion;
 
     public Producto() {
+        this.categoria = new Categoria();
     }
 
-    public Producto(Long id, String nombre, String categoria, Double precio, String imagenUrl, String descripcion) {
+    public Producto(Long id, String nombre, Categoria categoria, Double precio, String imagenUrl, String descripcion) {
         this.id = id;
         this.nombre = nombre;
         this.categoria = categoria;
@@ -53,11 +55,11 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 

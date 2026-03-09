@@ -1,5 +1,6 @@
 package com.muk.controller;
 
+import com.muk.entities.Categoria;
 import com.muk.entities.Producto;
 import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
@@ -39,7 +40,7 @@ public class AdminPlatoController {
             platos = productoService.findAll();
         }
 
-        List<String> categories = categoriaService.findAll();
+        List<Categoria> categories = categoriaService.findAll();
 
         model.addAttribute("platos", platos);
         model.addAttribute("categories", categories);
@@ -63,6 +64,9 @@ public String newForm(Model model) {
      */
     @PostMapping("/guardar")
     public String save(@ModelAttribute("plato") Producto plato, RedirectAttributes redirectAttributes) {
+        if (plato.getCategoria() != null && plato.getCategoria().getId() == null) {
+            plato.setCategoria(null);
+        }
         boolean creating = (plato.getId() == null);
         productoService.save(plato);
         redirectAttributes.addFlashAttribute("message", creating ? "Plato creado." : "Plato actualizado.");
@@ -97,7 +101,7 @@ public String delete(@PathVariable Long id, RedirectAttributes redirectAttribute
     return "redirect:/admin/platos";
 }
  private void loadCategories(Model model) {
-    List<String> categories = categoriaService.findAll();
+    List<Categoria> categories = categoriaService.findAll();
     model.addAttribute("categories", categories);
 }
 }

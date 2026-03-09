@@ -32,22 +32,22 @@
           </div>
 
       <div>
-  <label for="category" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">
+  <label for="categoria" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">
     Categoría
   </label>
 
   <div class="relative">
-    <select id="category" th:field="*{category}"
+    <select id="categoria" th:field="*{categoria.id}"
             class="w-full appearance-none px-5 py-4 pr-12 rounded-2xl font-bold border-4 focus:outline-none focus:ring-0"
             style="border-color:#F2B705; color:#34100B; background-color:white;">
       <option value="" disabled
-              th:selected="*{category} == null or *{category} == ''">
+              th:selected="*{categoria} == null or *{categoria.id} == null">
         Selecciona una categoría
       </option>
 
       <option th:each="cat : ${categories}"
-              th:value="${cat}"
-              th:text="${cat}">
+              th:value="${cat.id}"
+              th:text="${cat.nombre}">
       </option>
     </select>
 

@@ -1,5 +1,6 @@
 package com.muk.controller;
 
+import com.muk.entities.Categoria;
 import com.muk.entities.Producto;
 import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
@@ -37,7 +38,7 @@ public class ProductoController {
         } else {
             products = productoService.findAll();
         }
-        List<String> categories = categoriaService.findAll();
+        List<Categoria> categories = categoriaService.findAll();
         model.addAttribute("productos", products);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", category);
@@ -54,6 +55,9 @@ public class ProductoController {
 
     @PostMapping
     public String save(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {
+        if (producto.getCategoria() != null && producto.getCategoria().getId() == null) {
+            producto.setCategoria(null);
+        }
         productoService.save(producto);
         redirectAttributes.addFlashAttribute("message", producto.getId() == null ? "Producto creado." : "Producto actualizado.");
         return "redirect:/productos";

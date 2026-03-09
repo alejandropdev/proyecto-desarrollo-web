@@ -1,5 +1,6 @@
 package com.muk.controller;
 
+import com.muk.entities.Categoria;
 import com.muk.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ public class CategoriaController {
 
     @GetMapping
     public String list(Model model) {
-        List<String> categories = categoriaService.findAll();
+        List<Categoria> categories = categoriaService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("currentPage", "categorias");
         return "categorias/list";

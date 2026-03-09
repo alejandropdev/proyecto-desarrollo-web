@@ -16,7 +16,7 @@
         <img th:src="${producto.imageUrl}" th:alt="${producto.name}" class="w-full max-w-md rounded-lg shadow-lg object-cover">
       </div>
       <div class="flex-1">
-        <span th:text="${producto.category}" class="inline-block bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded mb-2"></span>
+        <span th:text="${producto.categoria != null ? producto.categoria.nombre : ''}" class="inline-block bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded mb-2"></span>
         <h1 class="text-3xl font-bold text-amber-900 mb-2" th:text="${producto.name}">Nombre</h1>
         <p class="text-stone-600 mb-4" th:text="${producto.description}">Descripción</p>
         <p class="text-xl font-semibold text-amber-900 mb-2">$<span th:text="${producto.price != null ? #numbers.formatInteger(producto.price, 0, 'POINT') : '0'}"></span> COP</p>

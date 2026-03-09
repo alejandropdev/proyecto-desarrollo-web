@@ -19,7 +19,7 @@
       <a th:href="@{/productos}" class="px-4 py-2 rounded font-medium"
          th:classappend="${selectedCategory == null && (searchQuery == null || searchQuery.isEmpty())} ? 'bg-amber-500 text-white' : 'bg-white border border-stone-300 hover:bg-stone-100'">Todos</a>
       <a th:each="cat : ${categories}"
-         th:href="@{/productos(category=${cat})}"
+         th:href="@{/productos(category=${cat.nombre})}"
          th:text="${cat}"
          th:classappend="${selectedCategory == cat} ? 'bg-amber-500 text-white' : 'bg-white border border-stone-300 hover:bg-stone-100'"
          class="px-4 py-2 rounded font-medium"></a>
@@ -47,7 +47,7 @@
           <tr th:each="p : ${productos}" class="border-t border-stone-200 hover:bg-amber-50/50">
             <td class="py-3 px-4"><img th:src="${p.imageUrl}" th:alt="${p.name}" class="w-16 h-16 object-cover rounded"></td>
             <td class="py-3 px-4 font-medium" th:text="${p.name}">Nombre</td>
-            <td class="py-3 px-4"><span th:text="${p.category}" class="text-sm text-stone-600"></span></td>
+            <td class="py-3 px-4"><span th:text="${p.categoria != null ? p.categoria.nombre : ''}" class="text-sm text-stone-600"></span></td>
             <td class="py-3 px-4">$<span th:text="${p.price != null ? #numbers.formatInteger(p.price, 0, 'POINT') : '0'}"></span> COP</td>
             <td class="py-3 px-4"><span th:if="${p.available != null && p.available}">Sí</span><span th:unless="${p.available != null && p.available}">No</span></td>
             <td class="py-3 px-4 flex gap-2">

@@ -38,8 +38,8 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public List<Producto> findByCategory(String categoria) {
-        return productoRepository.findByCategoriaIgnoreCase(categoria);
+    public List<Producto> findByCategory(String nombreCategoria) {
+        return productoRepository.findByCategoria_NombreIgnoreCase(nombreCategoria);
     }
 
     @Override
