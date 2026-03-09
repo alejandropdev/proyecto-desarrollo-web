@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:text="'Muk. Admin | ' + ${plato.name}">Muk. Admin</title>
+  <title th:text="'Muk. Admin | ' + ${plato.nombre}">Muk. Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -19,10 +19,9 @@
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
       <div>
         <a th:href="@{/admin/platos}" class="inline-flex items-center gap-2 font-black uppercase tracking-widest text-sm" style="color:#8C0E03"><span>←</span> <span>Volver</span></a>
-        <h1 class="mt-3 text-3xl sm:text-4xl font-black uppercase tracking-tighter" style="color:#34100B" th:text="${plato.name}">Plato</h1>
+        <h1 class="mt-3 text-3xl sm:text-4xl font-black uppercase tracking-tighter" style="color:#34100B" th:text="${plato.nombre}">Plato</h1>
         <div class="mt-2 flex flex-wrap gap-2">
-          <span class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-full text-white" style="background-color:#8C0E03" th:text="${plato.category}">Categoría</span>
-          <span class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-full" th:style="${plato.available} ? 'background-color:#F2B705;color:#34100B' : 'background-color:#D93D04;color:white'" th:text="${plato.available} ? 'Disponible' : 'No disponible'">Disponible</span>
+          <span class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-full text-white" style="background-color:#8C0E03" th:text="${plato.categoria}">Categoría</span>
           <span class="px-4 py-2 text-xs font-black uppercase tracking-widest rounded-full" style="background-color:#34100B;color:#F2B705" th:text="'ID: ' + ${plato.id}">ID</span>
         </div>
       </div>
@@ -40,16 +39,16 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
       <div class="rounded-3xl overflow-hidden shadow-2xl" style="background-color:#F2B705">
         <div class="h-80 lg:h-[520px]">
-          <img th:src="${plato.imageUrl}" alt="Imagen" class="w-full h-full object-cover" />
+          <img th:src="${plato.imagenUrl}" alt="Imagen" class="w-full h-full object-cover" />
         </div>
       </div>
 
       <div class="rounded-3xl shadow-2xl p-8 sm:p-10" style="background-color:white">
         <div class="text-xs font-black uppercase tracking-widest" style="color:#8C0E03">Precio</div>
-        <div class="text-3xl sm:text-4xl font-black italic mt-1" style="color:#8C0E03" th:text="${plato.price}">$0</div>
+        <div class="text-3xl sm:text-4xl font-black italic mt-1" style="color:#8C0E03" th:text="${plato.precio}">$0</div>
 
         <div class="mt-8 text-xs font-black uppercase tracking-widest" style="color:#8C0E03">Descripción</div>
-        <p class="mt-2 font-bold leading-relaxed" style="color:#34100B;opacity:0.85" th:text="${plato.description}">Descripción</p>
+        <p class="mt-2 font-bold leading-relaxed" style="color:#34100B;opacity:0.85" th:text="${plato.descripcion}">Descripción</p>
 
         <div class="mt-10">
           <a th:href="@{/comida/{id}(id=${plato.id})}">
