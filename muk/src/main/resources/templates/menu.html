@@ -64,8 +64,8 @@
              class="inline-block">
             <span
               class="px-4 py-2 text-xs sm:text-sm font-black rounded-full uppercase tracking-wider transition-all"
-              th:style="${selectedCategory}==${cat} ? 'background-color:#34100B;color:#F2B705' : 'background-color:#F2B705;color:#34100B'"
-              th:text="${cat}">
+              th:style="${selectedCategory != null and selectedCategory == cat.nombre} ? 'background-color:#34100B;color:#F2B705' : 'background-color:#F2B705;color:#34100B'"
+              th:text="${cat.nombre}">
               Categoría
             </span>
           </a>
@@ -86,7 +86,7 @@
 
             <!-- Imagen -->
             <div class="h-52 sm:h-56 relative overflow-hidden">
-              <img th:src="${dish.imageUrl}"
+              <img th:src="${dish.imagenUrl}"
                    alt="Plato"
                    class="w-full h-full object-cover transform transition-transform group-hover:scale-110" />
 
@@ -109,14 +109,14 @@
                          -webkit-box-orient:vertical;
                          overflow:hidden;
                          min-height:72px;"
-                  th:text="${dish.name}">
+                  th:text="${dish.nombre}">
                 Nombre
               </h3>
 
               <!-- Precio -->
               <p class="text-lg sm:text-xl font-black italic mt-2"
                  style="color:#8C0E03">
-                $<span th:text="${dish.price != null ? #numbers.formatInteger(dish.price, 0, 'POINT') : '0'}"></span> COP
+                $<span th:text="${dish.precio != null ? #numbers.formatDecimal(dish.precio, 1, 0) : '0'}"></span> COP
               </p>
 
               <!-- Descripción (máx 3 líneas, sin plugin) -->
@@ -127,7 +127,7 @@
                          -webkit-box-orient:vertical;
                          overflow:hidden;
                          min-height:72px;"
-                 th:text="${dish.description}">
+                 th:text="${dish.descripcion}">
                 Descripción
               </p>
 
