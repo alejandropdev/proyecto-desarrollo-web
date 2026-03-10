@@ -76,7 +76,7 @@ public class AdminPlatoController {
                     model.addAttribute("plato", p);
                     return "admin/platos/detail";
                 })
-                .orElse("admin/platos/notfound");
+                .orElse("redirect:/errors/notfound?ref=plato-admin");
     }
 
     @GetMapping("/{id}/editar")

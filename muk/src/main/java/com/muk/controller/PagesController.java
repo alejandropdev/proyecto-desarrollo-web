@@ -63,7 +63,7 @@ public class PagesController {
                     model.addAttribute("producto", p);
                     return "comida";
                 })
-                .orElse("comida-notfound");
+                .orElse("redirect:/errors/notfound?ref=comida");
     }
 
     @GetMapping("/desafios")

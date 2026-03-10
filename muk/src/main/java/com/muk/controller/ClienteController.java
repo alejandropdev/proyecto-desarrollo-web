@@ -66,7 +66,7 @@ public class ClienteController {
                     model.addAttribute("cliente", c);
                     return "clientes/detail";
                 })
-                .orElse("clientes/notfound");
+                .orElse("redirect:/errors/notfound?ref=cliente");
     }
 
     /**

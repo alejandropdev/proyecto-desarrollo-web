@@ -99,6 +99,6 @@ public class ProductoController {
                     model.addAttribute("producto", p);
                     return "productos/detail";
                 })
-                .orElse("productos/notfound");
+                .orElse("redirect:/errors/notfound?ref=producto");
     }
 }
