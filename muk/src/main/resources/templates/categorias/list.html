@@ -28,7 +28,7 @@
         <tbody>
           <tr th:each="cat, i : ${categories}" class="border-t border-stone-200 hover:bg-amber-50/50">
             <td class="py-3 px-4" th:text="${i.count}">1</td>
-            <td class="py-3 px-4 font-medium" th:text="${cat}">Categoría</td>
+            <td class="py-3 px-4 font-medium" th:text="${cat.nombre}">Categoría</td>
           </tr>
         </tbody>
       </table>

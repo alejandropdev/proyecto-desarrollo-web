@@ -60,7 +60,7 @@
 
           <!-- Categorías -->
           <a th:each="cat : ${categories}"
-             th:href="@{/menu(category=${cat}, q=${searchQuery})}"
+             th:href="@{/menu(category=${cat.nombre}, q=${searchQuery})}"
              class="inline-block">
             <span
               class="px-4 py-2 text-xs sm:text-sm font-black rounded-full uppercase tracking-wider transition-all"
@@ -90,10 +90,10 @@
                    alt="Plato"
                    class="w-full h-full object-cover transform transition-transform group-hover:scale-110" />
 
-              <div th:if="${dish.category != null && !#strings.isEmpty(dish.category)}"
+              <div th:if="${dish.categoria != null}"
                    class="absolute top-4 left-4 px-3 py-1.5 text-xs font-black rounded-full text-white"
                    style="background-color:#8C0E03"
-                   th:text="${dish.category}">
+                   th:text="${dish.categoria.nombre}">
                 Categoría
               </div>
             </div>

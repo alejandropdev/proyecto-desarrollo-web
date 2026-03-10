@@ -24,8 +24,8 @@
       <div class="rounded-3xl overflow-hidden shadow-2xl" style="background-color:#F2B705">
         <div class="relative h-80 sm:h-[420px] lg:h-[520px]">
           <img th:src="${producto.imageUrl}" alt="Plato" class="w-full h-full object-cover" />
-          <div class="absolute top-6 left-6" th:if="${producto.category != null && !#strings.isEmpty(producto.category)}">
-            <span class="px-4 py-2 text-xs font-black rounded-full text-white uppercase tracking-widest" style="background-color:#8C0E03" th:text="${producto.category}">Categoría</span>
+          <div class="absolute top-6 left-6" th:if="${producto.categoria != null}">
+            <span class="px-4 py-2 text-xs font-black rounded-full text-white uppercase tracking-widest" style="background-color:#8C0E03" th:text="${producto.categoria.nombre}">Categoría</span>
           </div>
         </div>
       </div>

@@ -35,12 +35,11 @@
                class="w-full border border-stone-300 rounded px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
       </div>
       <div>
-        <label for="category" class="block text-sm font-medium text-stone-700 mb-1">Categoría</label>
-        <input type="text" id="category" th:field="*{category}" list="category-options"
-               class="w-full border border-stone-300 rounded px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
-        <datalist id="category-options">
-          <option th:each="cat : ${categories}" th:value="${cat}"></option>
-        </datalist>
+        <label for="categoria" class="block text-sm font-medium text-stone-700 mb-1">Categoría</label>
+        <select id="categoria" th:field="*{categoria.id}" class="w-full border border-stone-300 rounded px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+          <option value="" th:selected="${producto.categoria == null || producto.categoria.id == null}">Selecciona una categoría</option>
+          <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
+        </select>
       </div>
       <div class="flex items-center gap-2">
         <input type="checkbox" id="available" th:field="*{available}" class="rounded border-stone-300 text-amber-600 focus:ring-amber-500">

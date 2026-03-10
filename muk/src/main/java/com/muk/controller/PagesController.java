@@ -1,5 +1,6 @@
 package com.muk.controller;
 
+import com.muk.entities.Categoria;
 import com.muk.entities.Producto;
 import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
@@ -42,7 +43,7 @@ public class PagesController {
         } else {
             foods = productoService.findAll();
         }
-        List<String> categories = categoriaService.findAll();
+        List<Categoria> categories = categoriaService.findAll();
         model.addAttribute("foods", foods);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", category);
