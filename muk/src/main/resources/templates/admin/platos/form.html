@@ -27,8 +27,8 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label for="name" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Nombre</label>
-            <input id="name" type="text" th:field="*{name}" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
+            <label for="nombre" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Nombre</label>
+            <input id="nombre" type="text" th:field="*{nombre}" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
           </div>
 
       <div>
@@ -59,31 +59,22 @@
     </div>
   </div>
 
-</div>
           <div>
-            <label for="price" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Precio (COP)</label>
-            <input id="price" type="number" th:field="*{price}" min="0" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
+            <label for="precio" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Precio (COP)</label>
+            <input id="precio" type="number" th:field="*{precio}" min="0" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
             <div class="text-xs font-bold mt-2" style="color:#34100B;opacity:0.7">Sin puntos ni comas. Ej: 35000</div>
           </div>
 
           <div>
-            <label for="imageUrl" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">URL de imagen</label>
-            <input id="imageUrl" type="url" th:field="*{imageUrl}" placeholder="https://..." class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
+            <label for="imagenUrl" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">URL de imagen</label>
+            <input id="imagenUrl" type="url" th:field="*{imagenUrl}" placeholder="https://..." class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
             <div class="text-xs font-bold mt-2" style="color:#34100B;opacity:0.7">Tip: mejor cuadrada u horizontal.</div>
           </div>
         </div>
 
         <div>
-          <label for="description" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Descripción</label>
-          <textarea id="description" th:field="*{description}" rows="4" placeholder="Describe el plato en una frase potente..." class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705"></textarea>
-        </div>
-
-        <div>
-          <label class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Disponibilidad</label>
-          <select th:field="*{available}" class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705">
-            <option th:value="true">Disponible</option>
-            <option th:value="false">No disponible</option>
-          </select>
+          <label for="descripcion" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Descripción</label>
+          <textarea id="descripcion" th:field="*{descripcion}" rows="4" placeholder="Describe el plato en una frase potente..." class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705"></textarea>
         </div>
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4">

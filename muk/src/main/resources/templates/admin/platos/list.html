@@ -42,8 +42,8 @@
             <tr th:each="p : ${platos}" class="border-t" style="border-color:#F2B70533">
               <td class="px-6 py-4 font-bold" style="color:#34100B" th:text="${p.id}">1</td>
               <td class="px-6 py-4">
-                <div class="font-black uppercase" style="color:#34100B" th:text="${p.name}">Nombre</div>
-                <div class="text-xs font-bold" style="color:#8C0E03;opacity:0.75" th:text="${p.description}">Descripción</div>
+                <div class="font-black uppercase" style="color:#34100B" th:text="${p.nombre}">Nombre</div>
+                <div class="text-xs font-bold" style="color:#8C0E03;opacity:0.75" th:text="${p.descripcion}">Descripción</div>
               </td>
               <td class="px-6 py-4 font-bold" style="color:#8C0E03" th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoria</td>
               <td class="px-6 py-4 font-black" style="color:#8C0E03" th:text="${p.price}">$0</td>
