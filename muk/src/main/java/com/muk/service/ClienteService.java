@@ -10,6 +10,12 @@ import java.util.Optional;
  */
 public interface ClienteService {
 
+    record LoginResult(Cliente cliente, String errorMessage) {
+        public boolean success() {
+            return cliente != null;
+        }
+    }
+
     List<Cliente> findAll();
 
     Optional<Cliente> findById(Long id);
@@ -27,6 +33,11 @@ public interface ClienteService {
      * Busca un cliente cuyo email y contraseña coinciden (texto plano).
      */
     Optional<Cliente> findByEmailAndPassword(String email, String password);
+
+    /**
+     * Valida login en capa de servicio (credenciales en texto plano).
+     */
+    LoginResult login(String email, String password);
 
     /**
      * Registra un nuevo cliente.

@@ -51,6 +51,28 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    public LoginResult login(String email, String password) {
+        if (email == null || email.isBlank()) {
+            return new LoginResult(null, "Email no registrado.");
+        }
+        if (password == null || password.isBlank()) {
+            return new LoginResult(null, "Credenciales inválidas.");
+        }
+
+        Optional<Cliente> byEmail = repository.findByEmail(email.trim());
+        if (byEmail.isEmpty()) {
+            return new LoginResult(null, "Email no registrado.");
+        }
+
+        Cliente cliente = byEmail.get();
+        if (!password.equals(cliente.getPassword())) {
+            return new LoginResult(null, "Credenciales inválidas.");
+        }
+
+        return new LoginResult(cliente, null);
+    }
+
+    @Override
     public Cliente registro(Cliente cliente) {
         if (cliente == null) return null;
         return repository.save(cliente);

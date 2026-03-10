@@ -83,21 +83,15 @@ public class ClienteController {
     @PostMapping("/login")
     public String login(@RequestParam String email, @RequestParam String password,
                         RedirectAttributes redirectAttributes, Model model) {
-        return clienteService.findByEmail(email)
-                .map(cliente -> {
-                    // ahora validamos también la contraseña en texto plano
-                    if (password != null && password.equals(cliente.getPassword())) {
-                        redirectAttributes.addFlashAttribute("message", "¡Bienvenido " + cliente.getNombre() + "!");
-                        return "redirect:/clientes/perfil?email=" + java.net.URLEncoder.encode(cliente.getEmail(), java.nio.charset.StandardCharsets.UTF_8);
-                    } else {
-                        model.addAttribute("error", "Credenciales inválidas.");
-                        return "login";
-                    }
-                })
-                .orElseGet(() -> {
-                    model.addAttribute("error", "Email no registrado.");
-                    return "login";
-                });
+        ClienteService.LoginResult result = clienteService.login(email, password);
+        if (result.success()) {
+            Cliente cliente = result.cliente();
+            redirectAttributes.addFlashAttribute("message", "¡Bienvenido " + cliente.getNombre() + "!");
+            return "redirect:/clientes/perfil?email=" + java.net.URLEncoder.encode(cliente.getEmail(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+
+        model.addAttribute("error", result.errorMessage());
+        return "login";
     }
 
     /**
