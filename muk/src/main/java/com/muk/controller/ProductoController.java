@@ -1,5 +1,6 @@
 package com.muk.controller;
 
+import com.muk.entities.Categoria;
 import com.muk.entities.Producto;
 import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
@@ -11,9 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-/**
- * Controlador CRUD de productos. Rutas base /productos.
- */
 @Controller
 @RequestMapping("/productos")
 public class ProductoController {
@@ -29,6 +27,7 @@ public class ProductoController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String q,
             Model model) {
+
         List<Producto> products;
         if (q != null && !q.isBlank()) {
             products = productoService.searchByName(q.trim());
@@ -37,7 +36,12 @@ public class ProductoController {
         } else {
             products = productoService.findAll();
         }
-        List<String> categories = categoriaService.findAll();
+
+        List<String> categories = categoriaService.findAll()
+                .stream()
+                .map(Categoria::getNombre)
+                .toList();
+
         model.addAttribute("productos", products);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", category);
@@ -47,24 +51,35 @@ public class ProductoController {
 
     @GetMapping("/new")
     public String newForm(Model model) {
+        List<String> categories = categoriaService.findAll()
+                .stream()
+                .map(Categoria::getNombre)
+                .toList();
+
         model.addAttribute("producto", new Producto());
-        model.addAttribute("categories", categoriaService.findAll());
+        model.addAttribute("categories", categories);
         return "productos/form";
     }
 
     @PostMapping
     public String save(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {
+        boolean isNew = (producto.getId() == null);
         productoService.save(producto);
-        redirectAttributes.addFlashAttribute("message", producto.getId() == null ? "Producto creado." : "Producto actualizado.");
+        redirectAttributes.addFlashAttribute("message", isNew ? "Producto creado." : "Producto actualizado.");
         return "redirect:/productos";
     }
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
+        List<String> categories = categoriaService.findAll()
+                .stream()
+                .map(Categoria::getNombre)
+                .toList();
+
         return productoService.findById(id)
                 .map(p -> {
                     model.addAttribute("producto", p);
-                    model.addAttribute("categories", categoriaService.findAll());
+                    model.addAttribute("categories", categories);
                     return "productos/form";
                 })
                 .orElse("redirect:/productos");

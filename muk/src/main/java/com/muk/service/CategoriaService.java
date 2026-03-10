@@ -1,13 +1,11 @@
 package com.muk.service;
 
+import com.muk.entities.Categoria;
 import java.util.List;
 
-/**
- * Servicio para administrar categorías.
- */
 public interface CategoriaService {
 
-    List<String> findAll();
+    List<Categoria> findAll();
 
     void addIfMissing(String category);
 }

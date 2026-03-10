@@ -37,17 +37,14 @@
             </label>
 
             <div class="relative">
-              <select id="categoria" th:field="*{categoria}"
+              <select id="categoria" th:field="*{categoria.id}"
                       class="w-full appearance-none px-5 py-4 pr-12 rounded-2xl font-bold border-4 focus:outline-none focus:ring-0"
                       style="border-color:#F2B705; color:#34100B; background-color:white;">
-                <option value="" disabled
-                        th:selected="*{categoria} == null or *{categoria} == ''">
-                  Selecciona una categoría
-                </option>
+                <option value="" disabled>Selecciona una categoría</option>
 
                 <option th:each="cat : ${categories}"
-                        th:value="${cat}"
-                        th:text="${cat}">
+                        th:value="${cat.id}"
+                        th:text="${cat.nombre}">
                 </option>
               </select>
 

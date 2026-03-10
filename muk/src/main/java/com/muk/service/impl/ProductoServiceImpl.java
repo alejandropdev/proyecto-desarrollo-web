@@ -37,10 +37,10 @@ public class ProductoServiceImpl implements ProductoService {
         productoRepository.deleteById(id);
     }
 
-    @Override
-    public List<Producto> findByCategory(String categoria) {
-        return productoRepository.findByCategoriaIgnoreCase(categoria);
-    }
+  @Override
+public List<Producto> findByCategory(String categoria) {
+    return productoRepository.findByCategoria_NombreIgnoreCase(categoria);
+}
 
     @Override
     public List<Producto> searchByName(String q) {
