@@ -10,6 +10,27 @@ import java.util.Optional;
  */
 public interface ClienteService {
 
+    record LoginResult(Cliente cliente, String errorMessage) {
+        public boolean success() {
+            return cliente != null;
+        }
+    }
+
+    record RegistroResult(Cliente cliente, String errorMessage) {
+        public boolean success() {
+            return cliente != null;
+        }
+    }
+
+    record PerfilResult(Cliente cliente, String errorMessage) {
+        public boolean success() {
+            return cliente != null;
+        }
+    }
+
+    record ActionResult(boolean success, String errorMessage) {
+    }
+
     List<Cliente> findAll();
 
     Optional<Cliente> findById(Long id);
@@ -29,7 +50,32 @@ public interface ClienteService {
     Optional<Cliente> findByEmailAndPassword(String email, String password);
 
     /**
+     * Valida login en capa de servicio (credenciales en texto plano).
+     */
+    LoginResult login(String email, String password);
+
+    /**
      * Registra un nuevo cliente.
      */
     Cliente registro(Cliente cliente);
+
+    /**
+     * Registra cliente con validaciones de negocio.
+     */
+    RegistroResult registrarConValidacion(Cliente cliente);
+
+    /**
+     * Obtiene perfil por email con validaciones de acceso.
+     */
+    PerfilResult obtenerPerfilPorEmail(String email, String missingEmailMessage);
+
+    /**
+     * Actualiza perfil con validaciones de negocio.
+     */
+    ActionResult actualizarPerfil(Cliente cliente);
+
+    /**
+     * Elimina perfil por email con validaciones de acceso.
+     */
+    ActionResult eliminarPerfilPorEmail(String email, String missingEmailMessage);
 }

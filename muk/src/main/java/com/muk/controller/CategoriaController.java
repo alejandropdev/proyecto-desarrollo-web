@@ -13,9 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-/**
- * Controlador MVC para listar y crear categorías.
- */
 @Controller
 @RequestMapping("/categorias")
 public class CategoriaController {
@@ -25,7 +22,11 @@ public class CategoriaController {
 
     @GetMapping
     public String list(Model model) {
-        List<Categoria> categories = categoriaService.findAll();
+        List<String> categories = categoriaService.findAll()
+                .stream()
+                .map(Categoria::getNombre)
+                .toList();
+
         model.addAttribute("categories", categories);
         model.addAttribute("currentPage", "categorias");
         return "categorias/list";

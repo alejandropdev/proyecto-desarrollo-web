@@ -13,14 +13,14 @@ public class Producto {
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id")
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
     @Column(nullable = false)
     private Double precio;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "imagen_url", nullable = false, length = 255)
     private String imagenUrl;
 
     @Column(nullable = false, length = 500)

@@ -12,9 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-/**
- * Módulo Administrador: CRUD de Platos.
- * */
 @Controller
 @RequestMapping("/admin/platos")
 public class AdminPlatoController {
@@ -40,7 +37,10 @@ public class AdminPlatoController {
             platos = productoService.findAll();
         }
 
-        List<Categoria> categories = categoriaService.findAll();
+        List<String> categories = categoriaService.findAll()
+                .stream()
+                .map(Categoria::getNombre)
+                .toList();
 
         model.addAttribute("platos", platos);
         model.addAttribute("categories", categories);
@@ -51,17 +51,15 @@ public class AdminPlatoController {
     }
 
     @GetMapping("/nuevo")
-public String newForm(Model model) {
-    loadCategories(model);
-    model.addAttribute("plato", new Producto());
-    return "admin/platos/form";
-}
+    public String newForm(Model model) {
+        Producto plato = new Producto();
+        plato.setCategoria(new Categoria()); // importante
 
-    /**
-     * Un solo endpoint para Create/Update.
-     * - Create: plato.id == null
-     * - Update: plato.id != null
-     */
+        loadCategories(model);
+        model.addAttribute("plato", plato);
+        return "admin/platos/form";
+    }
+
     @PostMapping("/guardar")
     public String save(@ModelAttribute("plato") Producto plato, RedirectAttributes redirectAttributes) {
         if (plato.getCategoria() != null && plato.getCategoria().getId() == null) {
@@ -81,27 +79,28 @@ public String newForm(Model model) {
                     model.addAttribute("plato", p);
                     return "admin/platos/detail";
                 })
-                .orElse("admin/platos/notfound");
+                .orElse("redirect:/errors/notfound?ref=plato-admin");
     }
 
-   @GetMapping("/{id}/editar")
-public String editForm(@PathVariable Long id, Model model) {
-    loadCategories(model);
-    return productoService.findById(id)
-            .map(p -> {
-                model.addAttribute("plato", p);
-                return "admin/platos/form";
-            })
-            .orElse("redirect:/admin/platos");
-}
-@PostMapping("/{id}/eliminar")
-public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-    productoService.delete(id);
-    redirectAttributes.addFlashAttribute("message", "Plato eliminado.");
-    return "redirect:/admin/platos";
-}
- private void loadCategories(Model model) {
-    List<Categoria> categories = categoriaService.findAll();
-    model.addAttribute("categories", categories);
-}
+    @GetMapping("/{id}/editar")
+    public String editForm(@PathVariable Long id, Model model) {
+        loadCategories(model);
+        return productoService.findById(id)
+                .map(p -> {
+                    model.addAttribute("plato", p);
+                    return "admin/platos/form";
+                })
+                .orElse("redirect:/admin/platos");
+    }
+
+    @PostMapping("/{id}/eliminar")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        productoService.delete(id);
+        redirectAttributes.addFlashAttribute("message", "Plato eliminado.");
+        return "redirect:/admin/platos";
+    }
+
+    private void loadCategories(Model model) {
+        model.addAttribute("categories", categoriaService.findAll()); // lista de Categoria, no String
+    }
 }

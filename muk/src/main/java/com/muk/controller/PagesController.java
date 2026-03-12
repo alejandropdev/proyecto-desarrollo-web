@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-/**
- * Serves the original site pages: landing, menu, comida detail, desafios, ubicacion, login, registro.
- */
 @Controller
 public class PagesController {
 
@@ -35,6 +32,7 @@ public class PagesController {
             Model model,
             @org.springframework.web.bind.annotation.RequestParam(required = false) String category,
             @org.springframework.web.bind.annotation.RequestParam(required = false) String q) {
+
         List<Producto> foods;
         if (q != null && !q.isBlank()) {
             foods = productoService.searchByName(q.trim());
@@ -43,7 +41,12 @@ public class PagesController {
         } else {
             foods = productoService.findAll();
         }
-        List<Categoria> categories = categoriaService.findAll();
+
+        List<String> categories = categoriaService.findAll()
+                .stream()
+                .map(Categoria::getNombre)
+                .toList();
+
         model.addAttribute("foods", foods);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", category);
@@ -60,7 +63,7 @@ public class PagesController {
                     model.addAttribute("producto", p);
                     return "comida";
                 })
-                .orElse("comida-notfound");
+                .orElse("redirect:/errors/notfound?ref=comida");
     }
 
     @GetMapping("/desafios")

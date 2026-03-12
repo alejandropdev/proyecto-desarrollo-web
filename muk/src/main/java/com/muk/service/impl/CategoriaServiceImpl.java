@@ -27,24 +27,20 @@ public class CategoriaServiceImpl implements CategoriaService {
         return repository.findById(id);
     }
 
-    @Override
-    public Optional<Categoria> findByNombre(String nombre) {
-        if (nombre == null || nombre.isBlank()) {
-            return Optional.empty();
-        }
-        return repository.findByNombreIgnoreCase(nombre.trim());
-    }
+  @Override
+public List<Categoria> findAll() {
+    return repository.findAll();
+}
 
-    @Override
-    public void addIfMissing(String nombre) {
-        if (nombre == null || nombre.isBlank()) {
-            return;
-        }
-        String normalized = nombre.trim();
-        if (repository.findByNombreIgnoreCase(normalized).isEmpty()) {
-            Categoria c = new Categoria();
-            c.setNombre(normalized);
-            repository.save(c);
-        }
+@Override
+public void addIfMissing(String category) {
+
+    if(repository.findByNombreIgnoreCase(category).isEmpty()) {
+
+        Categoria nueva = new Categoria();
+        nueva.setNombre(category);
+
+        repository.save(nueva);
     }
+}
 }

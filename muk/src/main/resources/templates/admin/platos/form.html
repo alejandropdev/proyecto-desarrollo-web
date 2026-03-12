@@ -31,33 +31,30 @@
             <input id="nombre" type="text" th:field="*{nombre}" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
           </div>
 
-      <div>
-  <label for="categoria" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">
-    Categoría
-  </label>
+          <div>
+            <label for="categoria" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">
+              Categoría
+            </label>
 
-  <div class="relative">
-    <select id="categoria" th:field="*{categoria.id}"
-            class="w-full appearance-none px-5 py-4 pr-12 rounded-2xl font-bold border-4 focus:outline-none focus:ring-0"
-            style="border-color:#F2B705; color:#34100B; background-color:white;">
-      <option value="" disabled
-              th:selected="*{categoria} == null or *{categoria.id} == null">
-        Selecciona una categoría
-      </option>
+            <div class="relative">
+              <select id="categoria" th:field="*{categoria.id}"
+                      class="w-full appearance-none px-5 py-4 pr-12 rounded-2xl font-bold border-4 focus:outline-none focus:ring-0"
+                      style="border-color:#F2B705; color:#34100B; background-color:white;">
+                <option value="" disabled>Selecciona una categoría</option>
 
-      <option th:each="cat : ${categories}"
-              th:value="${cat.id}"
-              th:text="${cat.nombre}">
-      </option>
-    </select>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.nombre}">
+                </option>
+              </select>
 
-    
-    <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center">
-      <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="color:#8C0E03;">
-        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
-      </svg>
-    </div>
-  </div>
+              <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center">
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="color:#8C0E03;">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            </div>
+          </div>
 
           <div>
             <label for="precio" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Precio (COP)</label>
