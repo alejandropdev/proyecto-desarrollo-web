@@ -62,6 +62,9 @@ public class AdminPlatoController {
 
     @PostMapping("/guardar")
     public String save(@ModelAttribute("plato") Producto plato, RedirectAttributes redirectAttributes) {
+        if (plato.getCategoria() != null && plato.getCategoria().getId() == null) {
+            plato.setCategoria(null);
+        }
         boolean creating = (plato.getId() == null);
         productoService.save(plato);
         redirectAttributes.addFlashAttribute("message", creating ? "Plato creado." : "Plato actualizado.");

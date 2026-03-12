@@ -27,6 +27,7 @@ public class Producto {
     private String descripcion;
 
     public Producto() {
+        this.categoria = new Categoria();
     }
 
     public Producto(Long id, String nombre, Categoria categoria, Double precio, String imagenUrl, String descripcion) {
