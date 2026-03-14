@@ -22,17 +22,11 @@ public class CategoriaServiceImpl implements CategoriaService {
         return repository.findAllByOrderByNombreAsc();
     }
 
-    @Override
     public Optional<Categoria> findById(Long id) {
         return repository.findById(id);
     }
 
-  @Override
-public List<Categoria> findAll() {
-    return repository.findAll();
-}
-
-@Override
+    @Override
 public void addIfMissing(String category) {
 
     if(repository.findByNombreIgnoreCase(category).isEmpty()) {

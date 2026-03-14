@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/categorias")
 public class CategoriaController {
@@ -22,12 +20,7 @@ public class CategoriaController {
 
     @GetMapping
     public String list(Model model) {
-        List<String> categories = categoriaService.findAll()
-                .stream()
-                .map(Categoria::getNombre)
-                .toList();
-
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categoriaService.findAll());
         model.addAttribute("currentPage", "categorias");
         return "categorias/list";
     }

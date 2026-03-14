@@ -37,13 +37,8 @@ public class AdminPlatoController {
             platos = productoService.findAll();
         }
 
-        List<String> categories = categoriaService.findAll()
-                .stream()
-                .map(Categoria::getNombre)
-                .toList();
-
         model.addAttribute("platos", platos);
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categoriaService.findAll());
         model.addAttribute("selectedCategory", category);
         model.addAttribute("searchQuery", q);
         model.addAttribute("currentPage", "admin-platos");

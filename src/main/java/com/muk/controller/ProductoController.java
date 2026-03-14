@@ -37,10 +37,7 @@ public class ProductoController {
             products = productoService.findAll();
         }
 
-        List<String> categories = categoriaService.findAll()
-                .stream()
-                .map(Categoria::getNombre)
-                .toList();
+        List<Categoria> categories = categoriaService.findAll();
 
         model.addAttribute("productos", products);
         model.addAttribute("categories", categories);
@@ -51,13 +48,8 @@ public class ProductoController {
 
     @GetMapping("/new")
     public String newForm(Model model) {
-        List<String> categories = categoriaService.findAll()
-                .stream()
-                .map(Categoria::getNombre)
-                .toList();
-
         model.addAttribute("producto", new Producto());
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categoriaService.findAll());
         return "productos/form";
     }
 
@@ -71,15 +63,10 @@ public class ProductoController {
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
-        List<String> categories = categoriaService.findAll()
-                .stream()
-                .map(Categoria::getNombre)
-                .toList();
-
         return productoService.findById(id)
                 .map(p -> {
                     model.addAttribute("producto", p);
-                    model.addAttribute("categories", categories);
+                    model.addAttribute("categories", categoriaService.findAll());
                     return "productos/form";
                 })
                 .orElse("redirect:/productos");
