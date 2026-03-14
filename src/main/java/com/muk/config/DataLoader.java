@@ -1,8 +1,10 @@
 package com.muk.config;
 
+import com.muk.entities.Adicional;
 import com.muk.entities.Categoria;
 import com.muk.entities.Cliente;
 import com.muk.entities.Producto;
+import com.muk.repository.AdicionalRepository;
 import com.muk.repository.CategoriaRepository;
 import com.muk.repository.ClienteRepository;
 import com.muk.repository.ProductoRepository;
@@ -22,11 +24,13 @@ import java.util.stream.Collectors;
 public class DataLoader implements CommandLineRunner {
 
     private final CategoriaRepository categoriaRepository;
+    private final AdicionalRepository adicionalRepository;
     private final ProductoRepository productoRepository;
     private final ClienteRepository clienteRepository;
 
-    public DataLoader(CategoriaRepository categoriaRepository, ProductoRepository productoRepository, ClienteRepository clienteRepository) {
+    public DataLoader(CategoriaRepository categoriaRepository, AdicionalRepository adicionalRepository, ProductoRepository productoRepository, ClienteRepository clienteRepository) {
         this.categoriaRepository = categoriaRepository;
+        this.adicionalRepository = adicionalRepository;
         this.productoRepository = productoRepository;
         this.clienteRepository = clienteRepository;
     }
@@ -35,6 +39,9 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) {
         if (categoriaRepository.count() == 0) {
             cargarCategorias();
+        }
+        if (adicionalRepository.count() == 0) {
+            cargarAdiciones();
         }
         if (productoRepository.count() == 0) {
             cargarProductos();
@@ -53,6 +60,47 @@ public class DataLoader implements CommandLineRunner {
             new Categoria(null, "DRINKS")
         );
         categoriaRepository.saveAll(categorias);
+    }
+
+    private void cargarAdiciones() {
+        Map<String, Categoria> categoriasPorNombre = categoriaRepository.findAll().stream()
+                .collect(Collectors.toMap(Categoria::getNombre, c -> c));
+
+        Categoria bbq = categoriasPorNombre.get("BBQ");
+        Categoria burgers = categoriasPorNombre.get("BURGERS");
+        Categoria chicken = categoriasPorNombre.get("CHICKEN");
+        Categoria desserts = categoriasPorNombre.get("DESSERTS");
+        Categoria drinks = categoriasPorNombre.get("DRINKS");
+
+        List<Adicional> adiciones = List.of(
+            new Adicional(null, "Salsa BBQ extra", bbq),
+            new Adicional(null, "Papas fritas", bbq),
+            new Adicional(null, "Ensalada", bbq),
+            new Adicional(null, "Pan de ajo", bbq),
+            new Adicional(null, "Coleslaw", bbq),
+            new Adicional(null, "Papas fritas", burgers),
+            new Adicional(null, "Pepinillos", burgers),
+            new Adicional(null, "Queso extra", burgers),
+            new Adicional(null, "Bacon", burgers),
+            new Adicional(null, "Huevo", burgers),
+            new Adicional(null, "Papas fritas", chicken),
+            new Adicional(null, "Salsa ranch", chicken),
+            new Adicional(null, "Aros de cebolla", chicken),
+            new Adicional(null, "Ensalada", chicken),
+            new Adicional(null, "Dip de queso", chicken),
+            new Adicional(null, "Helado extra", desserts),
+            new Adicional(null, "Crema batida", desserts),
+            new Adicional(null, "Salsa de chocolate", desserts),
+            new Adicional(null, "Frutos rojos", desserts),
+            new Adicional(null, "Nuez", desserts),
+            new Adicional(null, "Hielo extra", drinks),
+            new Adicional(null, "Limón", drinks),
+            new Adicional(null, "Crema", drinks),
+            new Adicional(null, "Doble shot", drinks),
+            new Adicional(null, "Vaso grande", drinks)
+        );
+
+        adicionalRepository.saveAll(adiciones);
     }
 
     private void cargarProductos() {
