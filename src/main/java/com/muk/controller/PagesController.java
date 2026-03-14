@@ -42,10 +42,7 @@ public class PagesController {
             foods = productoService.findAll();
         }
 
-        List<String> categories = categoriaService.findAll()
-                .stream()
-                .map(Categoria::getNombre)
-                .toList();
+        List<Categoria> categories = categoriaService.findAll();
 
         model.addAttribute("foods", foods);
         model.addAttribute("categories", categories);
