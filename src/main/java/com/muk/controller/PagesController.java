@@ -1,7 +1,9 @@
 package com.muk.controller;
 
+import com.muk.entities.Adicional;
 import com.muk.entities.Categoria;
 import com.muk.entities.Producto;
+import com.muk.service.AdicionalService;
 import com.muk.service.CategoriaService;
 import com.muk.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -20,6 +23,9 @@ public class PagesController {
 
     @Autowired
     private CategoriaService categoriaService;
+
+    @Autowired
+    private AdicionalService adicionalService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -43,10 +49,14 @@ public class PagesController {
         }
 
         List<Categoria> categories = categoriaService.findAll();
+        List<Adicional> adiciones = (category != null && !category.isBlank())
+                ? adicionalService.findByCategoriaNombre(category.trim())
+                : Collections.emptyList();
 
         model.addAttribute("foods", foods);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", category);
+        model.addAttribute("adiciones", adiciones);
         model.addAttribute("searchQuery", q);
         model.addAttribute("currentPage", "menu");
         return "menu";

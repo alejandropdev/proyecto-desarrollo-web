@@ -17,6 +17,9 @@ public class Categoria {
     @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 
+    @OneToMany(mappedBy = "categoria")
+    private List<Adicional> adiciones;
+
     public Categoria() {
     }
 
@@ -47,5 +50,13 @@ public class Categoria {
 
     public void setProductos(List<Producto> productos) {
         this.productos = productos;
+    }
+
+    public List<Adicional> getAdiciones() {
+        return adiciones;
+    }
+
+    public void setAdiciones(List<Adicional> adiciones) {
+        this.adiciones = adiciones;
     }
 }
