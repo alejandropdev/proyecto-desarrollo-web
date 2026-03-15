@@ -47,7 +47,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Optional<Cliente> findByEmailAndPassword(String email, String password) {
-        return repository.findByEmailAndPassword(email, password);
+        return repository.findByEmailAndContrasenaHash(email, password);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         Cliente cliente = byEmail.get();
-        if (!password.equals(cliente.getPassword())) {
+        if (!password.equals(cliente.getContrasenaHash())) {
             return new LoginResult(null, "Credenciales inválidas.");
         }
 
@@ -86,7 +86,7 @@ public class ClienteServiceImpl implements ClienteService {
         if (cliente.getEmail() == null || cliente.getEmail().isEmpty()) {
             return new RegistroResult(null, "El email es requerido.");
         }
-        if (cliente.getPassword() == null || cliente.getPassword().isEmpty()) {
+        if (cliente.getContrasenaHash() == null || cliente.getContrasenaHash().isEmpty()) {
             return new RegistroResult(null, "La contraseña es requerida.");
         }
         if (repository.findByEmail(cliente.getEmail()).isPresent()) {
@@ -113,9 +113,9 @@ public class ClienteServiceImpl implements ClienteService {
             return new ActionResult(false, "Datos inválidos.");
         }
 
-        if (cliente.getPassword() == null || cliente.getPassword().isBlank()) {
+        if (cliente.getContrasenaHash() == null || cliente.getContrasenaHash().isBlank()) {
             repository.findById(clienteId).ifPresent(existing ->
-                    cliente.setPassword(existing.getPassword()));
+                    cliente.setContrasenaHash(existing.getContrasenaHash()));
         }
 
         repository.save(cliente);

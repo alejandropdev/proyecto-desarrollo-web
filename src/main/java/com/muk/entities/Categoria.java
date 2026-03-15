@@ -14,6 +14,9 @@ public class Categoria {
     @Column(nullable = false, unique = true, length = 50)
     private String nombre;
 
+    @Column(length = 255)
+    private String description;
+
     @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 
@@ -26,6 +29,13 @@ public class Categoria {
     public Categoria(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
+        this.description = null;
+    }
+
+    public Categoria(Long id, String nombre, String description) {
+        this.id = id;
+        this.nombre = nombre;
+        this.description = description;
     }
 
     public Long getId() {
@@ -42,6 +52,14 @@ public class Categoria {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<Producto> getProductos() {

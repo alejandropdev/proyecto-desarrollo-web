@@ -1,6 +1,7 @@
 package com.muk.entities;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "clientes")
@@ -25,20 +26,26 @@ public class Cliente {
     @Column(nullable = false, length = 150)
     private String direccion;
 
-    @Column(nullable = false, length = 100)
-    private String password;
+    @Column(nullable = false, length = 100, name = "contraseña_hash")
+    private String contrasenaHash;
+
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Carrito carrito;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pedido> pedidos;
 
     public Cliente() {
     }
 
-    public Cliente(Long id, String nombre, String apellido, String email, String telefono, String direccion, String password) {
+    public Cliente(Long id, String nombre, String apellido, String email, String telefono, String direccion, String contrasenaHash) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.telefono = telefono;
         this.direccion = direccion;
-        this.password = password;
+        this.contrasenaHash = contrasenaHash;
     }
 
     public Long getId() {
@@ -89,11 +96,27 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    public String getPassword() {
-        return password;
+    public String getContrasenaHash() {
+        return contrasenaHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setContrasenaHash(String contrasenaHash) {
+        this.contrasenaHash = contrasenaHash;
+    }
+
+    public Carrito getCarrito() {
+        return carrito;
+    }
+
+    public void setCarrito(Carrito carrito) {
+        this.carrito = carrito;
+    }
+
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
     }
 }

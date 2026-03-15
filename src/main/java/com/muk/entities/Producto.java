@@ -1,6 +1,7 @@
 package com.muk.entities;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "productos")
@@ -26,8 +27,20 @@ public class Producto {
     @Column(nullable = false, length = 500)
     private String descripcion;
 
+    @Column(nullable = false)
+    private Boolean activo = true;
+
+    @ManyToMany
+    @JoinTable(
+            name = "producto_adicional",
+            joinColumns = @JoinColumn(name = "producto_id"),
+            inverseJoinColumns = @JoinColumn(name = "adicional_id")
+    )
+    private List<Adicional> adicionalesPermitidos;
+
     public Producto() {
         this.categoria = new Categoria();
+        this.activo = true;
     }
 
     public Producto(Long id, String nombre, Categoria categoria, Double precio, String imagenUrl, String descripcion) {
@@ -37,6 +50,7 @@ public class Producto {
         this.precio = precio;
         this.imagenUrl = imagenUrl;
         this.descripcion = descripcion;
+        this.activo = true;
     }
 
     public Long getId() {
@@ -85,5 +99,21 @@ public class Producto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public List<Adicional> getAdicionalesPermitidos() {
+        return adicionalesPermitidos;
+    }
+
+    public void setAdicionalesPermitidos(List<Adicional> adicionalesPermitidos) {
+        this.adicionalesPermitidos = adicionalesPermitidos;
     }
 }
