@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.muk.entities.Administrador;
+import com.muk.repository.AdministradorRepository;
+
 
 /**
  * Inicializa la base de datos H2 con datos de prueba al arrancar la aplicación.
@@ -27,12 +30,15 @@ public class DataLoader implements CommandLineRunner {
     private final AdicionalRepository adicionalRepository;
     private final ProductoRepository productoRepository;
     private final ClienteRepository clienteRepository;
+    private final AdministradorRepository administradorRepository;
 
-    public DataLoader(CategoriaRepository categoriaRepository, AdicionalRepository adicionalRepository, ProductoRepository productoRepository, ClienteRepository clienteRepository) {
+
+    public DataLoader(CategoriaRepository categoriaRepository, AdicionalRepository adicionalRepository, ProductoRepository productoRepository, ClienteRepository clienteRepository, AdministradorRepository administradorRepository) {
         this.categoriaRepository = categoriaRepository;
         this.adicionalRepository = adicionalRepository;
         this.productoRepository = productoRepository;
         this.clienteRepository = clienteRepository;
+         this.administradorRepository = administradorRepository;
     }
 
     @Override
@@ -49,6 +55,9 @@ public class DataLoader implements CommandLineRunner {
         if (clienteRepository.count() == 0) {
             cargarClientes();
         }
+        if (administradorRepository.count() == 0) {
+        cargarAdministradores();
+    }
     }
 
     private void cargarCategorias() {
@@ -175,4 +184,15 @@ public class DataLoader implements CommandLineRunner {
 
         clienteRepository.saveAll(clientes);
     }
+private void cargarAdministradores() {
+
+    List<Administrador> admins = List.of(
+        new Administrador(null, "admin", "1234"),
+        new Administrador(null, "mukadmin", "admin123")
+    );
+
+    administradorRepository.saveAll(admins);
+}
+
+    
 }

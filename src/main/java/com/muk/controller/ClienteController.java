@@ -106,16 +106,22 @@ public class ClienteController {
     /**
      * POST /registro - Registra un nuevo cliente
      */
-    @PostMapping("/registro")
-    public String registro(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
-        ClienteService.RegistroResult result = clienteService.registrarConValidacion(cliente);
-        if (!result.success()) {
-            redirectAttributes.addFlashAttribute("error", result.errorMessage());
-            return "redirect:/clientes/registro";
-        }
-        redirectAttributes.addFlashAttribute("message", "¡Cuenta creada! Ahora inicia sesión.");
-        return "redirect:/clientes/login";
+@PostMapping("/registro")
+public String registro(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
+    ClienteService.RegistroResult result = clienteService.registrarConValidacion(cliente);
+
+    if (!result.success()) {
+        redirectAttributes.addFlashAttribute("error", result.errorMessage());
+        return "redirect:/clientes/registro";
     }
+
+    redirectAttributes.addFlashAttribute("message", "¡Cuenta creada con éxito!");
+
+    String email = cliente.getEmail() != null ? cliente.getEmail() : "";
+    return "redirect:/clientes/perfil?email=" +
+            java.net.URLEncoder.encode(email, java.nio.charset.StandardCharsets.UTF_8);
+}
+
 
     /**
      * GET /perfil - Muestra la página de perfil del usuario (identificado por email en query).
