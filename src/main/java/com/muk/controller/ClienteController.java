@@ -59,16 +59,6 @@ public class ClienteController {
         return "redirect:/clientes";
     }
 
-    @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, Model model) {
-        return clienteService.findById(id)
-                .map(c -> {
-                    model.addAttribute("cliente", c);
-                    return "clientes/detail";
-                })
-                .orElse("redirect:/errors/notfound?ref=cliente");
-    }
-
     /**
      * GET /login - Muestra formulario de login
      */
@@ -166,15 +156,45 @@ public String registro(@ModelAttribute Cliente cliente, RedirectAttributes redir
      * POST /perfil/editar - Actualiza el perfil del cliente.
      */
     @PostMapping("/perfil/editar")
-    public String perfilEditar(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
+    public String perfilEditar(@ModelAttribute Cliente cliente, 
+                              @RequestParam(required = false) String newPassword,
+                              RedirectAttributes redirectAttributes) {
+        System.out.println("=== POST /perfil/editar ===");
+        System.out.println("Cliente ID: " + cliente.getId());
+        System.out.println("Cliente Email: " + cliente.getEmail());
+        System.out.println("New Password: " + newPassword);
+        
+        // Si no hay ID, obtener el cliente de la base de datos por email
+        if (cliente.getId() == null && cliente.getEmail() != null) {
+            System.out.println("ID es null, buscando por email...");
+            var existingCliente = clienteService.findByEmail(cliente.getEmail());
+            if (existingCliente.isPresent()) {
+                cliente.setId(existingCliente.get().getId());
+                System.out.println("Cliente encontrado! ID: " + cliente.getId());
+                // Si la nueva contraseña está vacía, mantener la anterior
+                if (newPassword == null || newPassword.isBlank()) {
+                    cliente.setContrasenaHash(existingCliente.get().getContrasenaHash());
+                } else {
+                    cliente.setContrasenaHash(newPassword);
+                }
+            } else {
+                System.out.println("Cliente NO encontrado por email");
+            }
+        }
+        
+        System.out.println("Actualizando perfil... ID: " + cliente.getId());
         ClienteService.ActionResult result = clienteService.actualizarPerfil(cliente);
+        System.out.println("Resultado: " + result.success() + " - " + result.errorMessage());
+        
         if (!result.success()) {
+            System.out.println("Error al actualizar: " + result.errorMessage());
             redirectAttributes.addFlashAttribute("error", result.errorMessage());
             return "redirect:/clientes/login";
         }
 
         redirectAttributes.addFlashAttribute("message", "Perfil actualizado.");
         String email = cliente.getEmail() != null ? cliente.getEmail() : "";
+        System.out.println("Redirigiendo a perfil con email: " + email);
         return "redirect:/clientes/perfil?email=" + java.net.URLEncoder.encode(email, java.nio.charset.StandardCharsets.UTF_8);
     }
 
@@ -194,5 +214,15 @@ public String registro(@ModelAttribute Cliente cliente, RedirectAttributes redir
 
         redirectAttributes.addFlashAttribute("message", "Tu cuenta ha sido eliminada.");
         return "redirect:/clientes/login";
+    }
+
+    @GetMapping("/{id}")
+    public String detail(@PathVariable Long id, Model model) {
+        return clienteService.findById(id)
+                .map(c -> {
+                    model.addAttribute("cliente", c);
+                    return "clientes/detail";
+                })
+                .orElse("redirect:/errors/notfound?ref=cliente");
     }
 }
