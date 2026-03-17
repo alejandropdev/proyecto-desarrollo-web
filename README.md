@@ -1,142 +1,148 @@
-# MUK Website — Spring Boot Backend
+## MUK Website – Backend Spring Boot
 
-This module runs the MUK restaurant site using **Spring Boot**.  
-The application serves the static frontend (HTML, CSS, JS) and provides backend functionality through controllers, services, and repositories.
-
-The backend now uses **Spring Data JPA** for database persistence and data management.
+Aplicación web para el restaurante Muk.  
+Se trata de un backend en **Spring Boot 3** que sirve plantillas **Thymeleaf** y recursos estáticos, y expone la lógica de negocio mediante controladores, servicios y repositorios con **Spring Data JPA** sobre base de datos **H2** en tiempo de desarrollo.
 
 ---
 
-## Requirements
+### Requisitos
 
-- Java 17
-- Maven 3.6+
+- **Java 17**
+- **Maven 3.6+**
+
+Opcionalmente:
+
+- Navegador moderno (para acceder a `http://localhost:8080`)
 
 ---
 
-## Run the application
+### Ejecución del proyecto
 
-From the `muk` directory:
+Desde la raíz del proyecto (`muk-website`):
 
 ```bash
 mvn spring-boot:run
 ```
 
-Or build and run the JAR:
+o bien, empaquetando y ejecutando el JAR:
 
 ```bash
 mvn clean package
 java -jar target/muk-website-backend-1.0.0.jar
 ```
 
-Then open the application in your browser:
+Acceso en el navegador:
 
-```
+```text
 http://localhost:8080
 ```
 
 ---
 
-## Project Structure
+### Estructura general
 
-```
+Código Java:
+
+```text
 src/main/java/com/muk
-│
-├── controller      → Handles HTTP requests
-├── entities        → JPA entities (Cliente, Producto)
-├── repository      → Data access layer using Spring Data JPA
-├── service         → Business logic interfaces
-├── service/impl    → Service implementations
-└── web             → Application configuration and main class
+├── MukApplication.java        # Punto de entrada Spring Boot
+├── config/                    # Configuración y carga inicial de datos (DataLoader)
+├── controller/                # Controladores MVC (páginas públicas y panel admin)
+├── entities/                  # Entidades JPA (Cliente, Producto, Categoria, etc.)
+├── repository/                # Repositorios Spring Data JPA
+├── service/                   # Interfaces de servicios
+└── service/impl/              # Implementaciones de servicios
 ```
 
-Resources:
+Recursos:
 
-```
+```text
 src/main/resources
-├── static      → Static frontend files (HTML, CSS, JavaScript)
-├── templates   → Thymeleaf templates
-└── application.properties → Application configuration
+├── templates/                 # Vistas Thymeleaf (públicas, clientes, admin, errores)
+├── static/                    # CSS, JS y otros estáticos compartidos
+└── application.properties     # Configuración de la aplicación (H2, logs, etc.)
 ```
 
 ---
 
-## JPA Implementation
+### Flujo y componentes principales
 
-The application uses **Spring Data JPA** to manage data persistence.
+- **Páginas públicas (`PagesController`)**
+  - `/` muestra la landing principal con hero, concepto Muk, platos destacados y sección de ubicación.
+  - `/menu` lista los productos con:
+    - Búsqueda por nombre (`q`).
+    - Filtro por categoría (`category`).
+    - Carga condicional de adicionales asociados a la categoría seleccionada.
+  - `/comida/{id}` muestra el detalle de un producto individual.
+  - `/desafios`, `/ubicacion`, `/login`, `/registro` muestran las páginas de desafíos, ubicación, login y registro.
 
-### Entities
+- **Clientes (`ClienteController`)**
+  - CRUD básico de clientes en rutas bajo `/clientes`.
+  - `/clientes/login` (GET/POST) inicia sesión buscando por email y contraseña.
+  - `/clientes/registro` (GET/POST) registra nuevos clientes con validaciones de negocio.
+  - `/clientes/perfil` muestra el perfil de cliente a partir del email recibido por query param.
+  - `/clientes/perfil/editar` permite editar datos del perfil.
+  - `/clientes/perfil/eliminar` elimina la cuenta del cliente.
 
-The following classes are mapped as database entities:
+- **Administración de platos (`AdminPlatoController`)**
+  - `/admin/platos` lista los platos con búsqueda y filtro por categoría.
+  - `/admin/platos/nuevo` formulario para crear un plato.
+  - `/admin/platos/guardar` guarda o actualiza un plato.
+  - `/admin/platos/{id}` muestra el detalle de un plato.
+  - `/admin/platos/{id}/editar` formulario de edición.
+  - `/admin/platos/{id}/eliminar` elimina el plato.
 
-- `Producto`
-- `Cliente`
+- **Autenticación administrador (`AdminAuthController`)**
+  - `/admin/login` (GET) muestra formulario de login para administrador.
+  - `/admin/login` (POST) valida credenciales contra `AdministradorRepository` y redirige al listado de platos de administración.
 
-Each entity includes the following JPA annotations:
+- **Capa de servicios**
+  - Servicios como `ProductoService`, `ClienteService`, `CategoriaService`, `AdicionalService` encapsulan la lógica de negocio.
+  - Las implementaciones (`ProductoServiceImpl`, etc.) orquestan validaciones, búsquedas y operaciones de escritura sobre los repositorios.
 
-- `@Entity`
-- `@Table`
-- `@Id`
-- `@GeneratedValue`
-
-Column constraints are defined using:
-
-- `nullable`
-- `unique`
-- `length`
-
-Example:
-
-```java
-@Column(nullable = false, unique = true, length = 100)
-private String nombre;
-```
-
----
-
-## Repositories
-
-Repositories extend `JpaRepository`, which provides built-in CRUD operations:
-
-- `findAll()`
-- `findById()`
-- `save()`
-- `deleteById()`
-
-Custom query methods are also defined, such as:
-
-- find products by category
-- search products by name
-- find clients by email
-- authenticate clients using email and password
+- **Persistencia (JPA/H2)**
+  - Entidades como `Producto`, `Cliente`, `Categoria`, `Pedido`, `Carrito`, `ItemCarrito`, `Administrador`, `Operador`, `Domiciliario`, `Adicional` y `SeleccionAdicional` modelan las tablas.
+  - Repositorios (`ProductoRepository`, `ClienteRepository`, `CategoriaRepository`, etc.) extienden `JpaRepository` para ofrecer operaciones CRUD y consultas derivadas.
+  - Base de datos H2 se ejecuta en memoria o archivo según configuración en `application.properties`.
 
 ---
 
-## Application Architecture
+### Cómo funciona a alto nivel
 
-The project follows a layered architecture:
-
-```
-Controller → Service → Repository → Database
-```
-
-- **Controllers** handle HTTP requests.
-- **Services** contain business logic.
-- **Repositories** manage database access with JPA.
-- **Entities** represent database tables.
+- El usuario accede a rutas públicas que renderizan plantillas Thymeleaf con datos suministrados por la capa de servicios.
+- La navegación de cliente final se centra en:
+  - Descubrir el menú y sus categorías.
+  - Explorar desafíos y ubicación del restaurante.
+  - Registrarse, iniciar sesión y administrar su perfil (sin manejo de sesión de servidor, se apoya en parámetros como el email).
+- El panel de administración permite a un administrador autenticado gestionar platos (crear, editar, eliminar) y visualizarlos con filtros y búsqueda.
+- La capa de persistencia abstrae la base de datos; cambiar de H2 a otra base soportada por JPA implica principalmente ajustes de configuración.
 
 ---
 
-## Features
+### Dependencias principales (pom.xml)
 
-- Product management
-- Client registration
-- Product search
-- Category filtering
-- Data persistence using JPA
+- `spring-boot-starter-web`  
+- `spring-boot-starter-thymeleaf`  
+- `spring-boot-starter-data-jpa`  
+- `com.h2database:h2` (runtime)  
+- `spring-boot-devtools` (desarrollo)  
+- `lombok` (reducción de boilerplate)  
+- `spring-boot-starter-test` (pruebas)
 
 ---
 
-## Authors
+### Entornos y configuración
 
-MUK Development Team
+- La configuración por defecto se encuentra en `src/main/resources/application.properties`.
+- Incluye propiedades para:
+  - Conexión y comportamiento de H2.
+  - Opciones de logging.
+  - Configuración propia de la aplicación Muk.
+
+---
+
+### Desarrollo y contribución
+
+- Clonar el repositorio y abrirlo en un IDE compatible con Maven y Java 17.
+- Ejecutar `mvn spring-boot:run` para levantar la aplicación en modo desarrollo.
+- Modificar plantillas en `templates` o recursos estáticos en `static` para ajustar el diseño del sitio Muk.
