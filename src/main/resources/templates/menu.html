@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menú | MUK</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" th:href="@{/styles.css}" href="/styles.css" />
+</head>
+
+<body class="bg-[#F7F1E8] text-[#34100B]">
+
+  <div th:replace="fragments/layout :: navbar-site"></div>
+
+  <main class="pt-24 pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+      <div class="mb-10">
+        <h1 class="text-4xl sm:text-5xl font-black uppercase tracking-tight" style="color:#34100B">
+          MENÚ
+        </h1>
+        <p class="mt-2 text-lg font-bold" style="color:#8C0E03">
+          Explora nuestros platos por categoría.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-6 mb-10">
+
+        <div class="flex flex-wrap items-center gap-3">
+          <form th:action="@{/menu}" method="get" class="flex-1 min-w-[200px] max-w-2xl">
+            <input
+              name="q"
+              th:value="${searchQuery}"
+              placeholder="Buscar platos..."
+              class="w-full px-6 py-4 rounded-2xl font-bold text-base sm:text-lg shadow-lg border-4 focus:outline-none"
+              style="border-color:#F2B705"
+            />
+            <input type="hidden" name="category" th:value="${selectedCategory}" />
+          </form>
+          <button type="button"
+                  th:if="${selectedCategory != null and !#lists.isEmpty(adiciones)}"
+                  id="menu-adiciones-btn"
+                  aria-expanded="false"
+                  aria-controls="menu-adiciones-list"
+                  class="px-5 py-4 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg border-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#34100B] transition-all"
+                  style="background-color:#F2B705; border-color:#F2B705; color:#34100B">
+            Adiciones
+          </button>
+        </div>
+
+        <div id="menu-adiciones-list"
+             th:if="${selectedCategory != null and !#lists.isEmpty(adiciones)}"
+             class="rounded-2xl p-4 border-4 shadow-lg hidden"
+             style="background-color:#F7F1E8; border-color:#F2B705"
+             role="region"
+             aria-label="Adiciones de la categoría">
+          <p class="text-sm font-black uppercase mb-3" style="color:#8C0E03">
+            Adiciones para <span th:text="${selectedCategory}">Categoría</span>
+          </p>
+          <ul class="flex flex-wrap gap-2">
+            <li th:each="ad : ${adiciones}"
+                class="py-2 px-4 rounded-xl font-bold text-[#2A0B07]"
+                style="background-color:#F2B70533">
+              <span th:text="${ad.nombre}">Adicional</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+
+          <a th:href="@{/menu}" class="inline-block">
+            <span
+              class="px-4 py-2 text-xs sm:text-sm font-black rounded-full uppercase tracking-wider transition-all"
+              th:style="${selectedCategory}==null ? 'background-color:#34100B;color:#F2B705' : 'background-color:#F2B705;color:#34100B'">
+              Todos
+            </span>
+          </a>
+
+          <a th:each="cat : ${categories}"
+             th:href="@{/menu(category=${cat.nombre}, q=${searchQuery})}"
+             class="inline-block">
+            <span
+              class="px-4 py-2 text-xs sm:text-sm font-black rounded-full uppercase tracking-wider transition-all"
+              th:style="${selectedCategory != null and selectedCategory == cat.nombre} ? 'background-color:#34100B;color:#F2B705' : 'background-color:#F2B705;color:#34100B'"
+              th:text="${cat.nombre}">
+              Categoría
+            </span>
+          </a>
+
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <a th:each="dish : ${foods}"
+           th:href="@{/comida/{id}(id=${dish.id})}"
+           class="group block">
+
+          <div class="rounded-[28px] shadow-2xl overflow-hidden transform transition-all group-hover:scale-[1.02]"
+               style="background-color:#F2B705">
+
+            <div class="h-52 sm:h-56 relative overflow-hidden">
+              <img th:src="${dish.imagenUrl}"
+                   alt="Plato"
+                   class="w-full h-full object-cover transform transition-transform group-hover:scale-110" />
+
+              <div th:if="${dish.categoria.nombre != null && !#strings.isEmpty(dish.categoria.nombre)}"
+                   class="absolute top-4 left-4 px-3 py-1.5 text-xs font-black rounded-full text-white"
+                   style="background-color:#8C0E03"
+                   th:text="${dish.categoria.nombre}">
+                Categoría
+              </div>
+            </div>
+
+            <div class="p-6 flex flex-col" style="min-height: 250px;">
+
+              <h3 class="text-[#2A0B07] font-black text-3xl leading-tight uppercase"
+                  style="display:-webkit-box;
+                         -webkit-line-clamp:2;
+                         line-clamp:2;
+                         -webkit-box-orient:vertical;
+                         overflow:hidden;
+                         min-height:72px;"
+                  th:text="${dish.nombre}">
+                Nombre
+              </h3>
+
+              <p class="text-lg sm:text-xl font-black italic mt-2"
+                 style="color:#8C0E03">
+                $<span th:text="${dish.precio != null ? #numbers.formatInteger(dish.precio, 0, 'POINT') : '0'}"></span> COP
+              </p>
+
+              <p class="text-[#2A0B07]/80 font-semibold mt-3"
+                 style="display:-webkit-box;
+                         -webkit-line-clamp:3;
+                         line-clamp:3;
+                         -webkit-box-orient:vertical;
+                         overflow:hidden;
+                         min-height:72px;"
+                 th:text="${dish.descripcion}">
+                Descripción
+              </p>
+
+              <div class="mt-auto pt-6">
+                <span class="bg-[#2A0B07] text-white font-black uppercase tracking-widest px-10 py-4 rounded-full inline-block">
+                  VER DETALLE
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <div th:if="${#lists.isEmpty(foods)}" class="text-center py-20">
+        <p class="text-2xl font-black uppercase" style="color:#34100B">
+          No encontramos platos con esos filtros.
+        </p>
+        <a th:href="@{/menu}" class="inline-block mt-6">
+          <span class="px-10 py-4 font-black rounded-full uppercase tracking-widest"
+                style="background-color:#34100B;color:#F2B705">
+            Ver todo
+          </span>
+        </a>
+      </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="fragments/layout :: footer-site"></div>
+
+  <script th:src="@{/script.js}" src="/script.js"></script>
+  <script th:if="${selectedCategory != null and !#lists.isEmpty(adiciones)}">
+    (function() {
+      var btn = document.getElementById('menu-adiciones-btn');
+      var list = document.getElementById('menu-adiciones-list');
+      if (!btn || !list) return;
+      btn.addEventListener('click', function() {
+        var isOpen = !list.classList.contains('hidden');
+        list.classList.toggle('hidden');
+        btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+      });
+    })();
+  </script>
+</body>
+</html>

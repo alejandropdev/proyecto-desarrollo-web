@@ -1,0 +1,261 @@
+/* Página desafíos */
+body.page-desafios {
+  background: var(--cream);
+  color: var(--text-dark);
+}
+body.page-desafios main {
+  padding-top: 5rem;
+}
+
+.page-desafios .navbar {
+  background: var(--brown-dark);
+}
+
+/* Hero */
+.desafios-hero {
+  min-height: 300px;
+  background: linear-gradient(rgba(45, 10, 10, 0.75), rgba(45, 10, 10, 0.75)),
+    url('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1600&q=80') center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+}
+.desafios-hero-inner {
+  max-width: 40rem;
+}
+.desafios-hero-icon {
+  font-size: 48px;
+  margin-bottom: 1rem;
+  display: block;
+}
+.desafios-hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  color: var(--yellow);
+  letter-spacing: 0.02em;
+  margin-bottom: 1rem;
+}
+.desafios-hero p {
+  font-size: 18px;
+  color: var(--orange);
+  line-height: 1.5;
+}
+
+/* Reglas */
+.desafios-reglas {
+  background: var(--white);
+  padding: 60px 80px;
+}
+@media (max-width: 768px) {
+  .desafios-reglas { padding: 40px 1.5rem; }
+}
+.desafios-reglas h2 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+}
+.reglas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  max-width: 64rem;
+  margin: 0 auto;
+}
+@media (max-width: 1024px) {
+  .reglas-grid { grid-template-columns: 1fr; }
+}
+.regla-item {
+  text-align: center;
+}
+.regla-num {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--yellow), var(--orange));
+  color: var(--white);
+  font-weight: 700;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+.regla-item h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+.regla-item p {
+  font-size: 0.95rem;
+  color: var(--orange);
+  line-height: 1.5;
+}
+
+/* Challenge cards */
+.desafios-cards-section {
+  padding: 40px 80px;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .desafios-cards-section { padding: 24px 1.5rem; }
+}
+.desafios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.desafios-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+@media (max-width: 1024px) {
+  .desafios-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .desafios-grid { grid-template-columns: 1fr; }
+}
+.desafio-card {
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.desafio-card-img-wrap {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+.desafio-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.desafio-card-llamas {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.25rem;
+  letter-spacing: 2px;
+}
+.desafio-card-body {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.desafio-card-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.35rem;
+}
+.desafio-card-desc {
+  font-size: 0.875rem;
+  color: var(--orange);
+  margin-bottom: 0.75rem;
+}
+.desafio-card-meta {
+  font-size: 0.875rem;
+  color: var(--text-dark);
+  margin-bottom: 0.35rem;
+}
+.desafio-card-divider {
+  height: 1px;
+  background: #eee;
+  margin: 1rem 0;
+}
+.desafio-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.desafio-card-stat label {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+.desafio-card-stat span {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--orange);
+}
+.desafio-card .btn-orange {
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  margin-top: auto;
+}
+
+/* Salón de la Fama */
+.salon-fama {
+  background: var(--brown-dark);
+  padding: 60px 80px;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .salon-fama { padding: 40px 1.5rem; }
+}
+.salon-fama h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: var(--yellow);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+}
+.salon-fama p {
+  font-size: 1.125rem;
+  color: var(--orange);
+  max-width: 36rem;
+  margin: 0 auto 2rem;
+}
+.salon-fama-video {
+  max-width: 680px;
+  aspect-ratio: 16/9;
+  margin: 0 auto;
+  background: #1a0a00;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.salon-fama-video::after {
+  content: '';
+  width: 80px;
+  height: 80px;
+  border: 4px solid var(--white);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+.salon-fama-video::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -12px;
+  margin-top: -16px;
+  border-style: solid;
+  border-width: 16px 0 16px 28px;
+  border-color: transparent transparent transparent var(--white);
+  pointer-events: none;
+  z-index: 1;
+}

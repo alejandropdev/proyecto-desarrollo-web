@@ -1,0 +1,465 @@
+<!doctype html>
+<!-- Fragmentos Thymeleaf (Navbar/Footer) - Diseño tipo Figma -->
+<html xmlns:th="http://www.thymeleaf.org">
+  <nav
+    th:fragment="navbar-site"
+    id="navbar"
+    class="fixed top-0 left-0 right-0 z-50 h-20 md:h-24 flex items-center justify-between px-6 sm:px-10 lg:px-20"
+    style="background-color: #34100b; border-bottom: 3px solid #8c0e03"
+  >
+    <div class="flex items-center shrink-0">
+      <a
+        th:href="@{/}"
+        href="/"
+        class="cursor-pointer hover:opacity-90 transition-all"
+      >
+        <span
+          class="text-4xl sm:text-5xl font-black uppercase tracking-tighter"
+          style="color: #f2b705"
+          >Muk.</span
+        >
+      </a>
+    </div>
+
+    <div class="hidden lg:flex items-center gap-16 xl:gap-20 mx-auto">
+      <a
+        th:href="@{/}"
+        href="/"
+        class="font-extrabold uppercase tracking-wide text-xl transition-all"
+        th:classappend="${currentPage=='index'} ? 'opacity-100' : 'opacity-80 hover:opacity-100'"
+        style="color: #f2b705; padding-bottom: 6px"
+        th:styleappend="${currentPage=='index'} ? 'border-bottom:3px solid #F2B705' : 'border-bottom:3px solid transparent'"
+        >Inicio</a
+      >
+      <a
+        th:href="@{/menu}"
+        href="/menu"
+        class="font-extrabold uppercase tracking-wide text-xl transition-all"
+        th:classappend="${currentPage=='menu'} ? 'opacity-100' : 'opacity-80 hover:opacity-100'"
+        style="color: #f2b705; padding-bottom: 6px"
+        th:styleappend="${currentPage=='menu'} ? 'border-bottom:3px solid #F2B705' : 'border-bottom:3px solid transparent'"
+        >Menú</a
+      >
+      <a
+        th:href="@{/desafios}"
+        href="/desafios"
+        class="font-extrabold uppercase tracking-wide text-xl transition-all"
+        th:classappend="${currentPage=='desafios'} ? 'opacity-100' : 'opacity-80 hover:opacity-100'"
+        style="color: #f2b705; padding-bottom: 6px"
+        th:styleappend="${currentPage=='desafios'} ? 'border-bottom:3px solid #F2B705' : 'border-bottom:3px solid transparent'"
+        >Desafíos</a
+      >
+    </div>
+
+    <div class="hidden lg:flex items-center gap-4 shrink-0">
+      <a
+        th:href="@{/clientes/login}"
+        href="/clientes/login"
+        class="px-5 py-3 rounded-xl text-lg font-bold border-2 transition-all hover:brightness-110"
+        style="border-color: #f2b705; color: #f2b705;"
+      >
+        Iniciar sesión
+      </a>
+
+      <a
+        th:href="@{/clientes/registro}"
+        href="/clientes/registro"
+        class="px-5 py-3 rounded-xl text-lg font-bold text-white transition-all hover:brightness-110"
+        style="background-color: #f27405;"
+      >
+        Crear cuenta
+      </a>
+    </div>
+
+    <button
+      id="nav-toggle"
+      type="button"
+      class="lg:hidden p-2"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+    >
+      <span
+        class="block w-6 h-0.5 mb-1"
+        style="background-color: #f27405"
+      ></span>
+      <span
+        class="block w-6 h-0.5 mb-1"
+        style="background-color: #f27405"
+      ></span>
+      <span class="block w-6 h-0.5" style="background-color: #f27405"></span>
+    </button>
+
+    <div
+      id="nav-menu"
+      class="hidden absolute top-20 left-0 right-0 lg:hidden flex-col gap-6 p-6 shadow-2xl"
+      style="background-color: #34100b"
+    >
+      <a
+        th:href="@{/}"
+        href="/"
+        class="font-bold uppercase tracking-widest text-sm"
+        style="color: #f2b705"
+        >Inicio</a
+      >
+      <a
+        th:href="@{/menu}"
+        href="/menu"
+        class="font-bold uppercase tracking-widest text-sm"
+        style="color: #f2b705"
+        >Menú</a
+      >
+      <a
+        th:href="@{/desafios}"
+        href="/desafios"
+        class="font-bold uppercase tracking-widest text-sm"
+        style="color: #f2b705"
+        >Desafíos</a
+      >
+
+      <div class="flex flex-col gap-3 mt-4">
+        <a th:href="@{/clientes/login}" href="/clientes/login">
+          <button
+            class="w-full px-6 py-3 border-2 font-bold rounded-xl transition-all hover:opacity-80"
+            style="border-color: #f27405; color: #f27405"
+          >
+            Iniciar sesión
+          </button>
+        </a>
+        <a th:href="@{/clientes/registro}" href="/clientes/registro">
+          <button
+            class="w-full px-6 py-3 font-bold rounded-xl text-white transition-all hover:brightness-110"
+            style="background-color: #d93d04"
+          >
+            Crear cuenta
+          </button>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <nav
+    th:fragment="navbar-admin"
+    id="navbar-admin"
+    class="fixed top-0 left-0 right-0 z-50 h-16 md:h-20 flex items-center justify-between px-4 sm:px-8 lg:px-24"
+    style="background-color: #34100b"
+  >
+    <div class="flex items-center">
+      <a
+        th:href="@{/admin/platos}"
+        href="/admin/platos"
+        class="cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-3"
+      >
+        <span
+          class="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tighter"
+          style="color: #f2b705"
+          >Muk.</span
+        >
+        <span
+          class="text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full"
+          style="background-color: #f27405; color: white"
+          >Admin</span
+        >
+      </a>
+    </div>
+
+    <div class="hidden lg:flex items-center justify-evenly w-full">
+      <a
+        th:href="@{/admin/platos}"
+        class="font-bold uppercase tracking-wider text-sm transition-all"
+        th:classappend="${currentPage=='admin-platos'} ? 'opacity-100' : 'opacity-70 hover:opacity-100'"
+        style="color: #f2b705; padding-bottom: 4px"
+        th:styleappend="${currentPage=='admin-platos'} ? 'border-bottom:2px solid #F2B705' : 'border-bottom:2px solid transparent'"
+        >Platos</a
+      >
+      <a
+        th:href="@{/admin/platos/nuevo}"
+        class="font-bold uppercase tracking-wider text-sm transition-all"
+        th:classappend="${currentPage=='admin-nuevo'} ? 'opacity-100' : 'opacity-70 hover:opacity-100'"
+        style="color: #f2b705; padding-bottom: 4px"
+        th:styleappend="${currentPage=='admin-nuevo'} ? 'border-bottom:2px solid #F2B705' : 'border-bottom:2px solid transparent'"
+        >Nuevo</a
+      >
+      <a
+        th:href="@{/menu}"
+        class="font-bold uppercase tracking-wider text-sm transition-all opacity-70 hover:opacity-100"
+        style="
+          color: #f2b705;
+          padding-bottom: 4px;
+          border-bottom: 2px solid transparent;
+        "
+        >Ver sitio</a
+      >
+    </div>
+
+    <div class="hidden lg:flex items-center space-x-4">
+      <a th:href="@{/menu}"
+        ><button
+          class="px-6 py-2 font-bold uppercase text-sm tracking-wide rounded"
+          style="
+            color: #f2b705;
+            background-color: transparent;
+            border: 1.5px solid #f2b705;
+          "
+        >
+          Menú
+        </button></a
+      >
+      <a th:href="@{/admin/platos/nuevo}"
+        ><button
+          class="px-6 py-2 font-bold uppercase text-sm tracking-wide rounded shadow-md text-white"
+          style="background-color: #f27405"
+        >
+          Crear plato
+        </button></a
+      >
+    </div>
+
+    <button
+      id="nav-toggle-admin"
+      type="button"
+      class="lg:hidden p-2"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+    >
+      <span
+        class="block w-6 h-0.5 mb-1"
+        style="background-color: #f27405"
+      ></span>
+      <span
+        class="block w-6 h-0.5 mb-1"
+        style="background-color: #f27405"
+      ></span>
+      <span class="block w-6 h-0.5" style="background-color: #f27405"></span>
+    </button>
+
+    <div
+      id="nav-menu-admin"
+      class="hidden absolute top-16 left-0 right-0 lg:hidden flex-col gap-6 p-6 shadow-2xl"
+      style="background-color: #34100b"
+    >
+      <a
+        th:href="@{/admin/platos}"
+        class="font-bold uppercase tracking-widest text-sm"
+        style="color: #f2b705"
+        >Platos</a
+      >
+      <a
+        th:href="@{/admin/platos/nuevo}"
+        class="font-bold uppercase tracking-widest text-sm"
+        style="color: #f2b705"
+        >Nuevo</a
+      >
+      <a
+        th:href="@{/menu}"
+        class="font-bold uppercase tracking-widest text-sm"
+        style="color: #f2b705"
+        >Ver sitio</a
+      >
+      <div class="flex flex-col gap-3 mt-4">
+        <a th:href="@{/menu}"
+          ><button
+            class="w-full px-6 py-3 border-2 font-bold rounded-full"
+            style="border-color: #f27405; color: #f27405"
+          >
+            Menú
+          </button></a
+        >
+        <a th:href="@{/admin/platos/nuevo}"
+          ><button
+            class="w-full px-6 py-3 font-bold rounded-full text-white"
+            style="background-color: #d93d04"
+          >
+            Crear plato
+          </button></a
+        >
+      </div>
+    </div>
+  </nav>
+
+  <footer
+    th:fragment="footer-site"
+    class="py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-16"
+    style="background-color: #34100b"
+  >
+    <div
+      class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10 sm:gap-12"
+    >
+      <div class="flex flex-col gap-4 sm:gap-6">
+        <span
+          class="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tighter"
+          style="color: #f2b705"
+          >Muk.</span
+        >
+        <p
+          class="max-w-xs font-bold text-sm leading-relaxed"
+          style="color: #f2b705; opacity: 0.8"
+        >
+          La experiencia definitiva de Mukbang. Comida gigante, sabor extremo y
+          la gloria eterna del desafío.
+        </p>
+        <div class="flex gap-4" aria-label="Redes sociales">
+          <a
+            href="#"
+            class="hover:opacity-80 transition-opacity"
+            aria-label="Instagram"
+            style="color: #f27405"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="hover:opacity-80 transition-opacity"
+            aria-label="Facebook"
+            style="color: #f27405"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              />
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="hover:opacity-80 transition-opacity"
+            aria-label="Twitter"
+            style="color: #f27405"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 2.1 0 3.8-1.2 3.8-1.2"
+              />
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="hover:opacity-80 transition-opacity"
+            aria-label="YouTube"
+            style="color: #f27405"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"
+              />
+              <polygon
+                points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"
+                fill="currentColor"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="grid grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12 lg:gap-16 w-full lg:w-auto"
+      >
+        <div class="flex flex-col gap-3 sm:gap-4">
+          <h4
+            class="font-black uppercase tracking-widest text-white mb-1 sm:mb-2 text-sm sm:text-base"
+          >
+            Compañía
+          </h4>
+          <a
+            href="#"
+            class="font-bold hover:underline text-sm sm:text-base"
+            style="color: #f27405"
+            >Nosotros</a
+          >
+          <a
+            href="#"
+            class="font-bold hover:underline text-sm sm:text-base"
+            style="color: #f27405"
+            >Franquicias</a
+          >
+          <a
+            href="#"
+            class="font-bold hover:underline text-sm sm:text-base"
+            style="color: #f27405"
+            >Carreras</a
+          >
+        </div>
+        <div class="flex flex-col gap-3 sm:gap-4">
+          <h4
+            class="font-black uppercase tracking-widest text-white mb-1 sm:mb-2 text-sm sm:text-base"
+          >
+            Soporte
+          </h4>
+          <a
+            href="#"
+            class="font-bold hover:underline text-sm sm:text-base"
+            style="color: #f27405"
+            >Contacto</a
+          >
+          <a
+            href="#"
+            class="font-bold hover:underline text-sm sm:text-base"
+            style="color: #f27405"
+            >FAQs</a
+          >
+          <a
+            href="#"
+            class="font-bold hover:underline text-sm sm:text-base"
+            style="color: #f27405"
+            >Aviso Legal</a
+          >
+        </div>
+        <div class="flex flex-col gap-3 sm:gap-4 col-span-2 lg:col-span-1">
+          <h4
+            class="font-black uppercase tracking-widest text-white mb-1 sm:mb-2 text-sm sm:text-base"
+          >
+            Horario
+          </h4>
+          <p class="font-bold text-sm sm:text-base" style="color: #f2b705">
+            Lunes - Domingo
+          </p>
+          <p class="font-bold text-sm sm:text-base" style="color: #f2b705">
+            12:00 PM - 12:00 AM
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="mt-12 sm:mt-16 lg:mt-20 pt-8 sm:pt-10 border-t border-white/10 text-center"
+    >
+      <p class="text-xs font-bold" style="color: #f2b705; opacity: 0.5">
+        © 2026 MUK RESTAURANT GROUP. TODOS LOS DERECHOS RESERVADOS.
+      </p>
+    </div>
+  </footer>
+</html>

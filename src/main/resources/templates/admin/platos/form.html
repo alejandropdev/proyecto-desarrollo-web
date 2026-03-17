@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="${plato.id != null} ? 'Muk. Admin | Editar plato' : 'Muk. Admin | Nuevo plato'">Muk. Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background-color:#FAF7F0;">
+
+<div th:replace="fragments/layout :: navbar-admin"></div>
+
+<main class="pt-16 md:pt-20 min-h-screen px-4 sm:px-8 lg:px-16 py-12" style="background-color:#FAF7F0">
+  <div class="max-w-4xl mx-auto">
+
+    <div class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tighter" style="color:#34100B" th:text="${plato.id != null} ? 'Editar plato' : 'Nuevo plato'">Formulario</h1>
+      <p class="font-bold mt-2" style="color:#8C0E03;opacity:0.8">Completa la información del plato. La URL de imagen se usa en las tarjetas del menú.</p>
+    </div>
+
+    <div class="rounded-3xl shadow-2xl p-8 sm:p-10" style="background-color:white">
+      <form th:action="@{/admin/platos/guardar}" th:object="${plato}" method="post" class="space-y-6">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label for="nombre" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Nombre</label>
+            <input id="nombre" type="text" th:field="*{nombre}" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
+          </div>
+
+          <div>
+            <label for="categoria" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">
+              Categoría
+            </label>
+
+            <div class="relative">
+              <select id="categoria" th:field="*{categoria.id}"
+                      class="w-full appearance-none px-5 py-4 pr-12 rounded-2xl font-bold border-4 focus:outline-none focus:ring-0"
+                      style="border-color:#F2B705; color:#34100B; background-color:white;">
+                <option value="" disabled>Selecciona una categoría</option>
+
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.nombre}">
+                </option>
+              </select>
+
+              <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center">
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="color:#8C0E03;">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label for="precio" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Precio (COP)</label>
+            <input id="precio" type="number" th:field="*{precio}" min="0" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
+            <div class="text-xs font-bold mt-2" style="color:#34100B;opacity:0.7">Sin puntos ni comas. Ej: 35000</div>
+          </div>
+
+          <div>
+            <label for="imagenUrl" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">URL de imagen</label>
+            <input id="imagenUrl" type="url" th:field="*{imagenUrl}" placeholder="https://..." class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705" />
+            <div class="text-xs font-bold mt-2" style="color:#34100B;opacity:0.7">Tip: mejor cuadrada u horizontal.</div>
+          </div>
+        </div>
+
+        <div>
+          <label for="descripcion" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8C0E03">Descripción</label>
+          <textarea id="descripcion" th:field="*{descripcion}" rows="4" placeholder="Describe el plato en una frase potente..." class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#F2B705"></textarea>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4">
+          <a th:href="@{/admin/platos}" class="font-black uppercase tracking-widest text-sm" style="color:#8C0E03">← Volver</a>
+          <div class="flex gap-3">
+            <button type="submit" class="px-8 py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl transition-all hover:brightness-110" style="background-color:#F27405">Guardar</button>
+            <a th:href="@{/admin/platos}">
+              <button type="button" class="px-8 py-4 font-black rounded-full uppercase tracking-widest border-2 transition-all hover:bg-black/5" style="border-color:#F27405;color:#F27405">Cancelar</button>
+            </a>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</main>
+
+<script th:src="@{/script.js}" src="/script.js"></script>
+</body>
+</html>
