@@ -1,22 +1,34 @@
 package com.muk.config;
 
 import com.muk.entities.Adicional;
+import com.muk.entities.Administrador;
+import com.muk.entities.Carrito;
 import com.muk.entities.Categoria;
 import com.muk.entities.Cliente;
+import com.muk.entities.Domiciliario;
+import com.muk.entities.ItemCarrito;
+import com.muk.entities.Operador;
+import com.muk.entities.Pedido;
 import com.muk.entities.Producto;
+import com.muk.entities.SeleccionAdicional;
 import com.muk.repository.AdicionalRepository;
+import com.muk.repository.AdministradorRepository;
+import com.muk.repository.CarritoRepository;
 import com.muk.repository.CategoriaRepository;
 import com.muk.repository.ClienteRepository;
+import com.muk.repository.DomiciliarioRepository;
+import com.muk.repository.ItemCarritoRepository;
+import com.muk.repository.OperadorRepository;
+import com.muk.repository.PedidoRepository;
 import com.muk.repository.ProductoRepository;
+import com.muk.repository.SeleccionAdicionalRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import com.muk.entities.Administrador;
-import com.muk.repository.AdministradorRepository;
-
 
 /**
  * Inicializa la base de datos H2 con datos de prueba al arrancar la aplicación.
@@ -31,14 +43,38 @@ public class DataLoader implements CommandLineRunner {
     private final ProductoRepository productoRepository;
     private final ClienteRepository clienteRepository;
     private final AdministradorRepository administradorRepository;
+    private final OperadorRepository operadorRepository;
+    private final DomiciliarioRepository domiciliarioRepository;
+    private final CarritoRepository carritoRepository;
+    private final ItemCarritoRepository itemCarritoRepository;
+    private final SeleccionAdicionalRepository seleccionAdicionalRepository;
+    private final PedidoRepository pedidoRepository;
 
 
-    public DataLoader(CategoriaRepository categoriaRepository, AdicionalRepository adicionalRepository, ProductoRepository productoRepository, ClienteRepository clienteRepository, AdministradorRepository administradorRepository) {
+    public DataLoader(
+            CategoriaRepository categoriaRepository,
+            AdicionalRepository adicionalRepository,
+            ProductoRepository productoRepository,
+            ClienteRepository clienteRepository,
+            AdministradorRepository administradorRepository,
+            OperadorRepository operadorRepository,
+            DomiciliarioRepository domiciliarioRepository,
+            CarritoRepository carritoRepository,
+            ItemCarritoRepository itemCarritoRepository,
+            SeleccionAdicionalRepository seleccionAdicionalRepository,
+            PedidoRepository pedidoRepository
+    ) {
         this.categoriaRepository = categoriaRepository;
         this.adicionalRepository = adicionalRepository;
         this.productoRepository = productoRepository;
         this.clienteRepository = clienteRepository;
-         this.administradorRepository = administradorRepository;
+        this.administradorRepository = administradorRepository;
+        this.operadorRepository = operadorRepository;
+        this.domiciliarioRepository = domiciliarioRepository;
+        this.carritoRepository = carritoRepository;
+        this.itemCarritoRepository = itemCarritoRepository;
+        this.seleccionAdicionalRepository = seleccionAdicionalRepository;
+        this.pedidoRepository = pedidoRepository;
     }
 
     @Override
@@ -56,8 +92,26 @@ public class DataLoader implements CommandLineRunner {
             cargarClientes();
         }
         if (administradorRepository.count() == 0) {
-        cargarAdministradores();
-    }
+            cargarAdministradores();
+        }
+        if (operadorRepository.count() == 0) {
+            cargarOperadores();
+        }
+        if (domiciliarioRepository.count() == 0) {
+            cargarDomiciliarios();
+        }
+        if (carritoRepository.count() == 0) {
+            cargarCarritos();
+        }
+        if (itemCarritoRepository.count() == 0) {
+            cargarItemsCarrito();
+        }
+        if (seleccionAdicionalRepository.count() == 0) {
+            cargarSeleccionesAdicionales();
+        }
+        if (pedidoRepository.count() == 0) {
+            cargarPedidos();
+        }
     }
 
     private void cargarCategorias() {
@@ -184,15 +238,129 @@ public class DataLoader implements CommandLineRunner {
 
         clienteRepository.saveAll(clientes);
     }
-private void cargarAdministradores() {
+    private void cargarAdministradores() {
+        List<Administrador> admins = List.of(
+                new Administrador(null, "admin", "1234"),
+                new Administrador(null, "mukadmin", "admin123"),
+                new Administrador(null, "adminops", "ops1234"),
+                new Administrador(null, "adminventas", "ventas123"),
+                new Administrador(null, "adminqa", "qa12345")
+        );
+        administradorRepository.saveAll(admins);
+    }
 
-    List<Administrador> admins = List.of(
-        new Administrador(null, "admin", "1234"),
-        new Administrador(null, "mukadmin", "admin123")
-    );
+    private void cargarOperadores() {
+        List<Operador> operadores = List.of(
+                new Operador(null, "Julian Herrera", "operador1", "hash-op-001"),
+                new Operador(null, "Paula Medina", "operador2", "hash-op-002"),
+                new Operador(null, "Santiago Rios", "operador3", "hash-op-003"),
+                new Operador(null, "Daniela Cruz", "operador4", "hash-op-004"),
+                new Operador(null, "Nicolas Vega", "operador5", "hash-op-005")
+        );
+        operadorRepository.saveAll(operadores);
+    }
 
-    administradorRepository.saveAll(admins);
-}
+    private void cargarDomiciliarios() {
+        List<Domiciliario> domiciliarios = List.of(
+                new Domiciliario(null, "Oscar Mejia", "3205551001", "101000001"),
+                new Domiciliario(null, "Felipe Leon", "3205551002", "101000002"),
+                new Domiciliario(null, "Camilo Parra", "3205551003", "101000003"),
+                new Domiciliario(null, "Luis Pardo", "3205551004", "101000004"),
+                new Domiciliario(null, "Kevin Mora", "3205551005", "101000005")
+        );
+        domiciliarioRepository.saveAll(domiciliarios);
+    }
 
-    
+    private void cargarCarritos() {
+        List<Cliente> clientes = clienteRepository.findAll();
+        if (clientes.size() < 5) {
+            return;
+        }
+
+        List<Carrito> carritos = List.of(
+                new Carrito(null, clientes.get(0)),
+                new Carrito(null, clientes.get(1)),
+                new Carrito(null, clientes.get(2)),
+                new Carrito(null, clientes.get(3)),
+                new Carrito(null, clientes.get(4))
+        );
+        carritoRepository.saveAll(carritos);
+    }
+
+    private void cargarItemsCarrito() {
+        List<Carrito> carritos = carritoRepository.findAll();
+        List<Producto> productos = productoRepository.findAll();
+        if (carritos.size() < 5 || productos.size() < 10) {
+            return;
+        }
+
+        List<ItemCarrito> items = List.of(
+                new ItemCarrito(null, carritos.get(0), productos.get(0), 1, productos.get(0).getPrecio()),
+                new ItemCarrito(null, carritos.get(0), productos.get(1), 2, productos.get(1).getPrecio()),
+                new ItemCarrito(null, carritos.get(1), productos.get(2), 1, productos.get(2).getPrecio()),
+                new ItemCarrito(null, carritos.get(1), productos.get(3), 1, productos.get(3).getPrecio()),
+                new ItemCarrito(null, carritos.get(2), productos.get(4), 3, productos.get(4).getPrecio()),
+                new ItemCarrito(null, carritos.get(2), productos.get(5), 1, productos.get(5).getPrecio()),
+                new ItemCarrito(null, carritos.get(3), productos.get(6), 2, productos.get(6).getPrecio()),
+                new ItemCarrito(null, carritos.get(3), productos.get(7), 1, productos.get(7).getPrecio()),
+                new ItemCarrito(null, carritos.get(4), productos.get(8), 1, productos.get(8).getPrecio()),
+                new ItemCarrito(null, carritos.get(4), productos.get(9), 2, productos.get(9).getPrecio())
+        );
+        itemCarritoRepository.saveAll(items);
+    }
+
+    private void cargarSeleccionesAdicionales() {
+        List<ItemCarrito> items = itemCarritoRepository.findAll();
+        List<Adicional> adicionales = adicionalRepository.findAll();
+        if (items.size() < 5 || adicionales.size() < 10) {
+            return;
+        }
+
+        List<SeleccionAdicional> selecciones = List.of(
+                new SeleccionAdicional(null, items.get(0), adicionales.get(0), adicionales.get(0).getPrecio()),
+                new SeleccionAdicional(null, items.get(0), adicionales.get(2), adicionales.get(2).getPrecio()),
+                new SeleccionAdicional(null, items.get(1), adicionales.get(5), adicionales.get(5).getPrecio()),
+                new SeleccionAdicional(null, items.get(2), adicionales.get(6), adicionales.get(6).getPrecio()),
+                new SeleccionAdicional(null, items.get(3), adicionales.get(10), adicionales.get(10).getPrecio()),
+                new SeleccionAdicional(null, items.get(4), adicionales.get(11), adicionales.get(11).getPrecio()),
+                new SeleccionAdicional(null, items.get(5), adicionales.get(15), adicionales.get(15).getPrecio()),
+                new SeleccionAdicional(null, items.get(6), adicionales.get(16), adicionales.get(16).getPrecio()),
+                new SeleccionAdicional(null, items.get(7), adicionales.get(20), adicionales.get(20).getPrecio()),
+                new SeleccionAdicional(null, items.get(8), adicionales.get(24), adicionales.get(24).getPrecio())
+        );
+        seleccionAdicionalRepository.saveAll(selecciones);
+    }
+
+    private void cargarPedidos() {
+        List<Cliente> clientes = clienteRepository.findAll();
+        List<Operador> operadores = operadorRepository.findAll();
+        List<Domiciliario> domiciliarios = domiciliarioRepository.findAll();
+        if (clientes.size() < 5 || operadores.size() < 5 || domiciliarios.size() < 5) {
+            return;
+        }
+
+        Pedido p1 = new Pedido(null, clientes.get(0), "PENDIENTE", LocalDateTime.now().minusHours(2));
+        p1.setOperador(operadores.get(0));
+        p1.setDomiciliario(domiciliarios.get(0));
+
+        Pedido p2 = new Pedido(null, clientes.get(1), "EN_PREPARACION", LocalDateTime.now().minusHours(1));
+        p2.setOperador(operadores.get(1));
+        p2.setDomiciliario(domiciliarios.get(1));
+
+        Pedido p3 = new Pedido(null, clientes.get(2), "EN_CAMINO", LocalDateTime.now().minusMinutes(40));
+        p3.setOperador(operadores.get(2));
+        p3.setDomiciliario(domiciliarios.get(2));
+
+        Pedido p4 = new Pedido(null, clientes.get(3), "ENTREGADO", LocalDateTime.now().minusDays(1));
+        p4.setOperador(operadores.get(3));
+        p4.setDomiciliario(domiciliarios.get(3));
+        p4.setFechaEntrega(LocalDateTime.now().minusDays(1).plusMinutes(45));
+
+        Pedido p5 = new Pedido(null, clientes.get(4), "CANCELADO", LocalDateTime.now().minusHours(5));
+        p5.setOperador(operadores.get(4));
+        p5.setDomiciliario(domiciliarios.get(4));
+
+        pedidoRepository.saveAll(List.of(p1, p2, p3, p4, p5));
+    }
+
 }
