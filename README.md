@@ -1,4 +1,4 @@
-## MUK Website – Backend Spring Boot
+## MUK Website - Backend Spring Boot
 
 Aplicación web para el restaurante Muk.  
 Se trata de un backend en **Spring Boot 3** que sirve plantillas **Thymeleaf** y recursos estáticos, y expone la lógica de negocio mediante controladores, servicios y repositorios con **Spring Data JPA** sobre base de datos **H2** en tiempo de desarrollo.
@@ -141,8 +141,9 @@ src/main/resources
 
 ---
 
-### Desarrollo y contribución
+### Equipo
 
-- Clonar el repositorio y abrirlo en un IDE compatible con Maven y Java 17.
-- Ejecutar `mvn spring-boot:run` para levantar la aplicación en modo desarrollo.
-- Modificar plantillas en `templates` o recursos estáticos en `static` para ajustar el diseño del sitio Muk.
+- Samuel José Velandia del Castillo
+- Sara Muñoz
+- Sebastián Vargas
+- Alejandro Parrado
