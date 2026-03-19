@@ -1,9 +1,15 @@
 package com.muk.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "seleccion_adicional")
+@Getter
+@Setter
+@NoArgsConstructor
 public class SeleccionAdicional {
 
     @Id
@@ -21,45 +27,10 @@ public class SeleccionAdicional {
     @Column(nullable = false)
     private Double precio;
 
-    public SeleccionAdicional() {
-    }
-
     public SeleccionAdicional(Long id, ItemCarrito itemCarrito, Adicional adicional, Double precio) {
         this.id = id;
         this.itemCarrito = itemCarrito;
         this.adicional = adicional;
-        this.precio = precio;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public ItemCarrito getItemCarrito() {
-        return itemCarrito;
-    }
-
-    public void setItemCarrito(ItemCarrito itemCarrito) {
-        this.itemCarrito = itemCarrito;
-    }
-
-    public Adicional getAdicional() {
-        return adicional;
-    }
-
-    public void setAdicional(Adicional adicional) {
-        this.adicional = adicional;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 }

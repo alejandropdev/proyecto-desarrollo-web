@@ -3,19 +3,17 @@ package com.muk.service.impl;
 import com.muk.entities.Cliente;
 import com.muk.repository.ClienteRepository;
 import com.muk.service.ClienteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository repository;
-
-    public ClienteServiceImpl(ClienteRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<Cliente> findAll() {

@@ -1,9 +1,15 @@
 package com.muk.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "administradores")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Administrador {
 
     @Id
@@ -16,36 +22,9 @@ public class Administrador {
     @Column(nullable = false, length = 100, name = "contraseña_hash")
     private String contrasenaHash;
 
-    public Administrador() {
-    }
-
     public Administrador(Long id, String usuario, String contrasenaHash) {
         this.id = id;
         this.usuario = usuario;
-        this.contrasenaHash = contrasenaHash;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getContrasenaHash() {
-        return contrasenaHash;
-    }
-
-    public void setContrasenaHash(String contrasenaHash) {
         this.contrasenaHash = contrasenaHash;
     }
 }

@@ -1,11 +1,18 @@
 package com.muk.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "carritos")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Carrito {
 
     @Id
@@ -17,50 +24,14 @@ public class Carrito {
     private Cliente cliente;
 
     @Column(nullable = false)
-    private LocalDateTime ultimaActualizacion;
+    private LocalDateTime ultimaActualizacion = LocalDateTime.now();
 
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemCarrito> items;
-
-    public Carrito() {
-        this.ultimaActualizacion = LocalDateTime.now();
-    }
 
     public Carrito(Long id, Cliente cliente) {
         this.id = id;
         this.cliente = cliente;
         this.ultimaActualizacion = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public LocalDateTime getUltimaActualizacion() {
-        return ultimaActualizacion;
-    }
-
-    public void setUltimaActualizacion(LocalDateTime ultimaActualizacion) {
-        this.ultimaActualizacion = ultimaActualizacion;
-    }
-
-    public List<ItemCarrito> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ItemCarrito> items) {
-        this.items = items;
     }
 }
