@@ -3,19 +3,17 @@ package com.muk.service.impl;
 import com.muk.entities.Categoria;
 import com.muk.repository.CategoriaRepository;
 import com.muk.service.CategoriaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final CategoriaRepository repository;
-
-    public CategoriaServiceImpl(CategoriaRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<Categoria> findAll() {

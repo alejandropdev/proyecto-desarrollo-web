@@ -22,6 +22,7 @@ import com.muk.repository.OperadorRepository;
 import com.muk.repository.PedidoRepository;
 import com.muk.repository.ProductoRepository;
 import com.muk.repository.SeleccionAdicionalRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
  * Reemplaza la carga desde data.sql para seguir la arquitectura de la aplicación.
  */
 @Component
+@RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
 
     private final CategoriaRepository categoriaRepository;
@@ -49,33 +51,6 @@ public class DataLoader implements CommandLineRunner {
     private final ItemCarritoRepository itemCarritoRepository;
     private final SeleccionAdicionalRepository seleccionAdicionalRepository;
     private final PedidoRepository pedidoRepository;
-
-
-    public DataLoader(
-            CategoriaRepository categoriaRepository,
-            AdicionalRepository adicionalRepository,
-            ProductoRepository productoRepository,
-            ClienteRepository clienteRepository,
-            AdministradorRepository administradorRepository,
-            OperadorRepository operadorRepository,
-            DomiciliarioRepository domiciliarioRepository,
-            CarritoRepository carritoRepository,
-            ItemCarritoRepository itemCarritoRepository,
-            SeleccionAdicionalRepository seleccionAdicionalRepository,
-            PedidoRepository pedidoRepository
-    ) {
-        this.categoriaRepository = categoriaRepository;
-        this.adicionalRepository = adicionalRepository;
-        this.productoRepository = productoRepository;
-        this.clienteRepository = clienteRepository;
-        this.administradorRepository = administradorRepository;
-        this.operadorRepository = operadorRepository;
-        this.domiciliarioRepository = domiciliarioRepository;
-        this.carritoRepository = carritoRepository;
-        this.itemCarritoRepository = itemCarritoRepository;
-        this.seleccionAdicionalRepository = seleccionAdicionalRepository;
-        this.pedidoRepository = pedidoRepository;
-    }
 
     @Override
     public void run(String... args) {

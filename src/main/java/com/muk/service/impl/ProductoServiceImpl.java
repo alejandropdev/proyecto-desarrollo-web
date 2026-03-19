@@ -3,19 +3,17 @@ package com.muk.service.impl;
 import com.muk.entities.Producto;
 import com.muk.repository.ProductoRepository;
 import com.muk.service.ProductoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepository;
-
-    public ProductoServiceImpl(ProductoRepository productoRepository) {
-        this.productoRepository = productoRepository;
-    }
 
     @Override
     public List<Producto> findAll() {
