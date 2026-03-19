@@ -19,12 +19,15 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public List<Producto> findAll() {
-        return productoRepository.findAll();
+        return productoRepository.findAll().stream()
+                .filter(this::isActivo)
+                .toList();
     }
 
     @Override
     public Optional<Producto> findById(Long id) {
-        return productoRepository.findById(id);
+        return productoRepository.findById(id)
+                .filter(this::isActivo);
     }
 
     @Override
@@ -34,16 +37,27 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public void delete(Long id) {
-        productoRepository.deleteById(id);
+        productoRepository.findById(id).ifPresent(producto -> {
+            producto.setActivo(false);
+            productoRepository.save(producto);
+        });
     }
 
-  @Override
-public List<Producto> findByCategory(String categoria) {
-    return productoRepository.findByCategoria_NombreIgnoreCase(categoria);
-}
+    @Override
+    public List<Producto> findByCategory(String categoria) {
+        return productoRepository.findByCategoria_NombreIgnoreCase(categoria).stream()
+                .filter(this::isActivo)
+                .toList();
+    }
 
     @Override
     public List<Producto> searchByName(String q) {
-        return productoRepository.findByNombreContainingIgnoreCase(q);
+        return productoRepository.findByNombreContainingIgnoreCase(q).stream()
+                .filter(this::isActivo)
+                .toList();
+    }
+
+    private boolean isActivo(Producto producto) {
+        return Boolean.TRUE.equals(producto.getActivo());
     }
 }
