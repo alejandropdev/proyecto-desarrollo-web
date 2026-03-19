@@ -109,17 +109,65 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public ActionResult actualizarPerfil(Cliente cliente) {
         Long clienteId = (cliente == null) ? null : cliente.getId();
+        System.out.println("[ClienteServiceImpl.actualizarPerfil] cliente=" + (cliente != null ? "OK" : "NULL") + ", id=" + clienteId);
+        
         if (cliente == null || clienteId == null) {
+            System.out.println("[ClienteServiceImpl] ERROR: Cliente es null o ID es null");
             return new ActionResult(false, "Datos inválidos.");
         }
 
-        if (cliente.getContrasenaHash() == null || cliente.getContrasenaHash().isBlank()) {
-            repository.findById(clienteId).ifPresent(existing ->
-                    cliente.setContrasenaHash(existing.getContrasenaHash()));
+        // Validar campos requeridos
+        if (cliente.getNombre() == null || cliente.getNombre().isBlank()) {
+            return new ActionResult(false, "El nombre es requerido.");
+        }
+        if (cliente.getApellido() == null || cliente.getApellido().isBlank()) {
+            return new ActionResult(false, "El apellido es requerido.");
+        }
+        if (cliente.getEmail() == null || cliente.getEmail().isBlank()) {
+            return new ActionResult(false, "El email es requerido.");
+        }
+        if (cliente.getTelefono() == null || cliente.getTelefono().isBlank()) {
+            return new ActionResult(false, "El teléfono es requerido.");
+        }
+        if (cliente.getDireccion() == null || cliente.getDireccion().isBlank()) {
+            return new ActionResult(false, "La dirección es requerida.");
         }
 
-        repository.save(cliente);
-        return new ActionResult(true, null);
+        try {
+            // Cargar el cliente existente de la BD para preservar las relaciones
+            System.out.println("[ClienteServiceImpl] Cargando cliente existente de la BD...");
+            Optional<Cliente> existingOpt = repository.findById(clienteId);
+            if (existingOpt.isEmpty()) {
+                return new ActionResult(false, "Cliente no encontrado en la base de datos.");
+            }
+            
+            Cliente existing = existingOpt.get();
+            System.out.println("[ClienteServiceImpl] Cliente existente cargado. Actualizando campos...");
+            
+            // Actualizar SOLO los campos que el usuario modificó
+            existing.setNombre(cliente.getNombre());
+            existing.setApellido(cliente.getApellido());
+            existing.setEmail(cliente.getEmail());
+            existing.setTelefono(cliente.getTelefono());
+            existing.setDireccion(cliente.getDireccion());
+            
+            // Manejar contraseña - solo actualizar si se proporcionó una nueva
+            if (cliente.getContrasenaHash() != null && !cliente.getContrasenaHash().isBlank()) {
+                System.out.println("[ClienteServiceImpl] Actualizando contraseña");
+                existing.setContrasenaHash(cliente.getContrasenaHash());
+            }
+
+            // Las relaciones (pedidos, carrito) se preservan automáticamente
+            System.out.println("[ClienteServiceImpl] Guardando cliente actualizado con ID: " + clienteId);
+            repository.save(existing);
+            System.out.println("[ClienteServiceImpl] ✓ Cliente guardado exitosamente");
+            return new ActionResult(true, null);
+            
+        } catch (Exception e) {
+            System.out.println("[ClienteServiceImpl] ERROR al guardar: " + e.getMessage());
+            e.printStackTrace();
+            return new ActionResult(false, "Error al guardar los cambios: " + e.getMessage());
+        }
     }
 
     @Override

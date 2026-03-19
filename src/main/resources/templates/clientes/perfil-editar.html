@@ -51,10 +51,15 @@
         <form
           class="mt-8 space-y-5"
           method="post"
-          th:action="@{/clientes/perfil/editar}"
+          th:action="@{/clientes/perfil/editar(emailOriginal=${cliente.email})}"
           th:object="${cliente}"
         >
-          <input type="hidden" th:field="*{id}" />
+          <input type="hidden" name="id" th:value="${cliente.id}" />
+          <input
+            type="hidden"
+            name="emailOriginal"
+            th:value="${cliente.email}"
+          />
           <div>
             <label
               class="block text-xs font-black uppercase tracking-widest mb-2"

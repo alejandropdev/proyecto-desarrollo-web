@@ -158,44 +158,90 @@ public String registro(@ModelAttribute Cliente cliente, RedirectAttributes redir
     @PostMapping("/perfil/editar")
     public String perfilEditar(@ModelAttribute Cliente cliente, 
                               @RequestParam(required = false) String newPassword,
+                              @RequestParam(required = false) String emailOriginal,
                               RedirectAttributes redirectAttributes) {
-        System.out.println("=== POST /perfil/editar ===");
-        System.out.println("Cliente ID: " + cliente.getId());
-        System.out.println("Cliente Email: " + cliente.getEmail());
-        System.out.println("New Password: " + newPassword);
+        System.out.println("\n=== POST /perfil/editar ===");
+        System.out.println("Cliente recibido: " + (cliente != null ? "SÍ" : "NO"));
+        if (cliente != null) {
+            System.out.println("  ID: " + cliente.getId());
+            System.out.println("  Email: " + cliente.getEmail());
+            System.out.println("  Nombre: " + cliente.getNombre());
+            System.out.println("  Apellido: " + cliente.getApellido());
+            System.out.println("  Teléfono: " + cliente.getTelefono());
+            System.out.println("  Dirección: " + cliente.getDireccion());
+        }
+        System.out.println("  Email original (param): " + emailOriginal);
+        System.out.println("  Nueva contraseña (param): " + newPassword);
         
-        // Si no hay ID, obtener el cliente de la base de datos por email
-        if (cliente.getId() == null && cliente.getEmail() != null) {
-            System.out.println("ID es null, buscando por email...");
-            var existingCliente = clienteService.findByEmail(cliente.getEmail());
+        // Validación básica
+        if (cliente == null) {
+            System.out.println("ERROR: Cliente es null");
+            redirectAttributes.addFlashAttribute("error", "Error: Cliente no encontrado.");
+            return "redirect:/clientes/login";
+        }
+        
+        // Si no hay ID, obtener el cliente de la base de datos por email original
+        if (cliente.getId() == null) {
+            String emailBusqueda = emailOriginal != null ? emailOriginal : cliente.getEmail();
+            System.out.println("Cliente sin ID, buscando por email: " + emailBusqueda);
+            
+            if (emailBusqueda == null || emailBusqueda.isBlank()) {
+                System.out.println("ERROR: No hay email para buscar");
+                redirectAttributes.addFlashAttribute("error", "Email no disponible.");
+                return "redirect:/clientes/login";
+            }
+            
+            var existingCliente = clienteService.findByEmail(emailBusqueda.trim());
             if (existingCliente.isPresent()) {
-                cliente.setId(existingCliente.get().getId());
-                System.out.println("Cliente encontrado! ID: " + cliente.getId());
+                Cliente dbCliente = existingCliente.get();
+                System.out.println("Cliente encontrado en BD. ID: " + dbCliente.getId());
+                cliente.setId(dbCliente.getId());
+                
                 // Si la nueva contraseña está vacía, mantener la anterior
                 if (newPassword == null || newPassword.isBlank()) {
-                    cliente.setContrasenaHash(existingCliente.get().getContrasenaHash());
+                    System.out.println("Preservando contraseña anterior");
+                    cliente.setContrasenaHash(dbCliente.getContrasenaHash());
                 } else {
+                    System.out.println("Actualizando contraseña");
                     cliente.setContrasenaHash(newPassword);
                 }
             } else {
-                System.out.println("Cliente NO encontrado por email");
+                System.out.println("ERROR: Cliente NO encontrado en BD por email: " + emailBusqueda);
+                redirectAttributes.addFlashAttribute("error", "Usuario no encontrado en el sistema.");
+                return "redirect:/clientes/perfil/editar?email=" + java.net.URLEncoder.encode(emailBusqueda, java.nio.charset.StandardCharsets.UTF_8);
+            }
+        } else {
+            // Si ya tiene ID, asegurarse de que la contraseña se mantenga si está vacía
+            System.out.println("Cliente YA tiene ID: " + cliente.getId());
+            if (newPassword == null || newPassword.isBlank()) {
+                System.out.println("Preservando contraseña anterior (cliente con ID)");
+                clienteService.findById(cliente.getId()).ifPresent(existing ->
+                        cliente.setContrasenaHash(existing.getContrasenaHash()));
+            } else {
+                System.out.println("Actualizando contraseña (cliente con ID)");
+                cliente.setContrasenaHash(newPassword);
             }
         }
         
-        System.out.println("Actualizando perfil... ID: " + cliente.getId());
+        System.out.println("Datos listos para guardar. ID: " + cliente.getId() + ", Email: " + cliente.getEmail());
         ClienteService.ActionResult result = clienteService.actualizarPerfil(cliente);
-        System.out.println("Resultado: " + result.success() + " - " + result.errorMessage());
+        System.out.println("Respuesta del servicio: éxito=" + result.success() + ", mensaje=" + result.errorMessage());
         
         if (!result.success()) {
-            System.out.println("Error al actualizar: " + result.errorMessage());
+            System.out.println("FALLIÓ la actualización. Redirigiendo a editar con error.");
             redirectAttributes.addFlashAttribute("error", result.errorMessage());
-            return "redirect:/clientes/login";
+            String redirectEmail = cliente.getEmail() != null ? cliente.getEmail() : (emailOriginal != null ? emailOriginal : "");
+            String redirectUrl = "redirect:/clientes/perfil/editar?email=" + java.net.URLEncoder.encode(redirectEmail, java.nio.charset.StandardCharsets.UTF_8);
+            System.out.println("Redirigiendo a: " + redirectUrl);
+            return redirectUrl;
         }
 
-        redirectAttributes.addFlashAttribute("message", "Perfil actualizado.");
-        String email = cliente.getEmail() != null ? cliente.getEmail() : "";
-        System.out.println("Redirigiendo a perfil con email: " + email);
-        return "redirect:/clientes/perfil?email=" + java.net.URLEncoder.encode(email, java.nio.charset.StandardCharsets.UTF_8);
+        System.out.println("✓ ÉXITO - Perfil actualizado correctamente");
+        redirectAttributes.addFlashAttribute("message", "Perfil actualizado exitosamente.");
+        String finalEmail = cliente.getEmail() != null ? cliente.getEmail() : "";
+        String redirectUrl = "redirect:/clientes/perfil?email=" + java.net.URLEncoder.encode(finalEmail, java.nio.charset.StandardCharsets.UTF_8);
+        System.out.println("Redirigiendo EXITOSAMENTE a: " + redirectUrl);
+        return redirectUrl;
     }
 
     /**
