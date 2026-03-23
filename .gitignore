@@ -19,7 +19,7 @@ dist/
 .angular/
 coverage/
 
-landing-angular/node_modules/
-landing-angular/dist/
-landing-angular/.angular/
-landing-angular/coverage/
+muk-angular/node_modules/
+muk-angular/dist/
+muk-angular/.angular/
+muk-angular/coverage/

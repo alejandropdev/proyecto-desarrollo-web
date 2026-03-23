@@ -1,0 +1,7 @@
+<div>
+  <label [for]="fieldId" class="block text-xs font-black uppercase tracking-widest mb-2" style="color:#8c0e03">
+    {{ label }}
+  </label>
+  <ng-content></ng-content>
+  <div *ngIf="hint" class="text-xs font-bold mt-2" style="color:#34100b;opacity:0.7">{{ hint }}</div>
+</div>

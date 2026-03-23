@@ -1,0 +1,52 @@
+<app-admin-page-shell
+  title="Administrar platos"
+  subtitle="Crear, editar o eliminar platos del menu."
+  actionLabel="+ Nuevo plato"
+  actionLink="/admin/platos/nuevo"
+>
+  <div class="rounded-3xl shadow-2xl overflow-hidden" style="background-color:white">
+    <div *ngIf="platos.length > 0; else emptyTable" class="overflow-x-auto">
+      <table class="w-full">
+        <thead style="background-color:#34100b">
+          <tr>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">ID</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">Nombre</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">Categoria</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">Precio</th>
+            <th class="text-right px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of platos" class="border-t" style="border-color:#f2b70533">
+            <td class="px-6 py-4 font-bold" style="color:#34100b">{{ p.id }}</td>
+            <td class="px-6 py-4">
+              <div class="font-black uppercase" style="color:#34100b">{{ p.nombre }}</div>
+              <div class="text-xs font-bold" style="color:#8c0e03;opacity:0.75">{{ p.descripcion }}</div>
+            </td>
+            <td class="px-6 py-4 font-bold" style="color:#8c0e03">{{ p.categoria?.nombre || '' }}</td>
+            <td class="px-6 py-4 font-black" style="color:#8c0e03">{{ p.precio }}</td>
+            <td class="px-6 py-4">
+              <div class="flex justify-end gap-3">
+                <a [routerLink]="['/admin/platos', p.id]">
+                  <app-admin-action-button label="Ver" kind="view"></app-admin-action-button>
+                </a>
+                <a [routerLink]="['/admin/platos', p.id, 'editar']">
+                  <app-admin-action-button label="Editar" kind="edit"></app-admin-action-button>
+                </a>
+                <app-admin-action-button label="Eliminar" kind="delete" (click)="onDelete(p.id)"></app-admin-action-button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyTable>
+      <app-admin-empty-state
+        message="Aun no hay platos creados."
+        actionLabel="Crear el primero"
+        actionLink="/admin/platos/nuevo"
+      ></app-admin-empty-state>
+    </ng-template>
+  </div>
+</app-admin-page-shell>

@@ -1,0 +1,8 @@
+<div class="p-10 text-center">
+  <p class="text-lg font-black" style="color:#34100b">{{ message }}</p>
+  <a *ngIf="actionLabel && actionLink" [routerLink]="actionLink" class="inline-block mt-5">
+    <button class="px-8 py-4 font-black rounded-full uppercase tracking-widest text-white" style="background-color:#f27405">
+      {{ actionLabel }}
+    </button>
+  </a>
+</div>

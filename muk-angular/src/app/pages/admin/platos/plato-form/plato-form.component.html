@@ -1,0 +1,95 @@
+<app-admin-page-shell
+  [title]="isEditMode ? 'Editar plato' : 'Nuevo plato'"
+  subtitle="Completa la informacion del plato. La URL de imagen se usa en las tarjetas del menu."
+>
+  <div class="rounded-3xl shadow-2xl p-8 sm:p-10" style="background-color:white">
+    <form #platoForm="ngForm" (ngSubmit)="onSubmit(platoForm)" class="space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <app-admin-form-field label="Nombre" fieldId="nombre">
+          <input
+            id="nombre"
+            name="nombre"
+            type="text"
+            [(ngModel)]="formData.nombre"
+            required
+            maxlength="100"
+            class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
+            style="border-color:#f2b705"
+          />
+        </app-admin-form-field>
+
+        <app-admin-form-field label="Categoria" fieldId="categoria">
+          <div class="relative">
+            <select
+              id="categoria"
+              name="categoriaId"
+              [(ngModel)]="formData.categoriaId"
+              required
+              class="w-full appearance-none px-5 py-4 pr-12 rounded-2xl font-bold border-4 focus:outline-none focus:ring-0"
+              style="border-color:#f2b705;color:#34100b;background-color:white;"
+            >
+              <option [ngValue]="null" disabled>Selecciona una categoria</option>
+              <option *ngFor="let cat of categorias" [ngValue]="cat.id">{{ cat.nombre }}</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center">
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="color:#8c0e03;">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+          </div>
+        </app-admin-form-field>
+
+        <app-admin-form-field label="Precio (COP)" fieldId="precio" hint="Sin puntos ni comas. Ej: 35000">
+          <input
+            id="precio"
+            name="precio"
+            type="number"
+            [(ngModel)]="formData.precio"
+            min="0"
+            required
+            class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
+            style="border-color:#f2b705"
+          />
+        </app-admin-form-field>
+
+        <app-admin-form-field label="URL de imagen" fieldId="imagenUrl" hint="Tip: mejor cuadrada u horizontal.">
+          <input
+            id="imagenUrl"
+            name="imagenUrl"
+            type="url"
+            [(ngModel)]="formData.imagenUrl"
+            required
+            maxlength="255"
+            placeholder="https://..."
+            class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
+            style="border-color:#f2b705"
+          />
+        </app-admin-form-field>
+      </div>
+
+      <app-admin-form-field label="Descripcion" fieldId="descripcion">
+        <textarea
+          id="descripcion"
+          name="descripcion"
+          [(ngModel)]="formData.descripcion"
+          required
+          maxlength="500"
+          rows="4"
+          placeholder="Describe el plato en una frase potente..."
+          class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
+          style="border-color:#f2b705"
+        ></textarea>
+      </app-admin-form-field>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4">
+        <a routerLink="/admin/platos" class="font-black uppercase tracking-widest text-sm" style="color:#8c0e03">← Volver</a>
+        <div class="flex gap-3">
+          <app-admin-action-button type="submit" label="Guardar" kind="primary"></app-admin-action-button>
+          <a routerLink="/admin/platos">
+            <app-admin-action-button label="Cancelar" kind="outline"></app-admin-action-button>
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-admin-page-shell>
