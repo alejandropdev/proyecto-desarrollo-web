@@ -1,0 +1,15 @@
+<button
+  [attr.type]="type"
+  class="px-4 py-2 rounded-full font-black uppercase text-xs transition-all hover:brightness-110"
+  [ngStyle]="{
+    'background-color':
+      kind === 'view' ? '#f2b705' :
+      kind === 'edit' ? '#f27405' :
+      kind === 'delete' ? '#d93d04' :
+      kind === 'outline' ? 'transparent' : '#f27405',
+    color: kind === 'view' ? '#34100b' : (kind === 'outline' ? '#f27405' : '#ffffff'),
+    border: kind === 'outline' ? '2px solid #f27405' : 'none'
+  }"
+>
+  {{ label }}
+</button>
