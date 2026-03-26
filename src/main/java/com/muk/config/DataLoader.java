@@ -230,7 +230,22 @@ public class DataLoader implements CommandLineRunner {
                 new Operador(null, "Paula Medina", "operador2", "hash-op-002"),
                 new Operador(null, "Santiago Rios", "operador3", "hash-op-003"),
                 new Operador(null, "Daniela Cruz", "operador4", "hash-op-004"),
-                new Operador(null, "Nicolas Vega", "operador5", "hash-op-005")
+                new Operador(null, "Nicolas Vega", "operador5", "hash-op-005"),
+                new Operador(null, "Mariana Lopez", "operador6", "hash-op-006"),
+                new Operador(null, "Esteban Ramirez", "operador7", "hash-op-007"),
+                new Operador(null, "Valeria Cardenas", "operador8", "hash-op-008"),
+                new Operador(null, "Sebastian Pineda", "operador9", "hash-op-009"),
+                new Operador(null, "Gabriela Molina", "operador10", "hash-op-010"),
+                new Operador(null, "Felipe Arias", "operador11", "hash-op-011"),
+                new Operador(null, "Natalia Ospina", "operador12", "hash-op-012"),
+                new Operador(null, "Juan David Suarez", "operador13", "hash-op-013"),
+                new Operador(null, "Laura Milena Prieto", "operador14", "hash-op-014"),
+                new Operador(null, "Andres Felipe Buitrago", "operador15", "hash-op-015"),
+                new Operador(null, "Catalina Mendez", "operador16", "hash-op-016"),
+                new Operador(null, "Kevin Alexander Forero", "operador17", "hash-op-017"),
+                new Operador(null, "Alejandra Tovar", "operador18", "hash-op-018"),
+                new Operador(null, "Miguel Angel Porras", "operador19", "hash-op-019"),
+                new Operador(null, "Diana Marcela Benitez", "operador20", "hash-op-020")
         );
         operadorRepository.saveAll(operadores);
     }
@@ -310,7 +325,7 @@ public class DataLoader implements CommandLineRunner {
         List<Cliente> clientes = clienteRepository.findAll();
         List<Operador> operadores = operadorRepository.findAll();
         List<Domiciliario> domiciliarios = domiciliarioRepository.findAll();
-        if (clientes.size() < 5 || operadores.size() < 5 || domiciliarios.size() < 5) {
+        if (clientes.size() < 10 || operadores.size() < 20 || domiciliarios.size() < 5) {
             return;
         }
 
@@ -335,7 +350,74 @@ public class DataLoader implements CommandLineRunner {
         p5.setOperador(operadores.get(4));
         p5.setDomiciliario(domiciliarios.get(4));
 
-        pedidoRepository.saveAll(List.of(p1, p2, p3, p4, p5));
+        Pedido p6 = new Pedido(null, clientes.get(5), "PENDIENTE", LocalDateTime.now().minusMinutes(25));
+        p6.setOperador(operadores.get(5));
+        p6.setDomiciliario(domiciliarios.get(0));
+
+        Pedido p7 = new Pedido(null, clientes.get(6), "EN_PREPARACION", LocalDateTime.now().minusHours(3));
+        p7.setOperador(operadores.get(6));
+        p7.setDomiciliario(domiciliarios.get(1));
+
+        Pedido p8 = new Pedido(null, clientes.get(7), "EN_CAMINO", LocalDateTime.now().minusMinutes(55));
+        p8.setOperador(operadores.get(7));
+        p8.setDomiciliario(domiciliarios.get(2));
+
+        Pedido p9 = new Pedido(null, clientes.get(8), "ENTREGADO", LocalDateTime.now().minusDays(2));
+        p9.setOperador(operadores.get(8));
+        p9.setDomiciliario(domiciliarios.get(3));
+        p9.setFechaEntrega(LocalDateTime.now().minusDays(2).plusMinutes(38));
+
+        Pedido p10 = new Pedido(null, clientes.get(9), "CANCELADO", LocalDateTime.now().minusHours(7));
+        p10.setOperador(operadores.get(9));
+        p10.setDomiciliario(domiciliarios.get(4));
+
+        Pedido p11 = new Pedido(null, clientes.get(0), "EN_PREPARACION", LocalDateTime.now().minusHours(4));
+        p11.setOperador(operadores.get(10));
+        p11.setDomiciliario(domiciliarios.get(0));
+
+        Pedido p12 = new Pedido(null, clientes.get(1), "EN_CAMINO", LocalDateTime.now().minusMinutes(70));
+        p12.setOperador(operadores.get(11));
+        p12.setDomiciliario(domiciliarios.get(1));
+
+        Pedido p13 = new Pedido(null, clientes.get(2), "ENTREGADO", LocalDateTime.now().minusDays(3));
+        p13.setOperador(operadores.get(12));
+        p13.setDomiciliario(domiciliarios.get(2));
+        p13.setFechaEntrega(LocalDateTime.now().minusDays(3).plusMinutes(52));
+
+        Pedido p14 = new Pedido(null, clientes.get(3), "PENDIENTE", LocalDateTime.now().minusMinutes(12));
+        p14.setOperador(operadores.get(13));
+        p14.setDomiciliario(domiciliarios.get(3));
+
+        Pedido p15 = new Pedido(null, clientes.get(4), "CANCELADO", LocalDateTime.now().minusHours(9));
+        p15.setOperador(operadores.get(14));
+        p15.setDomiciliario(domiciliarios.get(4));
+
+        Pedido p16 = new Pedido(null, clientes.get(5), "EN_CAMINO", LocalDateTime.now().minusMinutes(33));
+        p16.setOperador(operadores.get(15));
+        p16.setDomiciliario(domiciliarios.get(0));
+
+        Pedido p17 = new Pedido(null, clientes.get(6), "ENTREGADO", LocalDateTime.now().minusDays(4));
+        p17.setOperador(operadores.get(16));
+        p17.setDomiciliario(domiciliarios.get(1));
+        p17.setFechaEntrega(LocalDateTime.now().minusDays(4).plusMinutes(41));
+
+        Pedido p18 = new Pedido(null, clientes.get(7), "PENDIENTE", LocalDateTime.now().minusMinutes(8));
+        p18.setOperador(operadores.get(17));
+        p18.setDomiciliario(domiciliarios.get(2));
+
+        Pedido p19 = new Pedido(null, clientes.get(8), "EN_PREPARACION", LocalDateTime.now().minusHours(6));
+        p19.setOperador(operadores.get(18));
+        p19.setDomiciliario(domiciliarios.get(3));
+
+        Pedido p20 = new Pedido(null, clientes.get(9), "ENTREGADO", LocalDateTime.now().minusDays(5));
+        p20.setOperador(operadores.get(19));
+        p20.setDomiciliario(domiciliarios.get(4));
+        p20.setFechaEntrega(LocalDateTime.now().minusDays(5).plusMinutes(47));
+
+        pedidoRepository.saveAll(List.of(
+                p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,
+                p11, p12, p13, p14, p15, p16, p17, p18, p19, p20
+        ));
     }
 
 }
