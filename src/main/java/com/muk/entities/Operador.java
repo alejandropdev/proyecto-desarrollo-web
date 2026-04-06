@@ -27,6 +27,9 @@ public class Operador {
     @Column(nullable = false, length = 100, name = "contraseña_hash")
     private String contrasenaHash;
 
+    @Column(nullable = false)
+    private Boolean activo = true;
+
     @OneToMany(mappedBy = "operador")
     private List<Pedido> pedidosGestionados;
 

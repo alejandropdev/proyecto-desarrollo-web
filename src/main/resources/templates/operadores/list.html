@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Muk. Admin | Platos</title>
+  <title>Muk. Admin | Operadores</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -18,11 +18,11 @@
 
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
       <div>
-        <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tighter" style="color:#34100B">Administrar platos</h1>
-        <p class="font-bold mt-2" style="color:#8C0E03;opacity:0.8">Crear, editar o eliminar platos del menú.</p>
+        <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tighter" style="color:#34100B">Administrar operadores</h1>
+        <p class="font-bold mt-2" style="color:#8C0E03;opacity:0.8">Crear, editar o eliminar operadores del sistema.</p>
       </div>
-      <a th:href="@{/admin/platos/nuevo}">
-        <button class="px-8 py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl transition-all hover:brightness-110" style="background-color:#F27405">+ Nuevo plato</button>
+      <a th:href="@{/operadores/new}">
+        <button class="px-8 py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl transition-all hover:brightness-110" style="background-color:#F27405">+ Nuevo operador</button>
       </a>
     </div>
 
@@ -33,29 +33,26 @@
             <tr>
               <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#F2B705">ID</th>
               <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#F2B705">Nombre</th>
-              <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#F2B705">Categoría</th>
-              <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#F2B705">Precio</th>
+              <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#F2B705">Usuario</th>
               <th class="text-right px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#F2B705">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr th:each="p : ${platos}" class="border-t" style="border-color:#F2B70533">
-              <td class="px-6 py-4 font-bold" style="color:#34100B" th:text="${p.id}">1</td>
+            <tr th:each="o : ${operadores}" class="border-t" style="border-color:#F2B70533">
+              <td class="px-6 py-4 font-bold" style="color:#34100B" th:text="${o.id}">1</td>
               <td class="px-6 py-4">
-                <div class="font-black uppercase" style="color:#34100B" th:text="${p.nombre}">Nombre</div>
-                <div class="text-xs font-bold" style="color:#8C0E03;opacity:0.75" th:text="${p.descripcion}">Descripción</div>
+                <div class="font-black uppercase" style="color:#34100B" th:text="${o.nombre}">Nombre</div>
               </td>
-              <td class="px-6 py-4 font-bold" style="color:#D93D04" th:text="${p.categoria != null ? p.categoria.nombre : ''}">Categoria</td>
-              <td class="px-6 py-4 font-black" style="color:#D93D04" th:text="${p.precio}">$0</td>
+              <td class="px-6 py-4 font-bold" style="color:#D93D04" th:text="${o.usuario}">Usuario</td>
               <td class="px-6 py-4">
                 <div class="flex justify-end gap-3">
-                  <a th:href="@{/admin/platos/{id}(id=${p.id})}">
+                  <a th:href="@{/operadores/{id}(id=${o.id})}">
                     <button class="px-4 py-2 rounded-full font-black uppercase text-xs" style="background-color:#F2B705;color:#34100B">Ver</button>
                   </a>
-                  <a th:href="@{/admin/platos/{id}/editar(id=${p.id})}">
+                  <a th:href="@{/operadores/edit/{id}(id=${o.id})}">
                     <button class="px-4 py-2 rounded-full font-black uppercase text-xs text-white" style="background-color:#F27405">Editar</button>
                   </a>
-                  <form th:action="@{/admin/platos/{id}/eliminar(id=${p.id})}" method="post" onsubmit="return confirm('¿Eliminar este plato?');">
+                  <form th:action="@{/operadores/delete/{id}(id=${o.id})}" method="get" onsubmit="return confirm('¿Eliminar este operador?');">
                     <button type="submit" class="px-4 py-2 rounded-full font-black uppercase text-xs text-white" style="background-color:#D93D04">Eliminar</button>
                   </form>
                 </div>
@@ -65,9 +62,9 @@
         </table>
       </div>
 
-      <div th:if="${#lists.isEmpty(platos)}" class="p-10 text-center">
-        <p class="text-lg font-black" style="color:#34100B">Aún no hay platos creados.</p>
-        <a th:href="@{/admin/platos/nuevo}" class="inline-block mt-5">
+      <div th:if="${#lists.isEmpty(operadores)}" class="p-10 text-center">
+        <p class="text-lg font-black" style="color:#34100B">Aún no hay operadores creados.</p>
+        <a th:href="@{/operadores/new}" class="inline-block mt-5">
           <button class="px-8 py-4 font-black rounded-full uppercase tracking-widest text-white" style="background-color:#F27405">Crear el primero</button>
         </a>
       </div>

@@ -35,10 +35,9 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public void delete(Long id) {
-        productoRepository.findById(id).ifPresent(producto -> {
-            producto.setActivo(false);
-            productoRepository.save(producto);
-        });
+        if (id != null) {
+            productoRepository.deleteById(id);
+        }
     }
 
     @Override
