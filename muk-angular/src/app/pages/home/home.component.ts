@@ -13,6 +13,13 @@ export class HomeComponent implements OnInit {
   constructor(private productoService: ProductoService) {}
 
   ngOnInit(): void {
-    this.productosDestacados = this.productoService.getProductosDestacados();
+    this.productoService.getProductosDestacados().subscribe({
+      next: (productos) => {
+        this.productosDestacados = productos;
+      },
+      error: () => {
+        this.productosDestacados = [];
+      }
+    });
   }
 }

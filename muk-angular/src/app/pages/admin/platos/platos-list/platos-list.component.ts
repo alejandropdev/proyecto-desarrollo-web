@@ -20,11 +20,17 @@ export class PlatosListComponent implements OnInit {
     if (!window.confirm('¿Eliminar este plato?')) {
       return;
     }
-    this.platoService.deletePlato(id);
-    this.loadPlatos();
+    this.platoService.deletePlato(id).subscribe(() => this.loadPlatos());
   }
 
   private loadPlatos(): void {
-    this.platos = this.platoService.getPlatos();
+    this.platoService.getPlatos().subscribe({
+      next: (platos) => {
+        this.platos = platos;
+      },
+      error: () => {
+        this.platos = [];
+      }
+    });
   }
 }

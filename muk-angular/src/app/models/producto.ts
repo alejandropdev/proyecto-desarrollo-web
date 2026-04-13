@@ -6,6 +6,6 @@ export interface Producto {
   descripcion: string;
   precio: number;
   imagenUrl: string;
-  disponible: boolean;
+  activo: boolean;
   categoria: Categoria;
 }

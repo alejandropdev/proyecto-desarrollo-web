@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Categoria } from '../models/categoria';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoriaService {
+  private readonly apiUrl = '/api/categorias';
 
-  private categorias: Categoria[] = [
-    { id: 1, nombre: 'Hamburguesas' },
-    { id: 2, nombre: 'Ramen' },
-    { id: 3, nombre: 'Pollo' }
-  ];
+  constructor(private readonly http: HttpClient) { }
 
-  constructor() { }
+  getCategorias(): Observable<Categoria[]> {
+    return this.http.get<Categoria[]>(this.apiUrl);
+  }
 
-  getCategorias(): Categoria[] {
-    return this.categorias;
+  createCategoria(nombre: string): Observable<Categoria> {
+    return this.http.post<Categoria>(this.apiUrl, { nombre });
   }
 }

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +20,14 @@ import { AdminFormFieldComponent } from './components/admin/admin-form-field/adm
 import { PlatosListComponent } from './pages/admin/platos/platos-list/platos-list.component';
 import { PlatoFormComponent } from './pages/admin/platos/plato-form/plato-form.component';
 import { PlatoDetailComponent } from './pages/admin/platos/plato-detail/plato-detail.component';
+import { ComidaComponent } from './pages/comida/comida.component';
+import { UbicacionComponent } from './pages/ubicacion/ubicacion.component';
+import { PerfilComponent } from './pages/clientes/perfil/perfil.component';
+import { AdminLoginComponent } from './pages/admin/login/admin-login.component';
+import { OperadoresComponent } from './pages/admin/operadores/operadores.component';
+import { CategoriasComponent } from './pages/admin/categorias/categorias.component';
+import { ProductosComponent } from './pages/admin/productos/productos.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -37,11 +46,20 @@ import { PlatoDetailComponent } from './pages/admin/platos/plato-detail/plato-de
     AdminFormFieldComponent,
     PlatosListComponent,
     PlatoFormComponent,
-    PlatoDetailComponent
+    PlatoDetailComponent,
+    ComidaComponent,
+    UbicacionComponent,
+    PerfilComponent,
+    AdminLoginComponent,
+    OperadoresComponent,
+    CategoriasComponent,
+    ProductosComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     AppRoutingModule
   ],
   providers: [],

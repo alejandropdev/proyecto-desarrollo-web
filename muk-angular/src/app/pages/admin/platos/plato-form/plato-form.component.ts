@@ -36,23 +36,27 @@ export class PlatoFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categorias = this.platoService.getCategorias();
+    this.platoService.getCategorias().subscribe((categorias) => {
+      this.categorias = categorias;
+    });
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!Number.isNaN(id) && id > 0) {
-      const plato = this.platoService.getPlatoById(id);
-      if (!plato) {
-        this.router.navigate(['/admin/platos']);
-        return;
-      }
-      this.isEditMode = true;
-      this.formData = {
-        id: plato.id,
-        nombre: plato.nombre,
-        categoriaId: plato.categoria?.id ?? null,
-        precio: plato.precio,
-        imagenUrl: plato.imagenUrl,
-        descripcion: plato.descripcion
-      };
+      this.platoService.getPlatoById(id).subscribe({
+        next: (plato) => {
+          this.isEditMode = true;
+          this.formData = {
+            id: plato.id,
+            nombre: plato.nombre,
+            categoriaId: plato.categoria?.id ?? null,
+            precio: plato.precio,
+            imagenUrl: plato.imagenUrl,
+            descripcion: plato.descripcion
+          };
+        },
+        error: () => {
+          this.router.navigate(['/admin/platos']);
+        }
+      });
     }
   }
 
@@ -70,8 +74,8 @@ export class PlatoFormComponent implements OnInit {
       precio: this.formData.precio,
       imagenUrl: this.formData.imagenUrl,
       categoria
+    }).subscribe(() => {
+      this.router.navigate(['/admin/platos']);
     });
-
-    this.router.navigate(['/admin/platos']);
   }
 }

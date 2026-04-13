@@ -63,7 +63,8 @@
               "browserTarget": "muk-angular:build:production"
             },
             "development": {
-              "browserTarget": "muk-angular:build:development"
+              "browserTarget": "muk-angular:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

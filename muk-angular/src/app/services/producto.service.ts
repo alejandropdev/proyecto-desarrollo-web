@@ -1,52 +1,39 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Producto } from '../models/producto';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Plato } from '../models/plato';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductoService {
+  private readonly apiUrl = '/api/productos';
 
-  private productos: Producto[] = [
-    {
-      id: 1,
-      nombre: 'hOLSTER BURGER',
-      descripcion: 'Hamburguesa gigante para verdaderos valientes.',
-      precio: 49900,
-      imagenUrl: 'https://images.unsplash.com/photo-1582762147076-6d985d99975a?auto=format&fit=crop&w=1200&q=80',
-      disponible: true,
-      categoria: { id: 1, nombre: 'Hamburguesas' }
-    },
-    {
-      id: 2,
-      nombre: 'Nuclear Ramen',
-      descripcion: 'Ramen de picante extremo que pone a prueba tus límites.',
-      precio: 39900,
-      imagenUrl: 'https://i.redd.it/brpcqnn2zpv01.jpg',
-      disponible: true,
-      categoria: { id: 2, nombre: 'Ramen' }
-    },
-    {
-      id: 3,
-      nombre: 'Titan Chicken',
-      descripcion: 'Porción brutal de pollo para los más atrevidos.',
-      precio: 59900,
-      imagenUrl: 'https://images.unsplash.com/photo-1748864478869-c99e8436171b?auto=format&fit=crop&w=1200&q=80',
-      disponible: true,
-      categoria: { id: 3, nombre: 'Pollo' }
-    }
-  ];
+  constructor(private readonly http: HttpClient) { }
 
-  constructor() { }
-
-  getProductos(): Producto[] {
-    return this.productos;
+  getProductos(params?: { category?: string; q?: string }): Observable<Producto[]> {
+    return this.http.get<Producto[]>(this.apiUrl, { params: params ?? {} });
   }
 
-  getProductosDestacados(): Producto[] {
-    return this.productos.slice(0, 3);
+  getProductosDestacados(): Observable<Producto[]> {
+    return this.http.get<Producto[]>(this.apiUrl).pipe(map((productos) => productos.slice(0, 3)));
   }
 
-  getProductoById(id: number): Producto | undefined {
-    return this.productos.find(producto => producto.id === id);
+  getProductoById(id: number): Observable<Producto> {
+    return this.http.get<Producto>(`${this.apiUrl}/${id}`);
+  }
+
+  createProducto(payload: { nombre: string; descripcion: string; precio: number; imagenUrl: string; categoriaId: number }): Observable<Plato> {
+    return this.http.post<Plato>(this.apiUrl, payload);
+  }
+
+  updateProducto(id: number, payload: { nombre: string; descripcion: string; precio: number; imagenUrl: string; categoriaId: number }): Observable<Plato> {
+    return this.http.put<Plato>(`${this.apiUrl}/${id}`, payload);
+  }
+
+  deleteProducto(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
   }
 }

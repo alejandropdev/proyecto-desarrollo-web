@@ -1,0 +1,34 @@
+<app-admin-page-shell title="Operadores" subtitle="CRUD de operadores.">
+  <div class="rounded-3xl shadow-2xl p-8 mb-6" style="background-color:white">
+    <form class="grid grid-cols-1 sm:grid-cols-3 gap-3" (ngSubmit)="save()">
+      <input [(ngModel)]="form.nombre" name="nombre" placeholder="Nombre" required class="px-4 py-3 rounded-xl border-2" />
+      <input [(ngModel)]="form.usuario" name="usuario" placeholder="Usuario" required class="px-4 py-3 rounded-xl border-2" />
+      <input [(ngModel)]="form.contrasena" name="contrasena" [placeholder]="form.id ? 'Nueva contraseña (opcional)' : 'Contraseña'" class="px-4 py-3 rounded-xl border-2" [required]="!form.id" />
+      <button type="submit" class="px-6 py-3 rounded-xl font-black text-white uppercase" style="background-color:#d93d04">{{ form.id ? 'Actualizar' : 'Crear' }}</button>
+    </form>
+  </div>
+
+  <div class="rounded-3xl shadow-2xl overflow-hidden" style="background-color:white">
+    <table class="w-full">
+      <thead style="background-color:#34100b">
+        <tr>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Nombre</th>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Usuario</th>
+          <th class="text-right px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let o of operadores" class="border-t">
+          <td class="px-6 py-4 font-bold">{{ o.nombre }}</td>
+          <td class="px-6 py-4 font-bold">{{ o.usuario }}</td>
+          <td class="px-6 py-4">
+            <div class="flex justify-end gap-2">
+              <button type="button" (click)="edit(o)" class="px-3 py-2 rounded-full font-black text-xs text-white" style="background-color:#f27405">Editar</button>
+              <button type="button" (click)="remove(o.id)" class="px-3 py-2 rounded-full font-black text-xs text-white" style="background-color:#d93d04">Eliminar</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</app-admin-page-shell>

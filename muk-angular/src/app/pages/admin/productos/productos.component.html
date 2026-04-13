@@ -1,0 +1,41 @@
+<app-admin-page-shell title="Productos" subtitle="CRUD completo de productos.">
+  <div class="rounded-3xl shadow-2xl p-8 mb-6" style="background-color:white">
+    <form class="grid grid-cols-1 sm:grid-cols-2 gap-3" (ngSubmit)="save()">
+      <input [(ngModel)]="form.nombre" name="nombre" placeholder="Nombre" required class="px-4 py-3 rounded-xl border-2" />
+      <input [(ngModel)]="form.precio" name="precio" type="number" placeholder="Precio" required class="px-4 py-3 rounded-xl border-2" />
+      <input [(ngModel)]="form.imagenUrl" name="imagenUrl" placeholder="URL imagen" required class="px-4 py-3 rounded-xl border-2" />
+      <select [(ngModel)]="form.categoriaId" name="categoriaId" required class="px-4 py-3 rounded-xl border-2">
+        <option [ngValue]="0" disabled>Selecciona categoría</option>
+        <option *ngFor="let c of categorias" [ngValue]="c.id">{{ c.nombre }}</option>
+      </select>
+      <textarea [(ngModel)]="form.descripcion" name="descripcion" placeholder="Descripción" required class="sm:col-span-2 px-4 py-3 rounded-xl border-2"></textarea>
+      <button type="submit" class="px-6 py-3 rounded-xl font-black text-white uppercase sm:col-span-2" style="background-color:#d93d04">{{ form.id ? 'Actualizar' : 'Crear' }}</button>
+    </form>
+  </div>
+
+  <div class="rounded-3xl shadow-2xl overflow-hidden" style="background-color:white">
+    <table class="w-full">
+      <thead style="background-color:#34100b">
+        <tr>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Nombre</th>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Categoría</th>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Precio</th>
+          <th class="text-right px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of productos" class="border-t">
+          <td class="px-6 py-4 font-bold">{{ p.nombre }}</td>
+          <td class="px-6 py-4 font-bold">{{ p.categoria.nombre }}</td>
+          <td class="px-6 py-4 font-bold">{{ p.precio }}</td>
+          <td class="px-6 py-4">
+            <div class="flex justify-end gap-2">
+              <button type="button" (click)="edit(p)" class="px-3 py-2 rounded-full font-black text-xs text-white" style="background-color:#f27405">Editar</button>
+              <button type="button" (click)="remove(p.id)" class="px-3 py-2 rounded-full font-black text-xs text-white" style="background-color:#d93d04">Eliminar</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</app-admin-page-shell>

@@ -23,10 +23,14 @@ export class PlatoDetailComponent implements OnInit {
       this.router.navigate(['/admin/platos']);
       return;
     }
-    this.plato = this.platoService.getPlatoById(id);
-    if (!this.plato) {
-      this.router.navigate(['/admin/platos']);
-    }
+    this.platoService.getPlatoById(id).subscribe({
+      next: (plato) => {
+        this.plato = plato;
+      },
+      error: () => {
+        this.router.navigate(['/admin/platos']);
+      }
+    });
   }
 
   onDelete(): void {
@@ -36,7 +40,8 @@ export class PlatoDetailComponent implements OnInit {
     if (!window.confirm('¿Eliminar este plato?')) {
       return;
     }
-    this.platoService.deletePlato(this.plato.id);
-    this.router.navigate(['/admin/platos']);
+    this.platoService.deletePlato(this.plato.id).subscribe(() => {
+      this.router.navigate(['/admin/platos']);
+    });
   }
 }

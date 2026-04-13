@@ -1,0 +1,24 @@
+<app-admin-page-shell title="Categorías" subtitle="Gestión de categorías.">
+  <div class="rounded-3xl shadow-2xl p-8 mb-6" style="background-color:white">
+    <form class="flex gap-3" (ngSubmit)="create()">
+      <input [(ngModel)]="nombre" name="nombre" placeholder="Nueva categoría" required class="flex-1 px-4 py-3 rounded-xl border-2" />
+      <button type="submit" class="px-6 py-3 rounded-xl font-black text-white uppercase" style="background-color:#d93d04">Crear</button>
+    </form>
+  </div>
+  <div class="rounded-3xl shadow-2xl overflow-hidden" style="background-color:white">
+    <table class="w-full">
+      <thead style="background-color:#34100b">
+        <tr>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">ID</th>
+          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Nombre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of categorias" class="border-t">
+          <td class="px-6 py-4 font-bold">{{ c.id }}</td>
+          <td class="px-6 py-4 font-bold">{{ c.nombre }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</app-admin-page-shell>

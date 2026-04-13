@@ -1,0 +1,36 @@
+<main class="pt-24 pb-16 min-h-screen px-4 sm:px-8 lg:px-16" style="background-color:#faf7f0">
+  <div class="max-w-3xl mx-auto rounded-3xl shadow-2xl p-8 sm:p-10" style="background-color:white" *ngIf="cliente">
+    <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-center" style="color:#34100b">Mi perfil</h1>
+    <p class="text-center font-bold mt-2" style="color:#8c0e03;opacity:0.8">Gestiona tu información personal.</p>
+
+    <div *ngIf="!editMode" class="mt-8 space-y-3 font-bold" style="color:#34100b">
+      <p><span style="color:#8c0e03">Nombre:</span> {{ cliente.nombre }} {{ cliente.apellido }}</p>
+      <p><span style="color:#8c0e03">Correo:</span> {{ cliente.email }}</p>
+      <p><span style="color:#8c0e03">Teléfono:</span> {{ cliente.telefono }}</p>
+      <p><span style="color:#8c0e03">Dirección:</span> {{ cliente.direccion }}</p>
+    </div>
+
+    <form *ngIf="editMode" class="mt-8 space-y-4" (ngSubmit)="save()">
+      <input [(ngModel)]="form.nombre" name="nombre" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#f2b705" />
+      <input [(ngModel)]="form.apellido" name="apellido" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#f2b705" />
+      <input [(ngModel)]="form.email" name="email" type="email" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#f2b705" />
+      <input [(ngModel)]="form.telefono" name="telefono" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#f2b705" />
+      <input [(ngModel)]="form.direccion" name="direccion" required class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#f2b705" />
+      <input [(ngModel)]="form.contrasena" name="contrasena" type="password" placeholder="Nueva contraseña (opcional)" class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none" style="border-color:#f2b705" />
+      <button type="submit" class="w-full py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl" style="background-color:#f27405">Guardar cambios</button>
+    </form>
+
+    <div class="mt-8 flex flex-col sm:flex-row gap-3">
+      <button type="button" (click)="toggleEdit()" class="px-6 py-3 rounded-xl font-black uppercase text-white" style="background-color:#d93d04">
+        {{ editMode ? 'Cancelar edición' : 'Editar perfil' }}
+      </button>
+      <button type="button" (click)="deleteAccount()" class="px-6 py-3 rounded-xl font-black uppercase border-2" style="border-color:#d93d04;color:#d93d04">
+        Eliminar cuenta
+      </button>
+    </div>
+
+    <div *ngIf="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-4">
+      <p>{{ error }}</p>
+    </div>
+  </div>
+</main>

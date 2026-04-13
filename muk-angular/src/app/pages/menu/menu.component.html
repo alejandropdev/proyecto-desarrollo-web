@@ -1,8 +1,109 @@
-<section class="min-h-screen pt-32 px-6 py-16" style="background-color: #faf7f0;">
-  <div class="max-w-6xl mx-auto text-center">
-    <h1 class="text-5xl font-black uppercase" style="color: #34100b;">Menú</h1>
-    <p class="mt-4 text-lg font-bold" style="color: #8c0e03;">
-      Página base en Angular lista para conectar con productos dinámicos.
-    </p>
+<main class="pt-24 pb-16 bg-[#F7F1E8] text-[#34100B] min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+    <div class="mb-10">
+      <h1 class="text-4xl sm:text-5xl font-black uppercase tracking-tight" style="color:#34100B">MENÚ</h1>
+      <p class="mt-2 text-lg font-bold" style="color:#8C0E03">Explora nuestros platos por categoría.</p>
+    </div>
+
+    <div class="flex flex-col gap-6 mb-10">
+      <div class="flex flex-wrap items-center gap-3">
+        <form (ngSubmit)="onSearch()" class="flex-1 min-w-[200px] max-w-2xl">
+          <input
+            name="q"
+            [(ngModel)]="searchQuery"
+            placeholder="Buscar platos..."
+            class="w-full px-6 py-4 rounded-2xl font-bold text-base sm:text-lg shadow-lg border-4 focus:outline-none"
+            style="border-color:#F2B705"
+          />
+          <input type="hidden" name="category" [value]="selectedCategory" />
+        </form>
+        <button
+          type="button"
+          *ngIf="selectedCategory && adiciones.length"
+          (click)="showAdiciones = !showAdiciones"
+          class="px-5 py-4 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg border-4 focus:outline-none transition-all"
+          style="background-color:#F2B705; border-color:#F2B705; color:#34100B"
+        >
+          Adiciones
+        </button>
+      </div>
+
+      <div
+        *ngIf="selectedCategory && adiciones.length && showAdiciones"
+        class="rounded-2xl p-4 border-4 shadow-lg"
+        style="background-color:#F7F1E8; border-color:#F2B705"
+      >
+        <p class="text-sm font-black uppercase mb-3" style="color:#8C0E03">
+          Adiciones para {{ selectedCategory }}
+        </p>
+        <ul class="flex flex-wrap gap-2">
+          <li
+            *ngFor="let ad of adiciones"
+            class="py-2 px-4 rounded-xl font-bold text-[#2A0B07]"
+            style="background-color:#F2B70533"
+          >
+            {{ ad.nombre }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          type="button"
+          (click)="filterByCategory('')"
+          class="px-4 py-2 text-xs sm:text-sm font-black rounded-full uppercase tracking-wider transition-all"
+          [ngStyle]="{ 'background-color': selectedCategory ? '#F2B705' : '#34100B', color: selectedCategory ? '#34100B' : '#F2B705' }"
+        >
+          Todos
+        </button>
+
+        <button
+          type="button"
+          *ngFor="let cat of categorias"
+          (click)="filterByCategory(cat.nombre)"
+          class="px-4 py-2 text-xs sm:text-sm font-black rounded-full uppercase tracking-wider transition-all"
+          [ngStyle]="{ 'background-color': selectedCategory === cat.nombre ? '#34100B' : '#F2B705', color: selectedCategory === cat.nombre ? '#F2B705' : '#34100B' }"
+        >
+          {{ cat.nombre }}
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <a *ngFor="let dish of productos" [routerLink]="['/comida', dish.id]" class="group block">
+        <div class="rounded-[28px] shadow-2xl overflow-hidden transform transition-all group-hover:scale-[1.02]" style="background-color:#F2B705">
+          <div class="h-52 sm:h-56 relative overflow-hidden">
+            <img [src]="dish.imagenUrl" [alt]="dish.nombre" class="w-full h-full object-cover transform transition-transform group-hover:scale-110" />
+            <div
+              *ngIf="dish.categoria?.nombre"
+              class="absolute top-4 left-4 px-3 py-1.5 text-xs font-black rounded-full text-white"
+              style="background-color:#8C0E03"
+            >
+              {{ dish.categoria.nombre }}
+            </div>
+          </div>
+          <div class="p-6 flex flex-col" style="min-height: 250px;">
+            <h3 class="text-[#2A0B07] font-black text-3xl leading-tight uppercase line-clamp-2">{{ dish.nombre }}</h3>
+            <p class="text-lg sm:text-xl font-black italic mt-2" style="color:#8C0E03">${{ dish.precio }} COP</p>
+            <p class="text-[#2A0B07]/80 font-semibold mt-3 line-clamp-3">{{ dish.descripcion }}</p>
+            <div class="mt-auto pt-6">
+              <span class="bg-[#2A0B07] text-white font-black uppercase tracking-widest px-10 py-4 rounded-full inline-block">VER DETALLE</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div *ngIf="!productos.length" class="text-center py-20">
+      <p class="text-2xl font-black uppercase" style="color:#34100B">No encontramos platos con esos filtros.</p>
+      <button
+        type="button"
+        (click)="filterByCategory('')"
+        class="inline-block mt-6 px-10 py-4 font-black rounded-full uppercase tracking-widest"
+        style="background-color:#34100B;color:#F2B705"
+      >
+        Ver todo
+      </button>
+    </div>
   </div>
-</section>
+</main>
