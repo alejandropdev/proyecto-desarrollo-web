@@ -1,0 +1,62 @@
+<app-admin-page-shell
+  [title]="isEditMode ? 'Editar adicion' : 'Nueva adicion'"
+  subtitle="Completa la informacion de la adicion."
+>
+  <div class="rounded-3xl shadow-2xl p-8 sm:p-10" style="background-color:white">
+    <form #adicionForm="ngForm" (ngSubmit)="onSubmit(adicionForm)" class="space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <app-admin-form-field label="Nombre" fieldId="nombre">
+          <input
+            id="nombre"
+            name="nombre"
+            type="text"
+            [(ngModel)]="formData.nombre"
+            required
+            maxlength="100"
+            class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
+            style="border-color:#f2b705"
+          />
+        </app-admin-form-field>
+
+        <app-admin-form-field label="Categoria" fieldId="categoria">
+          <div class="relative">
+            <select
+              id="categoria"
+              name="categoriaId"
+              [(ngModel)]="formData.categoriaId"
+              required
+              class="w-full appearance-none px-5 py-4 pr-12 rounded-2xl font-bold border-4 focus:outline-none focus:ring-0"
+              style="border-color:#f2b705;color:#34100b;background-color:white;"
+            >
+              <option [ngValue]="null" disabled>Selecciona una categoria</option>
+              <option *ngFor="let cat of categorias" [ngValue]="cat.id">{{ cat.nombre }}</option>
+            </select>
+          </div>
+        </app-admin-form-field>
+
+        <app-admin-form-field label="Precio (COP)" fieldId="precio" hint="Sin puntos ni comas. Ej: 3500">
+          <input
+            id="precio"
+            name="precio"
+            type="number"
+            [(ngModel)]="formData.precio"
+            min="0"
+            required
+            class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
+            style="border-color:#f2b705"
+          />
+        </app-admin-form-field>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4">
+        <a routerLink="/admin/adiciones" class="font-black uppercase tracking-widest text-sm" style="color:#8c0e03">← Volver</a>
+        <div class="flex gap-3">
+          <app-admin-action-button type="submit" label="Guardar" kind="primary"></app-admin-action-button>
+          <a routerLink="/admin/adiciones">
+            <app-admin-action-button label="Cancelar" kind="outline"></app-admin-action-button>
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-admin-page-shell>

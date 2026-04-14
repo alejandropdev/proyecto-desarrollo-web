@@ -1,38 +1,41 @@
 package com.muk.controller.api;
 
 import com.muk.entities.Categoria;
-import com.muk.repository.CategoriaRepository;
-import lombok.RequiredArgsConstructor;
+import com.muk.service.CategoriaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/categorias")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class CategoriasApiController {
-    private final CategoriaRepository categoriaRepository;
+
+    private final CategoriaService categoriaService;
+
+    @Autowired
+    public CategoriasApiController(CategoriaService categoriaService) {
+        this.categoriaService = categoriaService;
+    }
 
     @GetMapping
     public List<ApiDtos.CategoriaDto> categorias() {
-        return categoriaRepository.findAllByOrderByNombreAsc().stream().map(ApiMappers::toCategoriaDto).toList();
+        return categoriaService.findAll().stream().map(ApiMappers::toCategoriaDto).toList();
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategoria(@RequestBody ApiDtos.CategoriaRequest request) {
-        String normalized = request.nombre() == null ? "" : request.nombre().trim();
-        if (normalized.isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "El nombre de categoría es obligatorio."));
+    public ResponseEntity<ApiDtos.CategoriaDto> createCategoria(@RequestBody ApiDtos.CategoriaRequest request) {
+        try {
+            String normalized = request.nombre() == null ? "" : request.nombre().trim();
+            boolean existed = categoriaService.findByNombre(normalized).isPresent();
+            Categoria categoria = categoriaService.createOrGetByNombre(request.nombre());
+            HttpStatus status = existed ? HttpStatus.OK : HttpStatus.CREATED;
+            return ResponseEntity.status(status).body(ApiMappers.toCategoriaDto(categoria));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().build();
         }
-        if (categoriaRepository.findByNombreIgnoreCase(normalized).isPresent()) {
-            return ResponseEntity.ok(ApiMappers.toCategoriaDto(categoriaRepository.findByNombreIgnoreCase(normalized).get()));
-        }
-        Categoria categoria = new Categoria();
-        categoria.setNombre(normalized);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toCategoriaDto(categoriaRepository.save(categoria)));
     }
 }

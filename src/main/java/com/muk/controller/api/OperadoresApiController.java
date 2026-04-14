@@ -2,7 +2,7 @@ package com.muk.controller.api;
 
 import com.muk.entities.Operador;
 import com.muk.service.OperadorService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,15 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/operadores")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class OperadoresApiController {
+
     private final OperadorService operadorService;
+
+    @Autowired
+    public OperadoresApiController(OperadorService operadorService) {
+        this.operadorService = operadorService;
+    }
 
     @GetMapping
     public List<ApiDtos.OperadorDto> operadores() {
@@ -27,15 +32,15 @@ public class OperadoresApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> operadorById(@PathVariable Long id) {
+    public ResponseEntity<Object> operadorById(@PathVariable Long id) {
         return operadorService.findById(id)
                 .filter(o -> Boolean.TRUE.equals(o.getActivo()))
-                .<ResponseEntity<?>>map(o -> ResponseEntity.ok(ApiMappers.toOperadorDto(o)))
+                .<ResponseEntity<Object>>map(o -> ResponseEntity.ok(ApiMappers.toOperadorDto(o)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Operador no encontrado.")));
     }
 
     @PostMapping
-    public ResponseEntity<?> createOperador(@RequestBody ApiDtos.OperadorRequest request) {
+    public ResponseEntity<Object> createOperador(@RequestBody ApiDtos.OperadorRequest request) {
         Operador operador = new Operador();
         operador.setNombre(request.nombre().trim());
         operador.setUsuario(request.usuario().trim());
@@ -45,7 +50,7 @@ public class OperadoresApiController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOperador(@PathVariable Long id, @RequestBody ApiDtos.OperadorRequest request) {
+    public ResponseEntity<Object> updateOperador(@PathVariable Long id, @RequestBody ApiDtos.OperadorRequest request) {
         Optional<Operador> existing = operadorService.findById(id);
         if (existing.isEmpty() || !Boolean.TRUE.equals(existing.get().getActivo())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Operador no encontrado."));
@@ -60,8 +65,8 @@ public class OperadoresApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOperador(@PathVariable Long id) {
+    public ResponseEntity<ApiDtos.MessageResponse> deleteOperador(@PathVariable Long id) {
         operadorService.delete(id);
-        return ResponseEntity.ok(Map.of("message", "Operador eliminado."));
+        return ResponseEntity.ok(new ApiDtos.MessageResponse("Operador eliminado."));
     }
 }

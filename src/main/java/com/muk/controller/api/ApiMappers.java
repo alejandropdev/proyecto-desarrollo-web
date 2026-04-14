@@ -28,7 +28,14 @@ public final class ApiMappers {
     }
 
     public static ApiDtos.AdicionalDto toAdicionalDto(Adicional adicional) {
-        return new ApiDtos.AdicionalDto(adicional.getId(), adicional.getNombre(), adicional.getPrecio(), Boolean.TRUE.equals(adicional.getActivo()));
+        ApiDtos.CategoriaDto categoria = adicional.getCategoria() == null ? null : toCategoriaDto(adicional.getCategoria());
+        return new ApiDtos.AdicionalDto(
+                adicional.getId(),
+                adicional.getNombre(),
+                adicional.getPrecio(),
+                Boolean.TRUE.equals(adicional.getActivo()),
+                categoria
+        );
     }
 
     public static ApiDtos.ClienteDto toClienteDto(Cliente cliente) {

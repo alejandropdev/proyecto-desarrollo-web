@@ -1,0 +1,51 @@
+<app-admin-page-shell
+  title="Administrar adiciones"
+  subtitle="Crear, editar o eliminar adiciones del menu."
+  actionLabel="+ Nueva adicion"
+  actionLink="/admin/adiciones/nuevo"
+>
+  <div class="rounded-3xl shadow-2xl overflow-hidden" style="background-color:white">
+    <div *ngIf="adiciones.length > 0; else emptyTable" class="overflow-x-auto">
+      <table class="w-full">
+        <thead style="background-color:#34100b">
+          <tr>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">ID</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">Nombre</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">Categoria</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">Precio</th>
+            <th class="text-right px-6 py-4 text-xs font-black uppercase tracking-widest" style="color:#f2b705">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of adiciones" class="border-t" style="border-color:#f2b70533">
+            <td class="px-6 py-4 font-bold" style="color:#34100b">{{ a.id }}</td>
+            <td class="px-6 py-4">
+              <div class="font-black uppercase" style="color:#34100b">{{ a.nombre }}</div>
+            </td>
+            <td class="px-6 py-4 font-bold" style="color:#8c0e03">{{ a.categoria?.nombre || '' }}</td>
+            <td class="px-6 py-4 font-black" style="color:#8c0e03">{{ a.precio }}</td>
+            <td class="px-6 py-4">
+              <div class="flex justify-end gap-3">
+                <a [routerLink]="['/admin/adiciones', a.id]">
+                  <app-admin-action-button label="Ver" kind="view"></app-admin-action-button>
+                </a>
+                <a [routerLink]="['/admin/adiciones', a.id, 'editar']">
+                  <app-admin-action-button label="Editar" kind="edit"></app-admin-action-button>
+                </a>
+                <app-admin-action-button label="Eliminar" kind="delete" (click)="onDelete(a.id)"></app-admin-action-button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyTable>
+      <app-admin-empty-state
+        message="Aun no hay adiciones creadas."
+        actionLabel="Crear la primera"
+        actionLink="/admin/adiciones/nuevo"
+      ></app-admin-empty-state>
+    </ng-template>
+  </div>
+</app-admin-page-shell>

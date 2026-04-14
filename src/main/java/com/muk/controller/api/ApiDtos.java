@@ -13,7 +13,7 @@ public final class ApiDtos {
     public record CategoriaDto(Long id, String nombre, String description) {
     }
 
-    public record AdicionalDto(Long id, String nombre, Double precio, boolean activo) {
+    public record AdicionalDto(Long id, String nombre, Double precio, boolean activo, CategoriaDto categoria) {
     }
 
     public record ClienteDto(Long id, String nombre, String apellido, String email, String telefono, String direccion) {
@@ -31,6 +31,9 @@ public final class ApiDtos {
     public record CategoriaRequest(String nombre) {
     }
 
+    public record AdicionalUpsertRequest(String nombre, Double precio, Long categoriaId) {
+    }
+
     public record OperadorRequest(String nombre, String usuario, String contrasena) {
     }
 
@@ -42,5 +45,8 @@ public final class ApiDtos {
     }
 
     public record AdminLoginRequest(String usuario, String password) {
+    }
+
+    public record MessageResponse(String message) {
     }
 }

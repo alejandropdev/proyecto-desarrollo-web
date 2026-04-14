@@ -8,5 +8,11 @@ public interface CategoriaService {
 
     List<Categoria> findAll();
 
+    Optional<Categoria> findById(Long id);
+
+    Optional<Categoria> findByNombre(String nombre);
+
+    Categoria createOrGetByNombre(String nombre);
+
     void addIfMissing(String category);
 }

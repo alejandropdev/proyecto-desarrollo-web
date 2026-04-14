@@ -28,6 +28,9 @@ import { OperadoresComponent } from './pages/admin/operadores/operadores.compone
 import { CategoriasComponent } from './pages/admin/categorias/categorias.component';
 import { ProductosComponent } from './pages/admin/productos/productos.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/adiciones-list.component';
+import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
+import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +57,10 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     OperadoresComponent,
     CategoriasComponent,
     ProductosComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AdicionesListComponent,
+    AdicionFormComponent,
+    AdicionDetailComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 package com.muk.service;
 
+import com.muk.controller.api.ApiDtos;
 import com.muk.entities.Producto;
 
 import java.util.List;
@@ -15,6 +16,12 @@ public interface ProductoService {
     Optional<Producto> findById(Long id);
 
     Producto save(Producto producto);
+
+    Producto createProducto(ApiDtos.ProductoUpsertRequest request);
+
+    Optional<Producto> updateProducto(Long id, ApiDtos.ProductoUpsertRequest request);
+
+    List<Producto> findByFilters(String category, String query);
 
     void delete(Long id);
 
