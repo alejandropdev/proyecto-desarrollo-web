@@ -16,9 +16,13 @@ public interface ProductoService {
 
     Producto save(Producto producto);
 
+    Producto saveFromAdminForm(Producto producto);
+
     void delete(Long id);
 
     List<Producto> findByCategory(String category);
 
     List<Producto> searchByName(String query);
+
+    List<Producto> findByFilters(String category, String query);
 }

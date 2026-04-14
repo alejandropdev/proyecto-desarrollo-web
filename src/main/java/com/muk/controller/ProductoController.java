@@ -16,11 +16,15 @@ import java.util.List;
 @RequestMapping("/productos")
 public class ProductoController {
 
-    @Autowired
-    private ProductoService productoService;
+    private final ProductoService productoService;
+
+    private final CategoriaService categoriaService;
 
     @Autowired
-    private CategoriaService categoriaService;
+    public ProductoController(ProductoService productoService, CategoriaService categoriaService) {
+        this.productoService = productoService;
+        this.categoriaService = categoriaService;
+    }
 
     @GetMapping
     public String list(
@@ -28,14 +32,7 @@ public class ProductoController {
             @RequestParam(required = false) String q,
             Model model) {
 
-        List<Producto> products;
-        if (q != null && !q.isBlank()) {
-            products = productoService.searchByName(q.trim());
-        } else if (category != null && !category.isBlank()) {
-            products = productoService.findByCategory(category.trim());
-        } else {
-            products = productoService.findAll();
-        }
+        List<Producto> products = productoService.findByFilters(category, q);
 
         List<Categoria> categories = categoriaService.findAll();
 

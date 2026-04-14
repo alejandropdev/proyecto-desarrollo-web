@@ -6,6 +6,7 @@ import com.muk.service.AdicionalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -17,5 +18,13 @@ public class AdicionalServiceImpl implements AdicionalService {
     @Override
     public List<Adicional> findByCategoriaNombre(String nombre) {
         return repository.findByCategoria_NombreIgnoreCaseOrderByNombreAsc(nombre);
+    }
+
+    @Override
+    public List<Adicional> findForMenuCategory(String category) {
+        if (category == null || category.isBlank()) {
+            return Collections.emptyList();
+        }
+        return findByCategoriaNombre(category.trim());
     }
 }

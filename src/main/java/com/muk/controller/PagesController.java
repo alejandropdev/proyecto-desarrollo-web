@@ -12,20 +12,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.Collections;
 import java.util.List;
 
 @Controller
 public class PagesController {
 
-    @Autowired
-    private ProductoService productoService;
+    private final ProductoService productoService;
+
+    private final CategoriaService categoriaService;
+
+    private final AdicionalService adicionalService;
 
     @Autowired
-    private CategoriaService categoriaService;
-
-    @Autowired
-    private AdicionalService adicionalService;
+    public PagesController(
+            ProductoService productoService,
+            CategoriaService categoriaService,
+            AdicionalService adicionalService) {
+        this.productoService = productoService;
+        this.categoriaService = categoriaService;
+        this.adicionalService = adicionalService;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
@@ -39,19 +45,10 @@ public class PagesController {
             @org.springframework.web.bind.annotation.RequestParam(required = false) String category,
             @org.springframework.web.bind.annotation.RequestParam(required = false) String q) {
 
-        List<Producto> foods;
-        if (q != null && !q.isBlank()) {
-            foods = productoService.searchByName(q.trim());
-        } else if (category != null && !category.isBlank()) {
-            foods = productoService.findByCategory(category.trim());
-        } else {
-            foods = productoService.findAll();
-        }
+        List<Producto> foods = productoService.findByFilters(category, q);
 
         List<Categoria> categories = categoriaService.findAll();
-        List<Adicional> adiciones = (category != null && !category.isBlank())
-                ? adicionalService.findByCategoriaNombre(category.trim())
-                : Collections.emptyList();
+        List<Adicional> adiciones = adicionalService.findForMenuCategory(category);
 
         model.addAttribute("foods", foods);
         model.addAttribute("categories", categories);

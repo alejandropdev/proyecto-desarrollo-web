@@ -16,11 +16,15 @@ import java.util.List;
 @RequestMapping("/admin/platos")
 public class AdminPlatoController {
 
-    @Autowired
-    private ProductoService productoService;
+    private final ProductoService productoService;
+
+    private final CategoriaService categoriaService;
 
     @Autowired
-    private CategoriaService categoriaService;
+    public AdminPlatoController(ProductoService productoService, CategoriaService categoriaService) {
+        this.productoService = productoService;
+        this.categoriaService = categoriaService;
+    }
 
     @GetMapping
     public String list(
@@ -28,14 +32,7 @@ public class AdminPlatoController {
             @RequestParam(required = false) String q,
             Model model) {
 
-        List<Producto> platos;
-        if (q != null && !q.isBlank()) {
-            platos = productoService.searchByName(q.trim());
-        } else if (category != null && !category.isBlank()) {
-            platos = productoService.findByCategory(category.trim());
-        } else {
-            platos = productoService.findAll();
-        }
+        List<Producto> platos = productoService.findByFilters(category, q);
 
         model.addAttribute("platos", platos);
         model.addAttribute("categories", categoriaService.findAll());
@@ -57,11 +54,8 @@ public class AdminPlatoController {
 
     @PostMapping("/guardar")
     public String save(@ModelAttribute("plato") Producto plato, RedirectAttributes redirectAttributes) {
-        if (plato.getCategoria() != null && plato.getCategoria().getId() == null) {
-            plato.setCategoria(null);
-        }
         boolean creating = (plato.getId() == null);
-        productoService.save(plato);
+        productoService.saveFromAdminForm(plato);
         redirectAttributes.addFlashAttribute("message", creating ? "Plato creado." : "Plato actualizado.");
         return "redirect:/admin/platos";
     }

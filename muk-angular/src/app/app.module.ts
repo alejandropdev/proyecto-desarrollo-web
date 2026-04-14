@@ -19,6 +19,9 @@ import { AdminFormFieldComponent } from './components/admin/admin-form-field/adm
 import { PlatosListComponent } from './pages/admin/platos/platos-list/platos-list.component';
 import { PlatoFormComponent } from './pages/admin/platos/plato-form/plato-form.component';
 import { PlatoDetailComponent } from './pages/admin/platos/plato-detail/plato-detail.component';
+import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/adiciones-list.component';
+import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
+import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,10 @@ import { PlatoDetailComponent } from './pages/admin/platos/plato-detail/plato-de
     AdminFormFieldComponent,
     PlatosListComponent,
     PlatoFormComponent,
-    PlatoDetailComponent
+    PlatoDetailComponent,
+    AdicionesListComponent,
+    AdicionFormComponent,
+    AdicionDetailComponent
   ],
   imports: [
     BrowserModule,

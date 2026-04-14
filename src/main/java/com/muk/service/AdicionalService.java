@@ -7,4 +7,6 @@ import java.util.List;
 public interface AdicionalService {
 
     List<Adicional> findByCategoriaNombre(String nombre);
+
+    List<Adicional> findForMenuCategory(String category);
 }
