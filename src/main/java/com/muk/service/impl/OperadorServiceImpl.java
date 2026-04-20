@@ -3,17 +3,21 @@ package com.muk.service.impl;
 import com.muk.entities.Operador;
 import com.muk.repository.OperadorRepository;
 import com.muk.service.OperadorService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class OperadorServiceImpl implements OperadorService {
 
     private final OperadorRepository repository;
+
+    @Autowired
+    public OperadorServiceImpl(OperadorRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public List<Operador> findAll() {
