@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Producto } from '../../models/producto';
 import { Categoria } from '../../models/categoria';
-import { Adicional } from '../../models/adicional';
 import { MenuService } from '../../services/menu.service';
 
 @Component({
@@ -13,10 +12,8 @@ import { MenuService } from '../../services/menu.service';
 export class MenuComponent implements OnInit {
   productos: Producto[] = [];
   categorias: Categoria[] = [];
-  adiciones: Adicional[] = [];
   selectedCategory = '';
   searchQuery = '';
-  showAdiciones = false;
 
   constructor(
     private readonly menuService: MenuService,
@@ -57,14 +54,10 @@ export class MenuComponent implements OnInit {
         next: (response) => {
           this.productos = response.productos;
           this.categorias = response.categorias;
-          this.adiciones = response.adiciones;
-          this.showAdiciones = false;
         },
         error: () => {
           this.productos = [];
           this.categorias = [];
-          this.adiciones = [];
-          this.showAdiciones = false;
         }
       });
   }

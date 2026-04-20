@@ -19,7 +19,7 @@ export class CategoriasComponent implements OnInit {
 
   create(): void {
     if (!this.nombre.trim()) return;
-    this.categoriaService.createCategoria(this.nombre.trim()).subscribe(() => {
+    this.categoriaService.createCategoria({ nombre: this.nombre }).subscribe(() => {
       this.nombre = '';
       this.load();
     });

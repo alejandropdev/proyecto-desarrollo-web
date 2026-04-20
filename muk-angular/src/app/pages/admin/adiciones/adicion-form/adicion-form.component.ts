@@ -2,14 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Categoria } from '../../../../models/categoria';
-import { AdicionalService } from '../../../../services/adicional.service';
-
-interface AdicionFormModel {
-  id?: number;
-  nombre: string;
-  categoriaId: number | null;
-  precio: number | null;
-}
+import { AdicionFormModel, AdicionalService } from '../../../../services/adicional.service';
 
 @Component({
   selector: 'app-adicion-form',
@@ -18,18 +11,16 @@ interface AdicionFormModel {
 })
 export class AdicionFormComponent implements OnInit {
   categorias: Categoria[] = [];
-  formData: AdicionFormModel = {
-    nombre: '',
-    categoriaId: null,
-    precio: null
-  };
+  formData: AdicionFormModel;
   isEditMode = false;
 
   constructor(
     private readonly adicionalService: AdicionalService,
     private readonly route: ActivatedRoute,
     private readonly router: Router
-  ) {}
+  ) {
+    this.formData = this.adicionalService.buildInitialFormData();
+  }
 
   ngOnInit(): void {
     this.adicionalService.getCategorias().subscribe((categorias) => {
@@ -41,12 +32,7 @@ export class AdicionFormComponent implements OnInit {
       this.adicionalService.getAdicionById(id).subscribe({
         next: (adicion) => {
           this.isEditMode = true;
-          this.formData = {
-            id: adicion.id,
-            nombre: adicion.nombre,
-            categoriaId: adicion.categoria?.id ?? null,
-            precio: adicion.precio
-          };
+          this.formData = this.adicionalService.mapToFormData(adicion);
         },
         error: () => {
           this.router.navigate(['/admin/adiciones']);
@@ -60,14 +46,7 @@ export class AdicionFormComponent implements OnInit {
       return;
     }
 
-    const categoria = this.categorias.find((item) => item.id === Number(this.formData.categoriaId)) ?? null;
-
-    this.adicionalService.saveAdicion({
-      id: this.formData.id,
-      nombre: this.formData.nombre,
-      precio: this.formData.precio,
-      categoria
-    }).subscribe(() => {
+    this.adicionalService.saveAdicionFromForm(this.formData).subscribe(() => {
       this.router.navigate(['/admin/adiciones']);
     });
   }

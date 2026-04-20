@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Producto } from '../../../models/producto';
 import { Categoria } from '../../../models/categoria';
-import { ProductoService } from '../../../services/producto.service';
+import { ProductoFormState, ProductoService } from '../../../services/producto.service';
 import { CategoriaService } from '../../../services/categoria.service';
 
 @Component({
@@ -12,12 +12,14 @@ import { CategoriaService } from '../../../services/categoria.service';
 export class ProductosComponent implements OnInit {
   productos: Producto[] = [];
   categorias: Categoria[] = [];
-  form = { id: 0, nombre: '', descripcion: '', precio: 0, imagenUrl: '', categoriaId: 0 };
+  form: ProductoFormState;
 
   constructor(
     private readonly productoService: ProductoService,
     private readonly categoriaService: CategoriaService
-  ) {}
+  ) {
+    this.form = this.productoService.buildInitialFormState();
+  }
 
   ngOnInit(): void {
     this.load();
@@ -25,29 +27,12 @@ export class ProductosComponent implements OnInit {
   }
 
   edit(producto: Producto): void {
-    this.form = {
-      id: producto.id,
-      nombre: producto.nombre,
-      descripcion: producto.descripcion,
-      precio: producto.precio,
-      imagenUrl: producto.imagenUrl,
-      categoriaId: producto.categoria.id
-    };
+    this.form = this.productoService.mapToFormState(producto);
   }
 
   save(): void {
-    const payload = {
-      nombre: this.form.nombre,
-      descripcion: this.form.descripcion,
-      precio: this.form.precio,
-      imagenUrl: this.form.imagenUrl,
-      categoriaId: this.form.categoriaId
-    };
-    const req = this.form.id
-      ? this.productoService.updateProducto(this.form.id, payload)
-      : this.productoService.createProducto(payload);
-    req.subscribe(() => {
-      this.form = { id: 0, nombre: '', descripcion: '', precio: 0, imagenUrl: '', categoriaId: 0 };
+    this.productoService.save(this.form).subscribe(() => {
+      this.form = this.productoService.buildInitialFormState();
       this.load();
     });
   }

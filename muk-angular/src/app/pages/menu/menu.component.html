@@ -17,34 +17,6 @@
           />
           <input type="hidden" name="category" [value]="selectedCategory" />
         </form>
-        <button
-          type="button"
-          *ngIf="selectedCategory && adiciones.length"
-          (click)="showAdiciones = !showAdiciones"
-          class="px-5 py-4 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg border-4 focus:outline-none transition-all"
-          style="background-color:#F2B705; border-color:#F2B705; color:#34100B"
-        >
-          Adiciones
-        </button>
-      </div>
-
-      <div
-        *ngIf="selectedCategory && adiciones.length && showAdiciones"
-        class="rounded-2xl p-4 border-4 shadow-lg"
-        style="background-color:#F7F1E8; border-color:#F2B705"
-      >
-        <p class="text-sm font-black uppercase mb-3" style="color:#8C0E03">
-          Adiciones para {{ selectedCategory }}
-        </p>
-        <ul class="flex flex-wrap gap-2">
-          <li
-            *ngFor="let ad of adiciones"
-            class="py-2 px-4 rounded-xl font-bold text-[#2A0B07]"
-            style="background-color:#F2B70533"
-          >
-            {{ ad.nombre }}
-          </li>
-        </ul>
       </div>
 
       <div class="flex flex-wrap gap-3">

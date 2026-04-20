@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Operador } from '../../../models/operador';
-import { OperadorService } from '../../../services/operador.service';
+import { OperadorFormState, OperadorService } from '../../../services/operador.service';
 
 @Component({
   selector: 'app-operadores',
@@ -9,25 +9,23 @@ import { OperadorService } from '../../../services/operador.service';
 })
 export class OperadoresComponent implements OnInit {
   operadores: Operador[] = [];
-  form = { id: 0, nombre: '', usuario: '', contrasena: '' };
+  form: OperadorFormState;
 
-  constructor(private readonly operadorService: OperadorService) {}
+  constructor(private readonly operadorService: OperadorService) {
+    this.form = this.operadorService.buildInitialFormState();
+  }
 
   ngOnInit(): void {
     this.load();
   }
 
   edit(operador: Operador): void {
-    this.form = { id: operador.id, nombre: operador.nombre, usuario: operador.usuario, contrasena: '' };
+    this.form = this.operadorService.mapToFormState(operador);
   }
 
   save(): void {
-    const payload = { nombre: this.form.nombre, usuario: this.form.usuario, contrasena: this.form.contrasena };
-    const req = this.form.id
-      ? this.operadorService.update(this.form.id, payload)
-      : this.operadorService.create(payload);
-    req.subscribe(() => {
-      this.form = { id: 0, nombre: '', usuario: '', contrasena: '' };
+    this.operadorService.save(this.form).subscribe(() => {
+      this.form = this.operadorService.buildInitialFormState();
       this.load();
     });
   }

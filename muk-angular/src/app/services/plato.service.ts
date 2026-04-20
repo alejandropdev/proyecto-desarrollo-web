@@ -4,6 +4,15 @@ import { Categoria } from '../models/categoria';
 import { Plato } from '../models/plato';
 import { Observable } from 'rxjs';
 
+export interface PlatoFormModel {
+  id?: number;
+  nombre: string;
+  categoriaId: number | null;
+  precio: number | null;
+  imagenUrl: string;
+  descripcion: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,6 +31,41 @@ export class PlatoService {
 
   getPlatoById(id: number): Observable<Plato> {
     return this.http.get<Plato>(`${this.apiUrl}/${id}`);
+  }
+
+  buildInitialFormData(): PlatoFormModel {
+    return {
+      nombre: '',
+      categoriaId: null,
+      precio: null,
+      imagenUrl: '',
+      descripcion: ''
+    };
+  }
+
+  mapToFormData(plato: Plato): PlatoFormModel {
+    return {
+      id: plato.id,
+      nombre: plato.nombre,
+      categoriaId: plato.categoria?.id ?? null,
+      precio: plato.precio,
+      imagenUrl: plato.imagenUrl,
+      descripcion: plato.descripcion
+    };
+  }
+
+  savePlatoFromForm(formData: PlatoFormModel): Observable<Plato> {
+    const payload = {
+      nombre: formData.nombre.trim(),
+      descripcion: formData.descripcion.trim(),
+      precio: formData.precio,
+      imagenUrl: formData.imagenUrl.trim(),
+      categoriaId: formData.categoriaId
+    };
+    if (formData.id === undefined) {
+      return this.http.post<Plato>(this.apiUrl, payload);
+    }
+    return this.http.put<Plato>(`${this.apiUrl}/${formData.id}`, payload);
   }
 
   savePlato(input: Omit<Plato, 'id' | 'activo'> & { id?: number }): Observable<Plato> {

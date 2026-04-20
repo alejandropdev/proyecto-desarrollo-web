@@ -20,6 +20,27 @@
         </h1>
         <p class="mt-4 text-xl sm:text-2xl font-black italic" style="color:#8c0e03">${{ producto.precio }} COP</p>
         <p class="mt-6 text-base sm:text-lg font-bold leading-relaxed" style="color:#34100b;opacity:0.85">{{ producto.descripcion }}</p>
+
+        <section class="mt-8" *ngIf="adiciones.length">
+          <h2 class="text-sm font-black uppercase tracking-widest mb-3" style="color:#8c0e03">
+            Selecciona tus adiciones
+          </h2>
+          <div class="flex flex-wrap gap-3">
+            <button
+              type="button"
+              *ngFor="let adicion of adiciones"
+              (click)="toggleAdicion(adicion.id)"
+              class="px-4 py-2 rounded-full border-2 font-black text-xs sm:text-sm uppercase tracking-wider transition-all"
+              [ngStyle]="{
+                'background-color': isAdicionSelected(adicion.id) ? '#34100B' : '#F2B70533',
+                'border-color': isAdicionSelected(adicion.id) ? '#34100B' : '#F2B705',
+                color: isAdicionSelected(adicion.id) ? '#F2B705' : '#34100B'
+              }"
+            >
+              {{ adicion.nombre }} (+${{ adicion.precio }})
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   </div>
