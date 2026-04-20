@@ -1,10 +1,6 @@
 package com.muk.controller.api;
 
-import com.muk.entities.Adicional;
-import com.muk.entities.Categoria;
-import com.muk.entities.Cliente;
-import com.muk.entities.Operador;
-import com.muk.entities.Producto;
+import com.muk.entities.*;
 
 public final class ApiMappers {
     private ApiMappers() {
@@ -51,5 +47,49 @@ public final class ApiMappers {
 
     public static ApiDtos.OperadorDto toOperadorDto(Operador operador) {
         return new ApiDtos.OperadorDto(operador.getId(), operador.getNombre(), operador.getUsuario(), Boolean.TRUE.equals(operador.getActivo()));
+    }
+
+    // Mappers para Pedidos
+    public static ApiDtos.PedidoDto toPedidoDto(Pedido pedido) {
+        return new ApiDtos.PedidoDto(
+                pedido.getId(),
+                pedido.getCliente().getId(),
+                pedido.getCantidadProductos(),
+                pedido.getCantidadAdiciones(),
+                pedido.getEstado(),
+                pedido.getFechaCreacion() != null ? pedido.getFechaCreacion().toString() : null,
+                pedido.getFechaEntrega() != null ? pedido.getFechaEntrega().toString() : null
+        );
+    }
+
+    public static ApiDtos.PedidoDetalleDto toPedidoDetalleDto(Pedido pedido) {
+        return new ApiDtos.PedidoDetalleDto(
+                pedido.getId(),
+                toClienteDto(pedido.getCliente()),
+                pedido.getCantidadProductos(),
+                pedido.getCantidadAdiciones(),
+                pedido.getEstado(),
+                pedido.getFechaCreacion() != null ? pedido.getFechaCreacion().toString() : null,
+                pedido.getFechaEntrega() != null ? pedido.getFechaEntrega().toString() : null,
+                pedido.getItems() != null ? pedido.getItems().stream().map(ApiMappers::toItemPedidoDto).toList() : null
+        );
+    }
+
+    public static ApiDtos.ItemPedidoDto toItemPedidoDto(ItemPedido itemPedido) {
+        return new ApiDtos.ItemPedidoDto(
+                itemPedido.getId(),
+                toProductoDto(itemPedido.getProducto()),
+                itemPedido.getCantidad(),
+                itemPedido.getPrecioUnitario(),
+                itemPedido.getSelecciones() != null ? itemPedido.getSelecciones().stream().map(ApiMappers::toSeleccionAdicionalPedidoDto).toList() : null
+        );
+    }
+
+    public static ApiDtos.SeleccionAdicionalPedidoDto toSeleccionAdicionalPedidoDto(SeleccionAdicionalPedido seleccion) {
+        return new ApiDtos.SeleccionAdicionalPedidoDto(
+                seleccion.getId(),
+                toAdicionalDto(seleccion.getAdicional()),
+                seleccion.getPrecio()
+        );
     }
 }

@@ -31,6 +31,9 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/adiciones-list.component';
 import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
 import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
+import { CrearPedidoComponent } from './pages/pedidos/crear-pedido/crear-pedido.component';
+import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
+import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
 
 @NgModule({
   declarations: [
@@ -60,15 +63,13 @@ import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/a
     NotFoundComponent,
     AdicionesListComponent,
     AdicionFormComponent,
-    AdicionDetailComponent
+    AdicionDetailComponent,
+    CrearPedidoComponent,
+    MisPedidosComponent,
+    DetallePedidoComponent,
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -7,7 +7,7 @@ import { MenuService } from '../../services/menu.service';
 @Component({
   selector: 'app-comida',
   templateUrl: './comida.component.html',
-  styleUrls: ['./comida.component.css']
+  styleUrls: ['./comida.component.css'],
 })
 export class ComidaComponent implements OnInit {
   producto?: Producto;
@@ -17,7 +17,7 @@ export class ComidaComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly menuService: MenuService
+    private readonly menuService: MenuService,
   ) {}
 
   ngOnInit(): void {
@@ -33,7 +33,7 @@ export class ComidaComponent implements OnInit {
       },
       error: () => {
         this.router.navigate(['/not-found']);
-      }
+      },
     });
   }
 
@@ -43,10 +43,35 @@ export class ComidaComponent implements OnInit {
 
   toggleAdicion(adicionId: number): void {
     if (this.isAdicionSelected(adicionId)) {
-      this.selectedAdiciones = this.selectedAdiciones.filter((id) => id !== adicionId);
+      this.selectedAdiciones = this.selectedAdiciones.filter(
+        (id) => id !== adicionId,
+      );
       return;
     }
     this.selectedAdiciones = [...this.selectedAdiciones, adicionId];
+  }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('clienteEmail');
+  }
+
+  hacerPedido(): void {
+    if (!this.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!this.producto) {
+      return;
+    }
+
+    // Navegar a crear-pedido con el producto seleccionado
+    this.router.navigate(['/pedidos/crear'], {
+      state: {
+        productId: this.producto.id,
+        selectedAdiciones: this.selectedAdiciones,
+      },
+    });
   }
 
   private loadAdicionesForCategoria(categoryName?: string): void {
@@ -61,7 +86,7 @@ export class ComidaComponent implements OnInit {
       },
       error: () => {
         this.adiciones = [];
-      }
+      },
     });
   }
 }

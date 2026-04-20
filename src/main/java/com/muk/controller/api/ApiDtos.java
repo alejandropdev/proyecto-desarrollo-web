@@ -49,4 +49,30 @@ public final class ApiDtos {
 
     public record MessageResponse(String message) {
     }
+
+    // Pedidos DTOs
+    public record CrearPedidoRequest(List<ItemPedidoRequest> items) {
+    }
+
+    public record ItemPedidoRequest(Long productoId, Integer cantidad, List<SeleccionAdicionalRequest> adiciones) {
+    }
+
+    public record SeleccionAdicionalRequest(Long adicionalId, Double precio) {
+    }
+
+    public record PedidoDto(Long id, Long clienteId, Integer cantidadProductos, Integer cantidadAdiciones,
+                            String estado, String fechaCreacion, String fechaEntrega) {
+    }
+
+    public record ItemPedidoDto(Long id, ProductoDto producto, Integer cantidad, Double precioUnitario,
+                                List<SeleccionAdicionalPedidoDto> selecciones) {
+    }
+
+    public record SeleccionAdicionalPedidoDto(Long id, AdicionalDto adicional, Double precio) {
+    }
+
+    public record PedidoDetalleDto(Long id, ClienteDto cliente, Integer cantidadProductos, Integer cantidadAdiciones,
+                                   String estado, String fechaCreacion, String fechaEntrega,
+                                   List<ItemPedidoDto> items) {
+    }
 }

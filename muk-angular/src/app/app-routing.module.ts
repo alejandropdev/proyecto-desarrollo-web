@@ -19,6 +19,9 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/adiciones-list.component';
 import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
 import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
+import { CrearPedidoComponent } from './pages/pedidos/crear-pedido/crear-pedido.component';
+import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
+import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -29,6 +32,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'clientes/perfil', component: PerfilComponent },
+  { path: 'pedidos/crear', component: CrearPedidoComponent },
+  { path: 'pedidos/mis-pedidos', component: MisPedidosComponent },
+  { path: 'pedidos/detalle/:id', component: DetallePedidoComponent },
   { path: 'admin/login', component: AdminLoginComponent },
   { path: 'admin/platos', component: PlatosListComponent },
   { path: 'admin/platos/nuevo', component: PlatoFormComponent },
@@ -42,11 +48,11 @@ const routes: Routes = [
   { path: 'categorias', component: CategoriasComponent },
   { path: 'productos', component: ProductosComponent },
   { path: 'not-found', component: NotFoundComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

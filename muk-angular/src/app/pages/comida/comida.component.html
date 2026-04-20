@@ -1,28 +1,61 @@
-<main class="pt-24 pb-16 min-h-screen px-4 sm:px-8 lg:px-16" style="background-color:#faf7f0">
+<main
+  class="pt-24 pb-16 min-h-screen px-4 sm:px-8 lg:px-16"
+  style="background-color: #faf7f0"
+>
   <div class="max-w-6xl mx-auto" *ngIf="producto">
-    <a routerLink="/menu" class="inline-flex items-center gap-2 font-black uppercase tracking-widest text-sm mb-6" style="color:#8c0e03">
+    <a
+      routerLink="/menu"
+      class="inline-flex items-center gap-2 font-black uppercase tracking-widest text-sm mb-6"
+      style="color: #8c0e03"
+    >
       <span>←</span><span>Volver al menú</span>
     </a>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14">
-      <div class="rounded-3xl overflow-hidden shadow-2xl" style="background-color:#f2b705">
+      <div
+        class="rounded-3xl overflow-hidden shadow-2xl"
+        style="background-color: #f2b705"
+      >
         <div class="relative h-80 sm:h-[420px] lg:h-[520px]">
-          <img [src]="producto.imagenUrl" [alt]="producto.nombre" class="w-full h-full object-cover" />
+          <img
+            [src]="producto.imagenUrl"
+            [alt]="producto.nombre"
+            class="w-full h-full object-cover"
+          />
           <div class="absolute top-6 left-6" *ngIf="producto.categoria?.nombre">
-            <span class="px-4 py-2 text-xs font-black rounded-full text-white uppercase tracking-widest" style="background-color:#8c0e03">
+            <span
+              class="px-4 py-2 text-xs font-black rounded-full text-white uppercase tracking-widest"
+              style="background-color: #8c0e03"
+            >
               {{ producto.categoria.nombre }}
             </span>
           </div>
         </div>
       </div>
       <div class="flex flex-col justify-center">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-[0.95]" style="color:#34100b">
+        <h1
+          class="text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-[0.95]"
+          style="color: #34100b"
+        >
           {{ producto.nombre }}
         </h1>
-        <p class="mt-4 text-xl sm:text-2xl font-black italic" style="color:#8c0e03">${{ producto.precio }} COP</p>
-        <p class="mt-6 text-base sm:text-lg font-bold leading-relaxed" style="color:#34100b;opacity:0.85">{{ producto.descripcion }}</p>
+        <p
+          class="mt-4 text-xl sm:text-2xl font-black italic"
+          style="color: #8c0e03"
+        >
+          ${{ producto.precio }} COP
+        </p>
+        <p
+          class="mt-6 text-base sm:text-lg font-bold leading-relaxed"
+          style="color: #34100b; opacity: 0.85"
+        >
+          {{ producto.descripcion }}
+        </p>
 
         <section class="mt-8" *ngIf="adiciones.length">
-          <h2 class="text-sm font-black uppercase tracking-widest mb-3" style="color:#8c0e03">
+          <h2
+            class="text-sm font-black uppercase tracking-widest mb-3"
+            style="color: #8c0e03"
+          >
             Selecciona tus adiciones
           </h2>
           <div class="flex flex-wrap gap-3">
@@ -32,15 +65,28 @@
               (click)="toggleAdicion(adicion.id)"
               class="px-4 py-2 rounded-full border-2 font-black text-xs sm:text-sm uppercase tracking-wider transition-all"
               [ngStyle]="{
-                'background-color': isAdicionSelected(adicion.id) ? '#34100B' : '#F2B70533',
-                'border-color': isAdicionSelected(adicion.id) ? '#34100B' : '#F2B705',
-                color: isAdicionSelected(adicion.id) ? '#F2B705' : '#34100B'
+                'background-color': isAdicionSelected(adicion.id)
+                  ? '#34100B'
+                  : '#F2B70533',
+                'border-color': isAdicionSelected(adicion.id)
+                  ? '#34100B'
+                  : '#F2B705',
+                color: isAdicionSelected(adicion.id) ? '#F2B705' : '#34100B',
               }"
             >
               {{ adicion.nombre }} (+${{ adicion.precio }})
             </button>
           </div>
         </section>
+
+        <button
+          type="button"
+          (click)="hacerPedido()"
+          class="mt-10 px-8 py-4 rounded-xl text-lg font-black uppercase tracking-wide text-white transition-all hover:brightness-110"
+          style="background-color: #f27405; width: 100%; max-width: 400px"
+        >
+          Hacer Pedido
+        </button>
       </div>
     </div>
   </div>

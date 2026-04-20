@@ -18,15 +18,22 @@ export interface ProductoFormState extends ProductoPayload {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductoService {
   private readonly apiUrl = '/api/productos';
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
 
   buildInitialFormState(): ProductoFormState {
-    return { id: 0, nombre: '', descripcion: '', precio: 0, imagenUrl: '', categoriaId: 0 };
+    return {
+      id: 0,
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      imagenUrl: '',
+      categoriaId: 0,
+    };
   }
 
   mapToFormState(producto: Producto): ProductoFormState {
@@ -36,7 +43,7 @@ export class ProductoService {
       descripcion: producto.descripcion,
       precio: producto.precio,
       imagenUrl: producto.imagenUrl,
-      categoriaId: producto.categoria.id
+      categoriaId: producto.categoria.id,
     };
   }
 
@@ -46,16 +53,21 @@ export class ProductoService {
       descripcion: form.descripcion,
       precio: form.precio,
       imagenUrl: form.imagenUrl,
-      categoriaId: form.categoriaId
+      categoriaId: form.categoriaId,
     };
   }
 
-  getProductos(params?: { category?: string; q?: string }): Observable<Producto[]> {
+  getProductos(params?: {
+    category?: string;
+    q?: string;
+  }): Observable<Producto[]> {
     return this.http.get<Producto[]>(this.apiUrl, { params: params ?? {} });
   }
 
   getProductosDestacados(): Observable<Producto[]> {
-    return this.http.get<Producto[]>(this.apiUrl).pipe(map((productos) => productos.slice(0, 3)));
+    return this.http
+      .get<Producto[]>(this.apiUrl)
+      .pipe(map((productos) => productos.slice(0, 3)));
   }
 
   getProductoById(id: number): Observable<Producto> {
@@ -72,7 +84,9 @@ export class ProductoService {
 
   save(form: ProductoFormState): Observable<Plato> {
     const payload = this.buildPayload(form);
-    return form.id ? this.updateProducto(form.id, payload) : this.createProducto(payload);
+    return form.id
+      ? this.updateProducto(form.id, payload)
+      : this.createProducto(payload);
   }
 
   deleteProducto(id: number): Observable<{ message: string }> {

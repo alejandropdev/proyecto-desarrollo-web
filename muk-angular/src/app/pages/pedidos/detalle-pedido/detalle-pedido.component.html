@@ -1,0 +1,258 @@
+<main class="pt-24 pb-16 min-h-screen" style="background-color: #faf7f0">
+  <div class="max-w-4xl mx-auto px-4 sm:px-8 lg:px-16">
+    <!-- Botón Volver -->
+    <button
+      (click)="volver()"
+      class="mb-8 px-6 py-3 font-black rounded-full uppercase tracking-widest text-white transition-all hover:brightness-110"
+      style="background-color: #34100b"
+    >
+      ← Volver
+    </button>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center py-20">
+      <p class="text-2xl font-black uppercase" style="color: #34100b">
+        Cargando detalles del pedido...
+      </p>
+    </div>
+
+    <!-- Error -->
+    <div
+      *ngIf="error"
+      class="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded mb-8"
+    >
+      <p class="font-bold text-lg">{{ error }}</p>
+    </div>
+
+    <!-- Detalle del Pedido -->
+    <div *ngIf="!isLoading && pedido" class="space-y-8">
+      <!-- Encabezado del Pedido -->
+      <div class="rounded-2xl shadow-2xl p-8" style="background-color: #f2b705">
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <h1
+              class="text-3xl sm:text-4xl font-black uppercase"
+              style="color: #34100b"
+            >
+              Pedido #{{ pedido.id }}
+            </h1>
+            <p class="font-bold mt-2" style="color: #34100b; opacity: 0.8">
+              Cliente: {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}
+            </p>
+          </div>
+          <span
+            class="px-4 py-2 font-black text-white text-sm rounded-full"
+            [ngStyle]="{ 'background-color': getEstadoColor(pedido.estado) }"
+          >
+            {{ pedido.estado }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-white/50 p-4 rounded-lg">
+            <p class="text-xs font-black uppercase" style="color: #8c0e03">
+              Productos
+            </p>
+            <p class="text-2xl font-black mt-1" style="color: #34100b">
+              {{ pedido.cantidadProductos }}
+            </p>
+          </div>
+          <div class="bg-white/50 p-4 rounded-lg">
+            <p class="text-xs font-black uppercase" style="color: #8c0e03">
+              Adiciones
+            </p>
+            <p class="text-2xl font-black mt-1" style="color: #34100b">
+              {{ pedido.cantidadAdiciones }}
+            </p>
+          </div>
+          <div class="bg-white/50 p-4 rounded-lg">
+            <p class="text-xs font-black uppercase" style="color: #8c0e03">
+              Fecha
+            </p>
+            <p class="text-xs font-bold mt-1" style="color: #34100b">
+              {{ pedido.fechaCreacion | date: "short" }}
+            </p>
+          </div>
+          <div class="bg-white/50 p-4 rounded-lg">
+            <p class="text-xs font-black uppercase" style="color: #8c0e03">
+              Entrega
+            </p>
+            <p class="text-xs font-bold mt-1" style="color: #34100b">
+              {{
+                pedido.fechaEntrega
+                  ? (pedido.fechaEntrega | date: "short")
+                  : "Pendiente"
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items del Pedido -->
+      <div class="rounded-2xl shadow-2xl p-8" style="background-color: white">
+        <h2 class="text-2xl font-black uppercase mb-6" style="color: #34100b">
+          Items del Pedido
+        </h2>
+
+        <div class="space-y-6">
+          <div
+            *ngFor="let item of pedido.items"
+            class="border-b-2 pb-6"
+            style="border-color: #f2b705"
+          >
+            <!-- Producto -->
+            <div class="flex gap-4 mb-4">
+              <img
+                [src]="item.producto.imagenUrl"
+                [alt]="item.producto.nombre"
+                class="w-20 h-20 rounded-xl object-cover shadow-md"
+              />
+              <div class="flex-1">
+                <h3 class="font-black text-lg uppercase" style="color: #34100b">
+                  {{ item.producto.nombre }}
+                </h3>
+                <p class="font-bold mt-1" style="color: #8c0e03">
+                  {{ item.producto.categoria.nombre }}
+                </p>
+                <p
+                  class="text-sm font-semibold mt-2"
+                  style="color: #34100b; opacity: 0.8"
+                >
+                  {{ item.producto.descripcion }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Detalles del Item -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div>
+                  <p class="text-xs font-bold uppercase" style="color: #8c0e03">
+                    Cantidad
+                  </p>
+                  <p class="text-lg font-black" style="color: #34100b">
+                    {{ item.cantidad }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-xs font-bold uppercase" style="color: #8c0e03">
+                    Precio Unit.
+                  </p>
+                  <p class="text-lg font-black" style="color: #34100b">
+                    ${{ item.precioUnitario }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-xs font-bold uppercase" style="color: #8c0e03">
+                    Subtotal
+                  </p>
+                  <p class="text-lg font-black" style="color: #f27405">
+                    ${{ item.precioUnitario * item.cantidad | number: "1.0-0" }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Adiciones -->
+            <div
+              *ngIf="item.selecciones && item.selecciones.length > 0"
+              class="pl-4 border-l-2"
+              style="border-color: #f2b705"
+            >
+              <p class="font-bold mb-3" style="color: #8c0e03">Adiciones:</p>
+              <div
+                *ngFor="let adicion of item.selecciones"
+                class="text-sm mb-2"
+                style="color: #34100b"
+              >
+                <p class="font-semibold">
+                  {{ adicion.adicional.nombre }} - ${{ adicion.precio }} x
+                  {{ item.cantidad }} =
+                  <span class="font-black" style="color: #f27405"
+                    >${{
+                      adicion.precio * item.cantidad | number: "1.0-0"
+                    }}</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen de Totales -->
+      <div class="rounded-2xl shadow-2xl p-8" style="background-color: #34100b">
+        <h2 class="text-2xl font-black uppercase mb-6" style="color: #f2b705">
+          Resumen del Pedido
+        </h2>
+
+        <div class="space-y-4 border-b-2 pb-6" style="border-color: #f2b705">
+          <div
+            class="flex justify-between text-lg font-bold"
+            style="color: #f2b705"
+          >
+            <span>Subtotal Productos:</span>
+            <span>${{ calcularSubtotal() | number: "1.0-0" }}</span>
+          </div>
+          <div
+            class="flex justify-between text-lg font-bold"
+            style="color: #f2b705"
+          >
+            <span>Total Adiciones:</span>
+            <span>${{ calcularTotalAdiciones() | number: "1.0-0" }}</span>
+          </div>
+        </div>
+
+        <div
+          class="flex justify-between text-3xl font-black mt-6"
+          style="color: #f27405"
+        >
+          <span>TOTAL:</span>
+          <span>${{ calcularTotal() | number: "1.0-0" }}</span>
+        </div>
+      </div>
+
+      <!-- Datos del Cliente -->
+      <div class="rounded-2xl shadow-2xl p-8" style="background-color: white">
+        <h2 class="text-2xl font-black uppercase mb-6" style="color: #34100b">
+          Datos de Envío
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <p class="text-xs font-bold uppercase mb-2" style="color: #8c0e03">
+              Cliente
+            </p>
+            <p class="font-black" style="color: #34100b">
+              {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase mb-2" style="color: #8c0e03">
+              Email
+            </p>
+            <p class="font-bold" style="color: #34100b">
+              {{ pedido.cliente.email }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase mb-2" style="color: #8c0e03">
+              Teléfono
+            </p>
+            <p class="font-bold" style="color: #34100b">
+              {{ pedido.cliente.telefono }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase mb-2" style="color: #8c0e03">
+              Dirección
+            </p>
+            <p class="font-bold" style="color: #34100b">
+              {{ pedido.cliente.direccion }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

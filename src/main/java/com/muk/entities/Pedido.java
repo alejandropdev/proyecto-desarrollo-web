@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
@@ -39,10 +40,21 @@ public class Pedido {
     @Column(nullable = true)
     private LocalDateTime fechaEntrega;
 
+    @Column(nullable = false)
+    private Integer cantidadProductos = 0;
+
+    @Column(nullable = false)
+    private Integer cantidadAdiciones = 0;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemPedido> items;
+
     public Pedido(Long id, Cliente cliente, String estado, LocalDateTime fechaCreacion) {
         this.id = id;
         this.cliente = cliente;
         this.estado = estado;
         this.fechaCreacion = fechaCreacion;
+        this.cantidadProductos = 0;
+        this.cantidadAdiciones = 0;
     }
 }
