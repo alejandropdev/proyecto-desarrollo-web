@@ -19,6 +19,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/adiciones-list.component';
 import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
 import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
+import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -38,6 +39,7 @@ const routes: Routes = [
   { path: 'admin/adiciones/nuevo', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id/editar', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id', component: AdicionDetailComponent },
+  { path: 'operario/pedidos', component: PedidoPortalComponent },
   { path: 'operadores', component: OperadoresComponent },
   { path: 'categorias', component: CategoriasComponent },
   { path: 'productos', component: ProductosComponent },

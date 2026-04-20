@@ -31,6 +31,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/adiciones-list.component';
 import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
 import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
+import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/a
     NotFoundComponent,
     AdicionesListComponent,
     AdicionFormComponent,
-    AdicionDetailComponent
+    AdicionDetailComponent,
+    PedidoPortalComponent
   ],
   imports: [
     BrowserModule,

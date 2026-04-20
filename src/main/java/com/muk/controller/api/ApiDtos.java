@@ -49,4 +49,18 @@ public final class ApiDtos {
 
     public record MessageResponse(String message) {
     }
+
+    public record SeleccionAdicionalDto(Long id, AdicionalDto adicional, Double precio) {
+    }
+
+    public record ItemCarritoDto(Long id, ProductoDto producto, Integer cantidad, Double precioUnitario,
+                                  List<SeleccionAdicionalDto> selecciones) {
+    }
+
+    public record DomiciliarioDto(Long id, String nombre, String celular, String cedula, Boolean disponible) {
+    }
+
+    public record PedidoDto(Long id, ClienteDto cliente, OperadorDto operador, DomiciliarioDto domiciliario,
+                            String estado, String fechaCreacion, String fechaEntrega, List<ItemCarritoDto> items) {
+    }
 }
