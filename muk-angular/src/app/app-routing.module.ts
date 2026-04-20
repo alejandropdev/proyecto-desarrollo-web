@@ -20,6 +20,9 @@ import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/a
 import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
 import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
 import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.component';
+import { CrearPedidoComponent } from './pages/pedidos/crear-pedido/crear-pedido.component';
+import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
+import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +33,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'clientes/perfil', component: PerfilComponent },
+  // Rutas de pedidos para clientes
+  { path: 'pedidos/crear', component: CrearPedidoComponent },
+  { path: 'pedidos/mis-pedidos', component: MisPedidosComponent },
+  { path: 'pedidos/detalle/:id', component: DetallePedidoComponent },
+  // Rutas de admin
   { path: 'admin/login', component: AdminLoginComponent },
   { path: 'admin/platos', component: PlatosListComponent },
   { path: 'admin/platos/nuevo', component: PlatoFormComponent },
@@ -39,16 +47,18 @@ const routes: Routes = [
   { path: 'admin/adiciones/nuevo', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id/editar', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id', component: AdicionDetailComponent },
+  // Portal del operario
   { path: 'operario/pedidos', component: PedidoPortalComponent },
+  // Otras rutas
   { path: 'operadores', component: OperadoresComponent },
   { path: 'categorias', component: CategoriasComponent },
   { path: 'productos', component: ProductosComponent },
   { path: 'not-found', component: NotFoundComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

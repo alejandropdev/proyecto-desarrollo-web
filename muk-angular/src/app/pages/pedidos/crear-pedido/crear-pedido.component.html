@@ -1,0 +1,68 @@
+<main class="pt-24 pb-16 min-h-screen" style="background-color: #faf7f0">
+  <div class="max-w-2xl mx-auto px-4 sm:px-8 lg:px-16">
+    <div
+      class="rounded-3xl shadow-2xl p-8 sm:p-10"
+      style="background-color: white"
+    >
+      <h1 class="text-3xl font-black">Crear Pedido</h1>
+
+      <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
+        <div>
+          <label>Producto</label>
+          <select
+            [(ngModel)]="productoSeleccionadoId"
+            name="producto"
+            (change)="onProductoChange()"
+            class="w-full px-4 py-3 border rounded"
+            required
+          >
+            <option [ngValue]="null">Seleccione un producto</option>
+            <option *ngFor="let producto of productos" [ngValue]="producto.id">
+              {{ producto.nombre }} - ${{ producto.precio }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label>Cantidad</label>
+          <input
+            type="number"
+            [(ngModel)]="cantidadProductos"
+            name="cantidad"
+            min="1"
+            class="w-full px-4 py-3 border rounded"
+          />
+        </div>
+
+        <div *ngIf="adicionalesFiltrados.length > 0">
+          <label>Adicionales</label>
+
+          <div *ngFor="let adicional of adicionalesFiltrados">
+            <input
+              type="checkbox"
+              [value]="adicional.id"
+              (change)="onAdicionalChange($event, adicional.id)"
+            />
+            {{ adicional.nombre }} - ${{ adicional.precio }}
+          </div>
+        </div>
+
+        <div *ngIf="error" class="text-red-600">
+          {{ error }}
+        </div>
+
+        <div *ngIf="successMessage" class="text-green-600">
+          {{ successMessage }}
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="!productoSeleccionadoId || isLoading"
+          class="w-full py-3 rounded bg-yellow-500"
+        >
+          Confirmar Pedido
+        </button>
+      </form>
+    </div>
+  </div>
+</main>

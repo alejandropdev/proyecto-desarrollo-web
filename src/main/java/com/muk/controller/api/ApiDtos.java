@@ -50,17 +50,31 @@ public final class ApiDtos {
     public record MessageResponse(String message) {
     }
 
-    public record SeleccionAdicionalDto(Long id, AdicionalDto adicional, Double precio) {
+    // Pedidos Requests
+    public record CrearPedidoRequest(List<ItemPedidoRequest> items) {
     }
 
-    public record ItemCarritoDto(Long id, ProductoDto producto, Integer cantidad, Double precioUnitario,
-                                  List<SeleccionAdicionalDto> selecciones) {
+    public record ItemPedidoRequest(Long productoId, Integer cantidad, List<SeleccionAdicionalRequest> adiciones) {
     }
 
-    public record DomiciliarioDto(Long id, String nombre, String celular, String cedula, Boolean disponible) {
+    public record SeleccionAdicionalRequest(Long adicionalId, Double precio) {
     }
 
-    public record PedidoDto(Long id, ClienteDto cliente, OperadorDto operador, DomiciliarioDto domiciliario,
-                            String estado, String fechaCreacion, String fechaEntrega, List<ItemCarritoDto> items) {
+    // Pedidos Response DTOs - Listado (simplificado)
+    public record PedidoDto(Long id, Long clienteId, Integer cantidadProductos, Integer cantidadAdiciones,
+                            String estado, String fechaCreacion, String fechaEntrega) {
+    }
+
+    // Pedidos Response DTOs - Detalles (completo con items)
+    public record ItemPedidoDto(Long id, ProductoDto producto, Integer cantidad, Double precioUnitario,
+                                List<SeleccionAdicionalPedidoDto> selecciones) {
+    }
+
+    public record SeleccionAdicionalPedidoDto(Long id, AdicionalDto adicional, Double precio) {
+    }
+
+    public record PedidoDetalleDto(Long id, ClienteDto cliente, Integer cantidadProductos, Integer cantidadAdiciones,
+                                   String estado, String fechaCreacion, String fechaEntrega,
+                                   List<ItemPedidoDto> items) {
     }
 }
