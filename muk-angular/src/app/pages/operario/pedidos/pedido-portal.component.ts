@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PedidoService } from '../../../services/pedido.service';
 import { ClienteService } from '../../../services/cliente.service';
+import { OperarioAuthService } from '../../../services/operario-auth.service';
 import { Pedido } from '../../../models/pedido';
 import { Cliente } from '../../../models/cliente';
 
@@ -18,6 +19,7 @@ export class PedidoPortalComponent implements OnInit {
   constructor(
     private readonly pedidoService: PedidoService,
     private readonly clienteService: ClienteService,
+    private readonly operarioAuthService: OperarioAuthService,
     private readonly router: Router
   ) {}
 
@@ -82,5 +84,10 @@ export class PedidoPortalComponent implements OnInit {
   // Se renombró para que el HTML lo encuentre
   verDetalle(id: number): void {
     this.router.navigate(['/pedidos/detalle', id]);
+  }
+
+  cerrarSesion(): void {
+    this.operarioAuthService.logout();
+    this.router.navigate(['/operario/login']);
   }
 }

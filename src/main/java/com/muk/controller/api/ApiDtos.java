@@ -47,6 +47,12 @@ public final class ApiDtos {
     public record AdminLoginRequest(String usuario, String password) {
     }
 
+    public record OperarioLoginRequest(String usuario, String password) {
+    }
+
+    public record OperarioLoginResponse(String message, Long id, String usuario, String nombre) {
+    }
+
     public record MessageResponse(String message) {
     }
 

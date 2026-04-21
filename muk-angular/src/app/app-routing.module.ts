@@ -20,9 +20,11 @@ import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/a
 import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
 import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
 import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.component';
+import { OperarioLoginComponent } from './pages/operario/login/operario-login.component';
 import { CrearPedidoComponent } from './pages/pedidos/crear-pedido/crear-pedido.component';
 import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
 import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
+import { OperarioAuthGuard } from './guards/operario-auth.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -48,7 +50,8 @@ const routes: Routes = [
   { path: 'admin/adiciones/:id/editar', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id', component: AdicionDetailComponent },
   // Portal del operario
-  { path: 'operario/pedidos', component: PedidoPortalComponent },
+  { path: 'operario/login', component: OperarioLoginComponent },
+  { path: 'operario/pedidos', component: PedidoPortalComponent, canActivate: [OperarioAuthGuard] },
   // Otras rutas
   { path: 'operadores', component: OperadoresComponent },
   { path: 'categorias', component: CategoriasComponent },

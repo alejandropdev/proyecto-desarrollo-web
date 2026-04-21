@@ -36,6 +36,7 @@ import { CrearPedidoComponent } from './pages/pedidos/crear-pedido/crear-pedido.
 import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
 import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
 import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.component';
+import { OperarioLoginComponent } from './pages/operario/login/operario-login.component';
 
 @NgModule({
   imports: [BrowserModule, CommonModule, FormsModule, HttpClientModule, AppRoutingModule],
@@ -70,7 +71,8 @@ import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.co
     CrearPedidoComponent,
     DetallePedidoComponent,
     MisPedidosComponent,
-    PedidoPortalComponent
+    PedidoPortalComponent,
+    OperarioLoginComponent
   ],
   providers: [],
   bootstrap: [AppComponent],

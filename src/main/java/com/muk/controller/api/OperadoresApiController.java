@@ -23,6 +23,20 @@ public class OperadoresApiController {
         this.operadorService = operadorService;
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody ApiDtos.OperarioLoginRequest request) {
+        return operadorService.findByUsuarioAndContrasena(request.usuario(), request.password())
+                .filter(o -> Boolean.TRUE.equals(o.getActivo()))
+                .<ResponseEntity<Object>>map(o -> ResponseEntity.ok(new ApiDtos.OperarioLoginResponse(
+                        "Bienvenido operario",
+                        o.getId(),
+                        o.getUsuario(),
+                        o.getNombre()
+                )))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Usuario o contraseña incorrectos")));
+    }
+
     @GetMapping
     public List<ApiDtos.OperadorDto> operadores() {
         return operadorService.findAll().stream()
