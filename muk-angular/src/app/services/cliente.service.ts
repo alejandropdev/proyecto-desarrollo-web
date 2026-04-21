@@ -43,4 +43,8 @@ export class ClienteService {
   list(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(this.apiUrl);
   }
+
+  clienteById(id: number): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.apiUrl}/${id}`);
+  }
 }

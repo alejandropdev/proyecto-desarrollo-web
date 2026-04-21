@@ -42,22 +42,28 @@ public class PedidosApiController {
     }
 
     /**
-     * Obtiene los pedidos de un cliente.
-     * GET /api/pedidos?clienteId=123
+     * Obtiene todos los pedidos (para operarios).
+     * GET /api/pedidos
      */
     @GetMapping
-    public ResponseEntity<Object> obtenerPedidosPorCliente(@RequestParam Long clienteId) {
-        if (clienteId == null || clienteId <= 0) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", "El parámetro clienteId es requerido y debe ser válido."));
+    public ResponseEntity<Object> listaPedidos(
+            @RequestParam(required = false) Long clienteId) {
+        
+        // Si se proporciona clienteId, devolver solo pedidos de ese cliente
+        if (clienteId != null && clienteId > 0) {
+            List<ApiDtos.PedidoDto> pedidos = pedidoService.findByClienteId(clienteId)
+                    .stream()
+                    .map(ApiMappers::toPedidoDto)
+                    .toList();
+            return ResponseEntity.ok(pedidos);
         }
         
-        List<ApiDtos.PedidoDto> pedidos = pedidoService.findByClienteId(clienteId)
+        // Si no hay clienteId, devolver todos los pedidos (para operarios)
+        List<ApiDtos.PedidoDto> todosLosPedidos = pedidoService.findAll()
                 .stream()
                 .map(ApiMappers::toPedidoDto)
                 .toList();
-        
-        return ResponseEntity.ok(pedidos);
+        return ResponseEntity.ok(todosLosPedidos);
     }
 
     /**

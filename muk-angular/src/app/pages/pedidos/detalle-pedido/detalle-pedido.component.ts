@@ -1,81 +1,80 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PedidoService } from '../../../services/pedido.service';
+import { ClienteService } from '../../../services/cliente.service';
 import { PedidoDetalle } from '../../../models/pedido';
+import { Cliente } from '../../../models/cliente';
 
 @Component({
   selector: 'app-detalle-pedido',
   templateUrl: './detalle-pedido.component.html',
-  styleUrls: ['./detalle-pedido.component.css'],
+  styleUrls: ['./detalle-pedido.component.css']
 })
 export class DetallePedidoComponent implements OnInit {
   pedido: PedidoDetalle | null = null;
+  cliente: Cliente | null = null;
   isLoading: boolean = true;
-  error: string = '';
-  pedidoId: number = 0;
-  clienteEmail: string = '';
+  error: string | null = null;
 
   constructor(
+    private readonly activatedRoute: ActivatedRoute,
     private readonly pedidoService: PedidoService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
+    private readonly clienteService: ClienteService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    // Verificar si el usuario está autenticado
-    this.clienteEmail = localStorage.getItem('clienteEmail') || '';
-    if (!this.clienteEmail) {
-      this.router.navigate(['/login']);
+    this.cargarDetalle();
+  }
+
+  private cargarDetalle(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    if (!id) {
+      this.isLoading = false;
       return;
     }
 
-    // Obtener el ID del pedido de la ruta
-    this.route.paramMap.subscribe((params) => {
-      this.pedidoId = parseInt(params.get('id') || '0');
-      if (this.pedidoId > 0) {
-        this.cargarPedido();
-      } else {
-        this.error = 'ID de pedido inválido.';
-        this.isLoading = false;
-      }
+    this.pedidoService.obtenerPedidoDetalle(Number(id)).subscribe({
+      next: (pedido) => {
+        this.pedido = pedido;
+        if (pedido.cliente?.id) {
+          this.cargarCliente(pedido.cliente.id);
+        } else {
+          this.isLoading = false;
+        }
+      },
+      error: () => this.isLoading = false
     });
   }
 
-  cargarPedido(): void {
-    this.isLoading = true;
-    this.error = '';
-
-    this.pedidoService.obtenerPedidoDetalle(this.pedidoId).subscribe({
-      next: (pedido) => {
-        this.pedido = pedido;
+  private cargarCliente(clienteId: number): void {
+    this.clienteService.clienteById(clienteId).subscribe({
+      next: (cliente) => {
+        this.cliente = cliente;
         this.isLoading = false;
       },
-      error: (err) => {
-        this.error =
-          err?.error?.message ?? 'No se pudo cargar el detalle del pedido.';
-        this.isLoading = false;
-      },
+      error: () => this.isLoading = false
     });
   }
 
   volver(): void {
-    this.router.navigate(['/pedidos/mis-pedidos']);
+    this.router.navigate(['/operario/pedidos']);
+  }
+
+  volverAlPortal(): void {
+    this.router.navigate(['/operario/pedidos']);
   }
 
   calcularSubtotal(): number {
-    if (!this.pedido || !this.pedido.items) return 0;
-    return this.pedido.items.reduce((sum, item) => {
-      return sum + item.precioUnitario * item.cantidad;
-    }, 0);
+    if (!this.pedido?.items) return 0;
+    return this.pedido.items.reduce((sum, item) => sum + (item.precioUnitario * item.cantidad), 0);
   }
 
   calcularTotalAdiciones(): number {
-    if (!this.pedido || !this.pedido.items) return 0;
+    if (!this.pedido?.items) return 0;
     return this.pedido.items.reduce((sum, item) => {
-      const adicionesTotal = item.selecciones.reduce((adSum, adicion) => {
-        return adSum + adicion.precio * item.cantidad;
-      }, 0);
-      return sum + adicionesTotal;
+      const itemAdiciones = item.selecciones?.reduce((itemSum, sel) => itemSum + (sel.precio * item.cantidad), 0) || 0;
+      return sum + itemAdiciones;
     }, 0);
   }
 
@@ -84,15 +83,15 @@ export class DetallePedidoComponent implements OnInit {
   }
 
   getEstadoColor(estado: string): string {
-    switch (estado.toUpperCase()) {
-      case 'PENDIENTE':
-        return '#f2b705';
-      case 'ENTREGADO':
-        return '#34100b';
-      case 'CANCELADO':
-        return '#8c0e03';
-      default:
-        return '#34100b';
+    const est = estado?.toUpperCase() || '';
+    switch (est) {
+      case 'PENDIENTE': return '#f2b705';
+      case 'EN_PREPARACION': 
+      case 'EN_PREPARACIÓN': return '#3b82f6';
+      case 'EN_CAMINO': return '#8b5cf6';
+      case 'ENTREGADO': return '#34100b';
+      case 'CANCELADO': return '#8c0e03';
+      default: return '#6b7280';
     }
   }
 }

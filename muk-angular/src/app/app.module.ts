@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -37,6 +38,7 @@ import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.com
 import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.component';
 
 @NgModule({
+  imports: [BrowserModule, CommonModule, FormsModule, HttpClientModule, AppRoutingModule],
   declarations: [
     AppComponent,
     HeaderComponent,
@@ -70,7 +72,6 @@ import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.co
     MisPedidosComponent,
     PedidoPortalComponent
   ],
-  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent],
 })

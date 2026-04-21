@@ -1,41 +1,44 @@
-<app-admin-page-shell title="Portal de Pedidos" subtitle="Gestión de pedidos para operarios.">
-  <div *ngIf="cargando" class="rounded-3xl shadow-2xl p-8 text-center" style="background-color:white">
-    <p class="text-gray-600 font-semibold">Cargando pedidos...</p>
-  </div>
+<main class="pt-24 pb-16 min-h-screen" style="background-color: #faf7f0">
+  <div class="max-w-7xl mx-auto px-4">
+    
+    <div class="mb-10">
+      <h1 class="text-4xl font-black uppercase" style="color: #34100b">Portal de Operario</h1>
+    </div>
 
-  <div *ngIf="!cargando && pedidos.length === 0" class="rounded-3xl shadow-2xl overflow-hidden" style="background-color:white">
-    <div class="p-8 text-center text-gray-600">
-      <p class="font-semibold">No hay pedidos disponibles</p>
+    <div class="rounded-2xl shadow-xl bg-white overflow-hidden border-2" style="border-color: #f2b705">
+      <table class="w-full text-left">
+        <thead>
+          <tr style="background-color: #34100b; color: white">
+            <th class="p-4 uppercase font-black">ID</th>
+            <th class="p-4 uppercase font-black">Cliente</th>
+            <th class="p-4 uppercase font-black">Estado</th>
+            <th class="p-4 uppercase font-black text-center">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of pedidos" class="border-b">
+            <td class="p-4 font-bold">#{{ p.id }}</td>
+            <td class="p-4 font-semibold">{{ getNombreCliente(p) }}</td>
+            <td class="p-4">
+              <span [ngStyle]="{'background-color': getEstadoColor(p.estado)}" 
+                    class="px-3 py-1 rounded-full text-white text-xs font-black uppercase">
+                {{ p.estado }}
+              </span>
+            </td>
+            <td class="p-4 text-center">
+              <button (click)="verDetalle(p.id)" 
+                      class="px-4 py-2 rounded-full font-black text-white uppercase text-xs"
+                      style="background-color: #8c0e03">
+                Ver Detalle
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div *ngIf="isLoading" class="p-10 text-center font-bold uppercase">
+        Cargando pedidos...
+      </div>
     </div>
   </div>
-
-  <div *ngIf="!cargando && pedidos.length > 0" class="rounded-3xl shadow-2xl overflow-hidden" style="background-color:white">
-    <table class="w-full">
-      <thead style="background-color:#34100b">
-        <tr>
-          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">ID</th>
-          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Cliente</th>
-          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Productos</th>
-          <th class="text-center px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Cantidad Total</th>
-          <th class="text-center px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Estado</th>
-          <th class="text-left px-6 py-4 text-xs font-black uppercase" style="color:#f2b705">Fecha</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let p of pedidos" class="border-t hover:bg-gray-50">
-          <td class="px-6 py-4 font-bold">{{ p.id }}</td>
-          <td class="px-6 py-4 font-bold">{{ p.cliente.nombre }} {{ p.cliente.apellido }}</td>
-          <td class="px-6 py-4 font-semibold text-sm">{{ obtenerNombresProductos(p) }}</td>
-          <td class="px-6 py-4 font-bold text-center">{{ obtenerCantidadTotal(p) }}</td>
-          <td class="px-6 py-4 text-center">
-            <span class="px-3 py-1 rounded-full font-black text-xs text-white"
-                  [ngClass]="p.estado === 'PENDIENTE' ? '' : p.estado === 'EN_PROCESO' ? '' : ''">
-              {{ p.estado }}
-            </span>
-          </td>
-          <td class="px-6 py-4 text-sm text-gray-600">{{ p.fechaCreacion | slice:0:10 }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</app-admin-page-shell>
+</main>
