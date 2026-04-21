@@ -1,67 +1,194 @@
 <main class="pt-24 pb-16 min-h-screen" style="background-color: #faf7f0">
-  <div class="max-w-2xl mx-auto px-4 sm:px-8 lg:px-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-8 lg:px-16">
     <div
       class="rounded-3xl shadow-2xl p-8 sm:p-10"
       style="background-color: white"
     >
-      <h1 class="text-3xl font-black">Crear Pedido</h1>
+      <h1
+        class="text-3xl sm:text-4xl font-black uppercase tracking-tighter"
+        style="color: #34100b"
+      >
+        Crear Pedido
+      </h1>
+      <p
+        class="text-center font-bold mt-2"
+        style="color: #8c0e03; opacity: 0.8"
+      >
+        Selecciona los productos y adiciones que deseas.
+      </p>
 
       <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
-        <div>
-          <label>Producto</label>
+        <!-- SECCIÓN: Selección de Producto -->
+        <div class="border-b-2 pb-6" style="border-color: #f2b705">
+          <label
+            class="block text-xs font-black uppercase tracking-widest mb-3"
+            style="color: #8c0e03"
+          >
+            Selecciona un Producto
+          </label>
           <select
             [(ngModel)]="productoSeleccionadoId"
             name="producto"
             (change)="onProductoChange()"
-            class="w-full px-4 py-3 border rounded"
+            class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
+            style="border-color: #f2b705"
             required
           >
-            <option [ngValue]="null">Seleccione un producto</option>
+            <option [ngValue]="null">-- Selecciona un producto --</option>
             <option *ngFor="let producto of productos" [ngValue]="producto.id">
-              {{ producto.nombre }} - ${{ producto.precio }}
+              {{ producto.nombre }} - ${{ producto.precio }} COP
             </option>
           </select>
         </div>
 
-        <div>
-          <label>Cantidad</label>
-          <input
-            type="number"
-            [(ngModel)]="cantidadProductos"
-            name="cantidad"
-            min="1"
-            class="w-full px-4 py-3 border rounded"
-          />
-        </div>
-
-        <div *ngIf="adicionalesFiltrados.length > 0">
-          <label>Adicionales</label>
-
-          <div *ngFor="let adicional of adicionalesFiltrados">
-            <input
-              type="checkbox"
-              [value]="adicional.id"
-              (change)="onAdicionalChange($event, adicional.id)"
-            />
-            {{ adicional.nombre }} - ${{ adicional.precio }}
+        <!-- SECCIÓN: Resumen del Producto Seleccionado -->
+        <div
+          *ngIf="productoSeleccionado"
+          class="rounded-2xl p-6"
+          style="background-color: #f2b70520; border: 2px solid #f2b705"
+        >
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <p class="text-xs font-black uppercase" style="color: #8c0e03">
+                Producto
+              </p>
+              <p class="text-lg font-black" style="color: #34100b">
+                {{ productoSeleccionado.nombre }}
+              </p>
+            </div>
+            <div>
+              <p class="text-xs font-black uppercase" style="color: #8c0e03">
+                Precio Unitario
+              </p>
+              <p class="text-lg font-black" style="color: #f27405">
+                ${{ precioProducto }} COP
+              </p>
+            </div>
+            <div>
+              <p class="text-xs font-black uppercase" style="color: #8c0e03">
+                Cantidad
+              </p>
+              <input
+                type="number"
+                [(ngModel)]="cantidadProductos"
+                name="cantidad"
+                min="1"
+                max="99"
+                (change)="onCantidadChange()"
+                class="w-full px-4 py-2 rounded-lg border-2 font-bold"
+                style="border-color: #f2b705"
+              />
+            </div>
           </div>
         </div>
 
-        <div *ngIf="error" class="text-red-600">
-          {{ error }}
+        <!-- SECCIÓN: Adicionales (solo si hay producto seleccionado) -->
+        <div *ngIf="productoSeleccionado && adicionalesFiltrados.length > 0">
+          <h2
+            class="text-sm font-black uppercase tracking-widest mb-3"
+            style="color: #8c0e03"
+          >
+            Adiciones Disponibles (Opcional)
+          </h2>
+
+          <div class="space-y-2">
+            <div
+              *ngFor="let adicional of adicionalesFiltrados"
+              class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-gray-50"
+              style="border-color: #f2b70533"
+            >
+              <input
+                type="checkbox"
+                [checked]="adicionalesSeleccionados.includes(adicional.id)"
+                (change)="onAdicionalChange($event, adicional.id)"
+                [id]="'adicional-' + adicional.id"
+                class="w-5 h-5 cursor-pointer"
+              />
+              <label
+                [for]="'adicional-' + adicional.id"
+                class="flex-1 ml-3 cursor-pointer font-bold"
+                style="color: #34100b"
+              >
+                {{ adicional.nombre }}
+              </label>
+              <span class="font-black" style="color: #f27405">
+                +${{ adicional.precio }} COP
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div *ngIf="successMessage" class="text-green-600">
-          {{ successMessage }}
-        </div>
-
-        <button
-          type="submit"
-          [disabled]="!productoSeleccionadoId || isLoading"
-          class="w-full py-3 rounded bg-yellow-500"
+        <!-- SECCIÓN: Resumen de Precios -->
+        <div
+          class="rounded-2xl p-6 space-y-3"
+          style="background-color: #34100b20; border: 2px solid #34100b"
         >
-          Confirmar Pedido
-        </button>
+          <div class="flex justify-between">
+            <span class="font-bold" style="color: #34100b">
+              Producto: ${{ precioProducto }} × {{ cantidadProductos }}
+            </span>
+            <span class="font-black" style="color: #34100b">
+              ${{ precioProducto * cantidadProductos }} COP
+            </span>
+          </div>
+
+          <div *ngIf="precioAdicionales > 0" class="flex justify-between">
+            <span class="font-bold" style="color: #34100b">
+              Adiciones × {{ cantidadProductos }}
+            </span>
+            <span class="font-black" style="color: #34100b">
+              ${{ precioAdicionales * cantidadProductos }} COP
+            </span>
+          </div>
+
+          <div
+            class="border-t-2 pt-3 flex justify-between"
+            style="border-color: #34100b"
+          >
+            <span class="text-lg font-black" style="color: #34100b">
+              TOTAL:
+            </span>
+            <span class="text-2xl font-black" style="color: #f27405">
+              ${{ precioTotal }} COP
+            </span>
+          </div>
+        </div>
+
+        <!-- Mensaje de Error -->
+        <div
+          *ngIf="error"
+          class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded"
+        >
+          <p class="font-bold">{{ error }}</p>
+        </div>
+
+        <!-- Mensaje de Éxito -->
+        <div
+          *ngIf="successMessage"
+          class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded"
+        >
+          <p class="font-bold">{{ successMessage }}</p>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex gap-4 mt-8">
+          <button
+            type="submit"
+            [disabled]="!productoSeleccionadoId || isLoading"
+            class="flex-1 py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl transition-all hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
+            style="background-color: #f27405"
+          >
+            {{ isLoading ? "Creando Pedido..." : "Confirmar Pedido" }}
+          </button>
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="flex-1 py-4 font-black rounded-full uppercase tracking-widest border-2 transition-all hover:bg-gray-100"
+            style="border-color: #f2b705; color: #f2b705"
+          >
+            Cancelar
+          </button>
+        </div>
       </form>
     </div>
   </div>

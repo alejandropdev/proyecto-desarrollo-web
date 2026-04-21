@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { PedidoService } from '../../../services/pedido.service';
 import { ProductoService } from '../../../services/producto.service';
 import { AdicionalService } from '../../../services/adicional.service';
@@ -22,7 +22,13 @@ export class CrearPedidoComponent implements OnInit {
   adicionalesSeleccionados: number[] = [];
 
   productoSeleccionadoId: number | null = null;
+  productoSeleccionado: Producto | null = null;
   cantidadProductos: number = 1;
+
+  // Para mostrar resumen
+  precioProducto: number = 0;
+  precioAdicionales: number = 0;
+  precioTotal: number = 0;
 
   error: string = '';
   successMessage: string = '';
@@ -46,6 +52,69 @@ export class CrearPedidoComponent implements OnInit {
 
     this.cargarProductos();
     this.cargarAdicionales();
+
+    // Recibir datos del sessionStorage (desde comida.component)
+    const datosGuardados = sessionStorage.getItem('datosPedido');
+    if (datosGuardados) {
+      try {
+        const state = JSON.parse(datosGuardados);
+        this.procesarStateDelRouter(state);
+        // Limpiar después de procesar
+        sessionStorage.removeItem('datosPedido');
+      } catch (e) {
+        console.error('Error procesando datos del pedido', e);
+      }
+    }
+  }
+
+  private procesarStateDelRouter(state: any): void {
+    if (state.productoId) {
+      this.productoSeleccionadoId = state.productoId;
+      this.precioProducto = state.productoPrecio || 0;
+
+      // Esperar a que se carguen los productos para obtener la información completa
+      const checkProducts = setInterval(() => {
+        if (this.productos.length > 0) {
+          this.productoSeleccionado =
+            this.productos.find((p) => p.id === state.productoId) || null;
+
+          if (this.productoSeleccionado) {
+            this.precioProducto = this.productoSeleccionado.precio;
+
+            // Filtrar adiciones por categoría del producto
+            this.adicionalesFiltrados = this.todosLosAdicionales.filter(
+              (adicional) =>
+                adicional.categoria?.id ===
+                this.productoSeleccionado?.categoria.id,
+            );
+          }
+
+          clearInterval(checkProducts);
+        }
+      }, 100);
+
+      // Si vienen adiciones preseleccionadas, cargarlas
+      if (
+        state.adicionesPreseleccionadas &&
+        state.adicionesPreseleccionadas.length > 0
+      ) {
+        const checkAdiciones = setInterval(() => {
+          if (this.adicionalesFiltrados.length > 0) {
+            state.adicionesPreseleccionadas.forEach((adicional: any) => {
+              if (
+                this.adicionalesFiltrados.find((a) => a.id === adicional.id)
+              ) {
+                if (!this.adicionalesSeleccionados.includes(adicional.id)) {
+                  this.adicionalesSeleccionados.push(adicional.id);
+                }
+              }
+            });
+            this.calcularTotal();
+            clearInterval(checkAdiciones);
+          }
+        }, 100);
+      }
+    }
   }
 
   cargarProductos(): void {
@@ -73,17 +142,27 @@ export class CrearPedidoComponent implements OnInit {
   onProductoChange(): void {
     if (!this.productoSeleccionadoId) {
       this.adicionalesFiltrados = [];
+      this.productoSeleccionado = null;
+      this.precioProducto = 0;
       return;
     }
 
-    this.adicionalesFiltrados = this.todosLosAdicionales.filter(
-      (adicional) =>
-        adicional.categoria?.id ===
-        this.productos.find((p) => p.id === this.productoSeleccionadoId)
-          ?.categoria.id,
-    );
+    // Obtener el producto seleccionado
+    this.productoSeleccionado =
+      this.productos.find((p) => p.id === this.productoSeleccionadoId) || null;
+
+    if (this.productoSeleccionado) {
+      this.precioProducto = this.productoSeleccionado.precio;
+
+      // Filtrar adiciones por categoría del producto
+      this.adicionalesFiltrados = this.todosLosAdicionales.filter(
+        (adicional) =>
+          adicional.categoria?.id === this.productoSeleccionado?.categoria.id,
+      );
+    }
 
     this.adicionalesSeleccionados = [];
+    this.calcularTotal();
   }
 
   onAdicionalChange(event: any, adicionalId: number): void {
@@ -94,6 +173,28 @@ export class CrearPedidoComponent implements OnInit {
         (id) => id !== adicionalId,
       );
     }
+    this.calcularTotal();
+  }
+
+  private calcularTotal(): void {
+    // Precio de adiciones
+    this.precioAdicionales = this.adicionalesSeleccionados.reduce(
+      (total, adicionId) => {
+        const adicional = this.todosLosAdicionales.find(
+          (a) => a.id === adicionId,
+        );
+        return total + (adicional?.precio || 0);
+      },
+      0,
+    );
+
+    // Total: (precio producto + adicionales) * cantidad
+    this.precioTotal =
+      (this.precioProducto + this.precioAdicionales) * this.cantidadProductos;
+  }
+
+  onCantidadChange(): void {
+    this.calcularTotal();
   }
 
   onSubmit(): void {

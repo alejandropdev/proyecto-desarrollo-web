@@ -65,13 +65,28 @@ export class ComidaComponent implements OnInit {
       return;
     }
 
-    // Navegar a crear-pedido con el producto seleccionado
-    this.router.navigate(['/pedidos/crear'], {
-      state: {
-        productId: this.producto.id,
-        selectedAdiciones: this.selectedAdiciones,
-      },
-    });
+    // Mapear IDs de adiciones a objetos con información completa
+    const adicionesConInfo = this.selectedAdiciones
+      .map((adicionId) => this.adiciones.find((a) => a.id === adicionId))
+      .filter((a) => a !== undefined) as Adicional[];
+
+    // Guardar en sessionStorage para transferencia segura
+    const datosTransferencia = {
+      productoId: this.producto.id,
+      productoNombre: this.producto.nombre,
+      productoPrecio: this.producto.precio,
+      productoCategoriaId: this.producto.categoria?.id,
+      adicionesPreseleccionadas: adicionesConInfo.map((a) => ({
+        id: a.id,
+        nombre: a.nombre,
+        precio: a.precio,
+      })),
+    };
+
+    sessionStorage.setItem('datosPedido', JSON.stringify(datosTransferencia));
+
+    // Navegar a crear-pedido
+    this.router.navigate(['/pedidos/crear']);
   }
 
   private loadAdicionesForCategoria(categoryName?: string): void {
