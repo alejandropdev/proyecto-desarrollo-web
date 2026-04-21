@@ -14,46 +14,71 @@
         class="text-center font-bold mt-2"
         style="color: #8c0e03; opacity: 0.8"
       >
-        Selecciona los productos y adiciones que deseas.
+        Agrega todos los productos que quieras en un mismo pedido.
       </p>
 
       <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
-        <!-- SECCIÓN: Selección de Producto -->
-        <div class="border-b-2 pb-6" style="border-color: #f2b705">
-          <label
-            class="block text-xs font-black uppercase tracking-widest mb-3"
-            style="color: #8c0e03"
-          >
-            Selecciona un Producto
-          </label>
-          <select
-            [(ngModel)]="productoSeleccionadoId"
-            name="producto"
-            (change)="onProductoChange()"
-            class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
-            style="border-color: #f2b705"
-            required
-          >
-            <option [ngValue]="null">-- Selecciona un producto --</option>
-            <option *ngFor="let producto of productos" [ngValue]="producto.id">
-              {{ producto.nombre }} - ${{ producto.precio }} COP
-            </option>
-          </select>
-        </div>
-
-        <!-- SECCIÓN: Resumen del Producto Seleccionado -->
+        <!-- LÍNEAS DEL PEDIDO -->
         <div
-          *ngIf="productoSeleccionado"
-          class="rounded-2xl p-6"
-          style="background-color: #f2b70520; border: 2px solid #f2b705"
+          *ngFor="let linea of lineas; let i = index; trackBy: trackLineaByUid"
+          class="rounded-2xl p-6 space-y-5"
+          style="background-color: #f2b70510; border: 2px solid #f2b705"
         >
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="flex items-center justify-between">
+            <h3
+              class="text-sm font-black uppercase tracking-widest"
+              style="color: #8c0e03"
+            >
+              Producto #{{ i + 1 }}
+            </h3>
+            <button
+              type="button"
+              *ngIf="lineas.length > 1"
+              (click)="eliminarLinea(linea.uid)"
+              class="text-xs font-black uppercase tracking-wider px-3 py-2 rounded-lg border-2 transition-all hover:bg-red-50"
+              style="border-color: #8c0e03; color: #8c0e03"
+              [attr.aria-label]="'Quitar producto ' + (i + 1)"
+            >
+              Quitar
+            </button>
+          </div>
+
+          <!-- Selector de Producto -->
+          <div>
+            <label
+              class="block text-xs font-black uppercase tracking-widest mb-2"
+              style="color: #8c0e03"
+            >
+              Producto
+            </label>
+            <select
+              [(ngModel)]="linea.productoId"
+              [name]="'producto-' + linea.uid"
+              (change)="onProductoChangeLinea(linea)"
+              class="w-full px-5 py-4 rounded-2xl font-bold border-4 focus:outline-none"
+              style="border-color: #f2b705"
+            >
+              <option [ngValue]="null">-- Selecciona un producto --</option>
+              <option
+                *ngFor="let producto of productos"
+                [ngValue]="producto.id"
+              >
+                {{ producto.nombre }} - ${{ producto.precio }} COP
+              </option>
+            </select>
+          </div>
+
+          <!-- Detalle del producto seleccionado -->
+          <div
+            *ngIf="linea.producto"
+            class="grid grid-cols-1 sm:grid-cols-3 gap-4"
+          >
             <div>
               <p class="text-xs font-black uppercase" style="color: #8c0e03">
                 Producto
               </p>
               <p class="text-lg font-black" style="color: #34100b">
-                {{ productoSeleccionado.nombre }}
+                {{ linea.producto.nombre }}
               </p>
             </div>
             <div>
@@ -61,7 +86,7 @@
                 Precio Unitario
               </p>
               <p class="text-lg font-black" style="color: #f27405">
-                ${{ precioProducto }} COP
+                ${{ linea.producto.precio }} COP
               </p>
             </div>
             <div>
@@ -70,74 +95,102 @@
               </p>
               <input
                 type="number"
-                [(ngModel)]="cantidadProductos"
-                name="cantidad"
+                [(ngModel)]="linea.cantidad"
+                [name]="'cantidad-' + linea.uid"
                 min="1"
                 max="99"
-                (change)="onCantidadChange()"
                 class="w-full px-4 py-2 rounded-lg border-2 font-bold"
                 style="border-color: #f2b705"
               />
             </div>
           </div>
-        </div>
 
-        <!-- SECCIÓN: Adicionales (solo si hay producto seleccionado) -->
-        <div *ngIf="productoSeleccionado && adicionalesFiltrados.length > 0">
-          <h2
-            class="text-sm font-black uppercase tracking-widest mb-3"
-            style="color: #8c0e03"
+          <!-- Adicionales disponibles -->
+          <div
+            *ngIf="linea.producto && linea.adicionalesFiltrados.length > 0"
           >
-            Adiciones Disponibles (Opcional)
-          </h2>
-
-          <div class="space-y-2">
-            <div
-              *ngFor="let adicional of adicionalesFiltrados"
-              class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-gray-50"
-              style="border-color: #f2b70533"
+            <h4
+              class="text-xs font-black uppercase tracking-widest mb-2"
+              style="color: #8c0e03"
             >
-              <input
-                type="checkbox"
-                [checked]="adicionalesSeleccionados.includes(adicional.id)"
-                (change)="onAdicionalChange($event, adicional.id)"
-                [id]="'adicional-' + adicional.id"
-                class="w-5 h-5 cursor-pointer"
-              />
-              <label
-                [for]="'adicional-' + adicional.id"
-                class="flex-1 ml-3 cursor-pointer font-bold"
-                style="color: #34100b"
+              Adiciones disponibles (opcional)
+            </h4>
+            <div class="space-y-2">
+              <div
+                *ngFor="let adicional of linea.adicionalesFiltrados"
+                class="flex items-center p-3 rounded-xl border-2 transition-all"
+                style="border-color: #f2b70533; background-color: white"
               >
-                {{ adicional.nombre }}
-              </label>
-              <span class="font-black" style="color: #f27405">
-                +${{ adicional.precio }} COP
-              </span>
+                <input
+                  type="checkbox"
+                  [checked]="estaSeleccionado(linea, adicional.id)"
+                  (change)="
+                    onAdicionalChangeLinea(linea, $event, adicional.id)
+                  "
+                  [id]="'adicional-' + linea.uid + '-' + adicional.id"
+                  [name]="'adicional-' + linea.uid + '-' + adicional.id"
+                  class="w-5 h-5 cursor-pointer"
+                />
+                <label
+                  [for]="'adicional-' + linea.uid + '-' + adicional.id"
+                  class="flex-1 ml-3 cursor-pointer font-bold"
+                  style="color: #34100b"
+                >
+                  {{ adicional.nombre }}
+                </label>
+                <span class="font-black" style="color: #f27405">
+                  +${{ adicional.precio }} COP
+                </span>
+              </div>
             </div>
+          </div>
+
+          <!-- Subtotal de la línea -->
+          <div
+            *ngIf="linea.producto"
+            class="flex justify-between items-center pt-3 border-t-2"
+            style="border-color: #f2b705"
+          >
+            <span
+              class="text-sm font-black uppercase tracking-widest"
+              style="color: #8c0e03"
+            >
+              Subtotal
+            </span>
+            <span class="text-xl font-black" style="color: #34100b">
+              ${{ subtotalLinea(linea) }} COP
+            </span>
           </div>
         </div>
 
-        <!-- SECCIÓN: Resumen de Precios -->
+        <!-- Añadir otro producto -->
+        <button
+          type="button"
+          (click)="agregarLinea()"
+          class="w-full py-4 font-black rounded-2xl uppercase tracking-widest border-4 border-dashed transition-all hover:brightness-95"
+          style="border-color: #f27405; color: #f27405; background-color: #f274050d"
+        >
+          + Añadir otro producto
+        </button>
+
+        <!-- RESUMEN TOTAL -->
         <div
           class="rounded-2xl p-6 space-y-3"
           style="background-color: #34100b20; border: 2px solid #34100b"
         >
           <div class="flex justify-between">
             <span class="font-bold" style="color: #34100b">
-              Producto: ${{ precioProducto }} × {{ cantidadProductos }}
+              Productos ({{ cantidadTotalItems() }})
             </span>
             <span class="font-black" style="color: #34100b">
-              ${{ precioProducto * cantidadProductos }} COP
+              ${{ totalProductos() }} COP
             </span>
           </div>
 
-          <div *ngIf="precioAdicionales > 0" class="flex justify-between">
-            <span class="font-bold" style="color: #34100b">
-              Adiciones × {{ cantidadProductos }}
-            </span>
+          <div *ngIf="totalAdiciones() > 0" class="flex justify-between">
+            <span class="font-bold" style="color: #34100b"> Adiciones </span>
             <span class="font-black" style="color: #34100b">
-              ${{ precioAdicionales * cantidadProductos }} COP
+              ${{ totalAdiciones() }} COP
             </span>
           </div>
 
@@ -149,7 +202,7 @@
               TOTAL:
             </span>
             <span class="text-2xl font-black" style="color: #f27405">
-              ${{ precioTotal }} COP
+              ${{ totalGeneral() }} COP
             </span>
           </div>
         </div>
@@ -174,7 +227,7 @@
         <div class="flex gap-4 mt-8">
           <button
             type="submit"
-            [disabled]="!productoSeleccionadoId || isLoading"
+            [disabled]="!puedeEnviar()"
             class="flex-1 py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl transition-all hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
             style="background-color: #f27405"
           >
