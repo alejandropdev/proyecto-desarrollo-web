@@ -1,14 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { PedidoService } from '../../../services/pedido.service';
 import { ProductoService } from '../../../services/producto.service';
 import { AdicionalService } from '../../../services/adicional.service';
 import {
   CrearPedidoRequest,
+  ItemPedidoRequest,
   SeleccionAdicionalRequest,
 } from '../../../models/pedido';
 import { Producto } from '../../../models/producto';
 import { Adicional } from '../../../models/adicional';
+
+interface LineaPedido {
+  uid: number;
+  productoId: number | null;
+  producto: Producto | null;
+  cantidad: number;
+  adicionalesFiltrados: Adicional[];
+  adicionalesSeleccionados: number[];
+}
 
 @Component({
   selector: 'app-crear-pedido',
@@ -18,22 +28,18 @@ import { Adicional } from '../../../models/adicional';
 export class CrearPedidoComponent implements OnInit {
   productos: Producto[] = [];
   todosLosAdicionales: Adicional[] = [];
-  adicionalesFiltrados: Adicional[] = [];
-  adicionalesSeleccionados: number[] = [];
 
-  productoSeleccionadoId: number | null = null;
-  productoSeleccionado: Producto | null = null;
-  cantidadProductos: number = 1;
-
-  // Para mostrar resumen
-  precioProducto: number = 0;
-  precioAdicionales: number = 0;
-  precioTotal: number = 0;
+  lineas: LineaPedido[] = [];
 
   error: string = '';
   successMessage: string = '';
   isLoading: boolean = false;
   clienteEmail: string = '';
+
+  private uidCounter: number = 0;
+  private datosPrefill: any = null;
+  private productosCargados: boolean = false;
+  private adicionalesCargados: boolean = false;
 
   constructor(
     private readonly pedidoService: PedidoService,
@@ -50,77 +56,28 @@ export class CrearPedidoComponent implements OnInit {
       return;
     }
 
-    this.cargarProductos();
-    this.cargarAdicionales();
-
-    // Recibir datos del sessionStorage (desde comida.component)
     const datosGuardados = sessionStorage.getItem('datosPedido');
     if (datosGuardados) {
       try {
-        const state = JSON.parse(datosGuardados);
-        this.procesarStateDelRouter(state);
-        // Limpiar después de procesar
-        sessionStorage.removeItem('datosPedido');
+        this.datosPrefill = JSON.parse(datosGuardados);
       } catch (e) {
-        console.error('Error procesando datos del pedido', e);
+        this.datosPrefill = null;
       }
+      sessionStorage.removeItem('datosPedido');
     }
+
+    this.cargarProductos();
+    this.cargarAdicionales();
   }
 
-  private procesarStateDelRouter(state: any): void {
-    if (state.productoId) {
-      this.productoSeleccionadoId = state.productoId;
-      this.precioProducto = state.productoPrecio || 0;
-
-      // Esperar a que se carguen los productos para obtener la información completa
-      const checkProducts = setInterval(() => {
-        if (this.productos.length > 0) {
-          this.productoSeleccionado =
-            this.productos.find((p) => p.id === state.productoId) || null;
-
-          if (this.productoSeleccionado) {
-            this.precioProducto = this.productoSeleccionado.precio;
-
-            // Filtrar adiciones por categoría del producto
-            this.adicionalesFiltrados = this.todosLosAdicionales.filter(
-              (adicional) =>
-                adicional.categoria?.id ===
-                this.productoSeleccionado?.categoria.id,
-            );
-          }
-
-          clearInterval(checkProducts);
-        }
-      }, 100);
-
-      // Si vienen adiciones preseleccionadas, cargarlas
-      if (
-        state.adicionesPreseleccionadas &&
-        state.adicionesPreseleccionadas.length > 0
-      ) {
-        const checkAdiciones = setInterval(() => {
-          if (this.adicionalesFiltrados.length > 0) {
-            state.adicionesPreseleccionadas.forEach((adicional: any) => {
-              if (
-                this.adicionalesFiltrados.find((a) => a.id === adicional.id)
-              ) {
-                if (!this.adicionalesSeleccionados.includes(adicional.id)) {
-                  this.adicionalesSeleccionados.push(adicional.id);
-                }
-              }
-            });
-            this.calcularTotal();
-            clearInterval(checkAdiciones);
-          }
-        }, 100);
-      }
-    }
-  }
+  // === Carga inicial de datos ===
 
   cargarProductos(): void {
     this.productoService.getProductos().subscribe({
       next: (data) => {
         this.productos = data;
+        this.productosCargados = true;
+        this.intentarInicializarLineas();
       },
       error: () => {
         this.error = 'No fue posible cargar productos.';
@@ -132,6 +89,8 @@ export class CrearPedidoComponent implements OnInit {
     this.adicionalService.getAdiciones().subscribe({
       next: (data) => {
         this.todosLosAdicionales = data;
+        this.adicionalesCargados = true;
+        this.intentarInicializarLineas();
       },
       error: () => {
         this.error = 'No fue posible cargar adicionales.';
@@ -139,90 +98,171 @@ export class CrearPedidoComponent implements OnInit {
     });
   }
 
-  onProductoChange(): void {
-    if (!this.productoSeleccionadoId) {
-      this.adicionalesFiltrados = [];
-      this.productoSeleccionado = null;
-      this.precioProducto = 0;
+  private intentarInicializarLineas(): void {
+    if (!this.productosCargados || !this.adicionalesCargados) {
       return;
     }
-
-    // Obtener el producto seleccionado
-    this.productoSeleccionado =
-      this.productos.find((p) => p.id === this.productoSeleccionadoId) || null;
-
-    if (this.productoSeleccionado) {
-      this.precioProducto = this.productoSeleccionado.precio;
-
-      // Filtrar adiciones por categoría del producto
-      this.adicionalesFiltrados = this.todosLosAdicionales.filter(
-        (adicional) =>
-          adicional.categoria?.id === this.productoSeleccionado?.categoria.id,
-      );
+    if (this.lineas.length > 0) {
+      return;
     }
-
-    this.adicionalesSeleccionados = [];
-    this.calcularTotal();
+    if (this.datosPrefill?.productoId) {
+      const linea = this.crearLineaVacia();
+      linea.productoId = this.datosPrefill.productoId;
+      this.aplicarCambioProducto(linea);
+      const preSel: any[] =
+        this.datosPrefill.adicionesPreseleccionadas ?? [];
+      preSel.forEach((a) => {
+        if (
+          linea.adicionalesFiltrados.some((ad) => ad.id === a.id) &&
+          !linea.adicionalesSeleccionados.includes(a.id)
+        ) {
+          linea.adicionalesSeleccionados.push(a.id);
+        }
+      });
+      this.lineas = [linea];
+    } else {
+      this.lineas = [this.crearLineaVacia()];
+    }
   }
 
-  onAdicionalChange(event: any, adicionalId: number): void {
-    if (event.target.checked) {
-      this.adicionalesSeleccionados.push(adicionalId);
+  // === Gestión de líneas (carrito) ===
+
+  private crearLineaVacia(): LineaPedido {
+    return {
+      uid: ++this.uidCounter,
+      productoId: null,
+      producto: null,
+      cantidad: 1,
+      adicionalesFiltrados: [],
+      adicionalesSeleccionados: [],
+    };
+  }
+
+  agregarLinea(): void {
+    this.lineas = [...this.lineas, this.crearLineaVacia()];
+  }
+
+  eliminarLinea(uid: number): void {
+    this.lineas = this.lineas.filter((l) => l.uid !== uid);
+    if (this.lineas.length === 0) {
+      this.lineas = [this.crearLineaVacia()];
+    }
+  }
+
+  onProductoChangeLinea(linea: LineaPedido): void {
+    this.aplicarCambioProducto(linea);
+  }
+
+  private aplicarCambioProducto(linea: LineaPedido): void {
+    if (!linea.productoId) {
+      linea.producto = null;
+      linea.adicionalesFiltrados = [];
+      linea.adicionalesSeleccionados = [];
+      return;
+    }
+    linea.producto =
+      this.productos.find((p) => p.id === linea.productoId) ?? null;
+    if (linea.producto) {
+      const catId = linea.producto.categoria?.id;
+      linea.adicionalesFiltrados = this.todosLosAdicionales.filter(
+        (a) => a.categoria?.id === catId,
+      );
     } else {
-      this.adicionalesSeleccionados = this.adicionalesSeleccionados.filter(
+      linea.adicionalesFiltrados = [];
+    }
+    linea.adicionalesSeleccionados = [];
+  }
+
+  onAdicionalChangeLinea(
+    linea: LineaPedido,
+    event: any,
+    adicionalId: number,
+  ): void {
+    if (event.target.checked) {
+      if (!linea.adicionalesSeleccionados.includes(adicionalId)) {
+        linea.adicionalesSeleccionados.push(adicionalId);
+      }
+    } else {
+      linea.adicionalesSeleccionados = linea.adicionalesSeleccionados.filter(
         (id) => id !== adicionalId,
       );
     }
-    this.calcularTotal();
   }
 
-  private calcularTotal(): void {
-    // Precio de adiciones
-    this.precioAdicionales = this.adicionalesSeleccionados.reduce(
-      (total, adicionId) => {
-        const adicional = this.todosLosAdicionales.find(
-          (a) => a.id === adicionId,
-        );
-        return total + (adicional?.precio || 0);
-      },
-      0,
+  // === Cálculos de precio ===
+
+  precioAdicionalesLinea(linea: LineaPedido): number {
+    return linea.adicionalesSeleccionados.reduce((total, adicionId) => {
+      const adicional = this.todosLosAdicionales.find(
+        (a) => a.id === adicionId,
+      );
+      return total + (adicional?.precio ?? 0);
+    }, 0);
+  }
+
+  subtotalLinea(linea: LineaPedido): number {
+    const precioProducto = linea.producto?.precio ?? 0;
+    return (
+      (precioProducto + this.precioAdicionalesLinea(linea)) *
+      (linea.cantidad || 0)
     );
-
-    // Total: (precio producto + adicionales) * cantidad
-    this.precioTotal =
-      (this.precioProducto + this.precioAdicionales) * this.cantidadProductos;
   }
 
-  onCantidadChange(): void {
-    this.calcularTotal();
+  totalProductos(): number {
+    return this.lineas.reduce((total, l) => {
+      const precio = l.producto?.precio ?? 0;
+      return total + precio * (l.cantidad || 0);
+    }, 0);
   }
+
+  totalAdiciones(): number {
+    return this.lineas.reduce((total, l) => {
+      return total + this.precioAdicionalesLinea(l) * (l.cantidad || 0);
+    }, 0);
+  }
+
+  totalGeneral(): number {
+    return this.totalProductos() + this.totalAdiciones();
+  }
+
+  cantidadTotalItems(): number {
+    return this.lineas.reduce((t, l) => t + (l.cantidad || 0), 0);
+  }
+
+  // === Envío ===
 
   onSubmit(): void {
     this.error = '';
     this.successMessage = '';
 
-    if (!this.productoSeleccionadoId) {
-      this.error = 'Debes seleccionar un producto.';
+    const lineasValidas = this.lineas.filter(
+      (l) => l.productoId && l.cantidad && l.cantidad > 0,
+    );
+
+    if (lineasValidas.length === 0) {
+      this.error = 'Debes agregar al menos un producto al pedido.';
       return;
     }
 
     this.isLoading = true;
 
-    const adiciones: SeleccionAdicionalRequest[] =
-      this.adicionalesSeleccionados.map((id) => ({
-        adicionalId: id,
-        precio: 0,
-      }));
+    const items: ItemPedidoRequest[] = lineasValidas.map((l) => {
+      const adiciones: SeleccionAdicionalRequest[] =
+        l.adicionalesSeleccionados.map((id) => {
+          const adicional = this.todosLosAdicionales.find((a) => a.id === id);
+          return {
+            adicionalId: id,
+            precio: adicional?.precio ?? 0,
+          };
+        });
+      return {
+        productoId: l.productoId as number,
+        cantidad: l.cantidad,
+        adiciones,
+      };
+    });
 
-    const request: CrearPedidoRequest = {
-      items: [
-        {
-          productoId: this.productoSeleccionadoId,
-          cantidad: this.cantidadProductos,
-          adiciones,
-        },
-      ],
-    };
+    const request: CrearPedidoRequest = { items };
 
     const clienteId = localStorage.getItem('clienteId') || '1';
 
@@ -244,5 +284,22 @@ export class CrearPedidoComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/']);
+  }
+
+  // === Helpers de template ===
+
+  trackLineaByUid(_index: number, linea: LineaPedido): number {
+    return linea.uid;
+  }
+
+  estaSeleccionado(linea: LineaPedido, adicionalId: number): boolean {
+    return linea.adicionalesSeleccionados.includes(adicionalId);
+  }
+
+  puedeEnviar(): boolean {
+    return (
+      !this.isLoading &&
+      this.lineas.some((l) => l.productoId && l.cantidad && l.cantidad > 0)
+    );
   }
 }
