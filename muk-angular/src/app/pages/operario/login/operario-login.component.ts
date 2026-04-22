@@ -9,7 +9,7 @@ import { OperarioAuthService } from '../../../services/operario-auth.service';
 })
 export class OperarioLoginComponent {
   usuario = '';
-  password = '';j
+  password = '';
   error = '';
 
   constructor(
