@@ -1,6 +1,5 @@
 package com.muk.controller.api;
 
-import com.muk.entities.Operador;
 import com.muk.service.OperadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/operadores")
 @CrossOrigin(origins = "*")
@@ -25,62 +22,64 @@ public class OperadoresApiController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody ApiDtos.OperarioLoginRequest request) {
-        return operadorService.findByUsuarioAndContrasena(request.usuario(), request.password())
-                .filter(o -> Boolean.TRUE.equals(o.getActivo()))
-                .<ResponseEntity<Object>>map(o -> ResponseEntity.ok(new ApiDtos.OperarioLoginResponse(
+        OperadorService.LoginResult result = operadorService.login(request.usuario(), request.password());
+        if (!result.success()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", result.errorMessage()));
+        }
+        return ResponseEntity.ok(new ApiDtos.OperarioLoginResponse(
                         "Bienvenido operario",
-                        o.getId(),
-                        o.getUsuario(),
-                        o.getNombre()
-                )))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("message", "Usuario o contraseña incorrectos")));
+                        result.operador().getId(),
+                        result.operador().getUsuario(),
+                        result.operador().getNombre()
+                ));
     }
 
     @GetMapping
     public List<ApiDtos.OperadorDto> operadores() {
-        return operadorService.findAll().stream()
-                .filter(o -> Boolean.TRUE.equals(o.getActivo()))
+        return operadorService.findAllActive().operadores().stream()
                 .map(ApiMappers::toOperadorDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> operadorById(@PathVariable Long id) {
-        return operadorService.findById(id)
-                .filter(o -> Boolean.TRUE.equals(o.getActivo()))
-                .<ResponseEntity<Object>>map(o -> ResponseEntity.ok(ApiMappers.toOperadorDto(o)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Operador no encontrado.")));
+        OperadorService.OperadorResult result = operadorService.findActiveById(id);
+        if (!result.success()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", result.errorMessage()));
+        }
+        return ResponseEntity.ok(ApiMappers.toOperadorDto(result.operador()));
     }
 
     @PostMapping
     public ResponseEntity<Object> createOperador(@RequestBody ApiDtos.OperadorRequest request) {
-        Operador operador = new Operador();
-        operador.setNombre(request.nombre().trim());
-        operador.setUsuario(request.usuario().trim());
-        operador.setContrasenaHash(request.contrasena());
-        operador.setActivo(true);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toOperadorDto(operadorService.save(operador)));
+        OperadorService.OperadorResult result = operadorService.create(toCommand(request));
+        if (!result.success()) {
+            return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toOperadorDto(result.operador()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateOperador(@PathVariable Long id, @RequestBody ApiDtos.OperadorRequest request) {
-        Optional<Operador> existing = operadorService.findById(id);
-        if (existing.isEmpty() || !Boolean.TRUE.equals(existing.get().getActivo())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Operador no encontrado."));
+        OperadorService.OperadorResult result = operadorService.update(id, toCommand(request));
+        if (!result.success()) {
+            HttpStatus status = "Operador no encontrado.".equals(result.errorMessage()) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+            return ResponseEntity.status(status).body(Map.of("message", result.errorMessage()));
         }
-        Operador operador = existing.get();
-        operador.setNombre(request.nombre().trim());
-        operador.setUsuario(request.usuario().trim());
-        if (request.contrasena() != null && !request.contrasena().isBlank()) {
-            operador.setContrasenaHash(request.contrasena());
-        }
-        return ResponseEntity.ok(ApiMappers.toOperadorDto(operadorService.save(operador)));
+        return ResponseEntity.ok(ApiMappers.toOperadorDto(result.operador()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiDtos.MessageResponse> deleteOperador(@PathVariable Long id) {
-        operadorService.delete(id);
+    public ResponseEntity<Object> deleteOperador(@PathVariable Long id) {
+        OperadorService.ActionResult result = operadorService.delete(id);
+        if (!result.success()) {
+            HttpStatus status = "Operador no encontrado.".equals(result.errorMessage()) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+            return ResponseEntity.status(status).body(Map.of("message", result.errorMessage()));
+        }
         return ResponseEntity.ok(new ApiDtos.MessageResponse("Operador eliminado."));
+    }
+
+    private OperadorService.OperadorUpsertCommand toCommand(ApiDtos.OperadorRequest request) {
+        return new OperadorService.OperadorUpsertCommand(request.nombre(), request.usuario(), request.contrasena());
     }
 }

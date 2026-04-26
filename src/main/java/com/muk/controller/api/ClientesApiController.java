@@ -1,6 +1,5 @@
 package com.muk.controller.api;
 
-import com.muk.entities.Cliente;
 import com.muk.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/clientes")
 @CrossOrigin(origins = "*")
@@ -25,49 +22,44 @@ public class ClientesApiController {
 
     @GetMapping
     public List<ApiDtos.ClienteDto> clientes() {
-        return clienteService.findAll().stream().map(ApiMappers::toClienteDto).toList();
+        return clienteService.findAll().clientes().stream().map(ApiMappers::toClienteDto).toList();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> clienteById(@PathVariable Long id) {
-        return clienteService.findById(id)
-                .<ResponseEntity<Object>>map(c -> ResponseEntity.ok(ApiMappers.toClienteDto(c)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Cliente no encontrado.")));
+        ClienteService.ClienteResult result = clienteService.findById(id);
+        if (!result.success()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", result.errorMessage()));
+        }
+        return ResponseEntity.ok(ApiMappers.toClienteDto(result.cliente()));
     }
 
     @PostMapping
-    public ResponseEntity<ApiDtos.ClienteDto> createCliente(@RequestBody ApiDtos.ClienteUpsertRequest request) {
-        Cliente cliente = new Cliente();
-        cliente.setNombre(request.nombre().trim());
-        cliente.setApellido(request.apellido().trim());
-        cliente.setEmail(request.email().trim());
-        cliente.setTelefono(request.telefono().trim());
-        cliente.setDireccion(request.direccion().trim());
-        cliente.setContrasenaHash(request.contrasena());
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toClienteDto(clienteService.save(cliente)));
+    public ResponseEntity<Object> createCliente(@RequestBody ApiDtos.ClienteUpsertRequest request) {
+        ClienteService.ClienteResult result = clienteService.create(toClienteCommand(request));
+        if (!result.success()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", result.errorMessage()));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toClienteDto(result.cliente()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateCliente(@PathVariable Long id, @RequestBody ApiDtos.ClienteUpsertRequest request) {
-        Optional<Cliente> existing = clienteService.findById(id);
-        if (existing.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Cliente no encontrado."));
+        ClienteService.ClienteResult result = clienteService.update(id, toClienteCommand(request));
+        if (!result.success()) {
+            HttpStatus status = "Cliente no encontrado.".equals(result.errorMessage()) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+            return ResponseEntity.status(status).body(Map.of("message", result.errorMessage()));
         }
-        Cliente cliente = existing.get();
-        cliente.setNombre(request.nombre().trim());
-        cliente.setApellido(request.apellido().trim());
-        cliente.setEmail(request.email().trim());
-        cliente.setTelefono(request.telefono().trim());
-        cliente.setDireccion(request.direccion().trim());
-        if (request.contrasena() != null && !request.contrasena().isBlank()) {
-            cliente.setContrasenaHash(request.contrasena());
-        }
-        return ResponseEntity.ok(ApiMappers.toClienteDto(clienteService.save(cliente)));
+        return ResponseEntity.ok(ApiMappers.toClienteDto(result.cliente()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiDtos.MessageResponse> deleteCliente(@PathVariable Long id) {
-        clienteService.delete(id);
+    public ResponseEntity<Object> deleteCliente(@PathVariable Long id) {
+        ClienteService.ActionResult result = clienteService.delete(id);
+        if (!result.success()) {
+            HttpStatus status = "Cliente no encontrado.".equals(result.errorMessage()) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+            return ResponseEntity.status(status).body(Map.of("message", result.errorMessage()));
+        }
         return ResponseEntity.ok(new ApiDtos.MessageResponse("Cliente eliminado."));
     }
 
@@ -82,14 +74,7 @@ public class ClientesApiController {
 
     @PostMapping("/registro")
     public ResponseEntity<Object> registroCliente(@RequestBody ApiDtos.ClienteUpsertRequest request) {
-        Cliente cliente = new Cliente();
-        cliente.setNombre(request.nombre().trim());
-        cliente.setApellido(request.apellido().trim());
-        cliente.setEmail(request.email().trim());
-        cliente.setTelefono(request.telefono().trim());
-        cliente.setDireccion(request.direccion().trim());
-        cliente.setContrasenaHash(request.contrasena());
-        ClienteService.RegistroResult result = clienteService.registrarConValidacion(cliente);
+        ClienteService.RegistroResult result = clienteService.registrarConValidacion(toClienteCommand(request));
         if (!result.success()) {
             return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
         }
@@ -107,24 +92,15 @@ public class ClientesApiController {
 
     @PutMapping("/perfil")
     public ResponseEntity<Object> editarPerfil(@RequestParam String emailOriginal, @RequestBody ApiDtos.ClienteUpsertRequest request) {
-        Optional<Cliente> existing = clienteService.findByEmail(emailOriginal);
-        if (existing.isEmpty()) {
+        ClienteService.ClienteResult existing = clienteService.findByEmail(emailOriginal);
+        if (!existing.success()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Usuario no encontrado."));
         }
-        Cliente cliente = existing.get();
-        cliente.setNombre(request.nombre().trim());
-        cliente.setApellido(request.apellido().trim());
-        cliente.setEmail(request.email().trim());
-        cliente.setTelefono(request.telefono().trim());
-        cliente.setDireccion(request.direccion().trim());
-        if (request.contrasena() != null && !request.contrasena().isBlank()) {
-            cliente.setContrasenaHash(request.contrasena());
-        }
-        ClienteService.ActionResult result = clienteService.actualizarPerfil(cliente);
+        ClienteService.ClienteResult result = clienteService.update(existing.cliente().getId(), toClienteCommand(request));
         if (!result.success()) {
-            return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(ApiMappers.toClienteDto(clienteService.findById(cliente.getId()).orElse(cliente)));
+        return ResponseEntity.ok(ApiMappers.toClienteDto(result.cliente()));
     }
 
     @DeleteMapping("/perfil")
@@ -134,5 +110,16 @@ public class ClientesApiController {
             return ResponseEntity.badRequest().body(new ApiDtos.MessageResponse(result.errorMessage()));
         }
         return ResponseEntity.ok(new ApiDtos.MessageResponse("Tu cuenta ha sido eliminada."));
+    }
+
+    private ClienteService.ClienteUpsertCommand toClienteCommand(ApiDtos.ClienteUpsertRequest request) {
+        return new ClienteService.ClienteUpsertCommand(
+                request.nombre(),
+                request.apellido(),
+                request.email(),
+                request.telefono(),
+                request.direccion(),
+                request.contrasena()
+        );
     }
 }

@@ -3,22 +3,42 @@ package com.muk.service;
 import com.muk.entities.Operador;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interfaz del servicio de operadores. Lógica de negocio.
  */
 public interface OperadorService {
 
-    List<Operador> findAll();
+    record OperadorUpsertCommand(String nombre, String usuario, String contrasena) {
+    }
 
-    Optional<Operador> findById(Long id);
+    record OperadorResult(Operador operador, String errorMessage) {
+        public boolean success() {
+            return operador != null;
+        }
+    }
 
-    Operador save(Operador operador);
+    record OperadoresResult(List<Operador> operadores) {
+    }
 
-    void delete(Long id);
+    record LoginResult(Operador operador, String errorMessage) {
+        public boolean success() {
+            return operador != null;
+        }
+    }
 
-    Optional<Operador> findByUsuario(String usuario);
+    record ActionResult(boolean success, String errorMessage) {
+    }
 
-    Optional<Operador> findByUsuarioAndContrasena(String usuario, String contrasena);
+    OperadoresResult findAllActive();
+
+    OperadorResult findActiveById(Long id);
+
+    OperadorResult create(OperadorUpsertCommand command);
+
+    OperadorResult update(Long id, OperadorUpsertCommand command);
+
+    ActionResult delete(Long id);
+
+    LoginResult login(String usuario, String password);
 }

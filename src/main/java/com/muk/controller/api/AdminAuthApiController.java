@@ -20,9 +20,11 @@ public class AdminAuthApiController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiDtos.MessageResponse> adminLogin(@RequestBody ApiDtos.AdminLoginRequest request) {
-        return administradorService.login(request.usuario(), request.password())
-                .map(admin -> ResponseEntity.ok(new ApiDtos.MessageResponse("Bienvenido administrador")))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(new ApiDtos.MessageResponse("Usuario o contraseña incorrectos")));
+        AdministradorService.LoginResult result = administradorService.login(request.usuario(), request.password());
+        if (!result.success()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiDtos.MessageResponse(result.errorMessage()));
+        }
+        return ResponseEntity.ok(new ApiDtos.MessageResponse("Bienvenido administrador"));
     }
 }

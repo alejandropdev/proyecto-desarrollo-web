@@ -20,36 +20,97 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public List<Cliente> findAll() {
-        return repository.findAll();
+    public ClientesResult findAll() {
+        return new ClientesResult(repository.findAll());
     }
 
     @Override
-    public Optional<Cliente> findById(Long id) {
-        return id == null ? Optional.empty() : repository.findById(id);
-    }
-
-    @Override
-    public Cliente save(Cliente cliente) {
-        if (cliente == null) return null;
-        return repository.save(cliente);
-    }
-
-    @Override
-    public void delete(Long id) {
-        if (id != null) {
-            repository.deleteById(id);
+    public ClienteResult findById(Long id) {
+        if (id == null) {
+            return new ClienteResult(null, "Id inválido.");
         }
+        return repository.findById(id)
+                .map(cliente -> new ClienteResult(cliente, null))
+                .orElseGet(() -> new ClienteResult(null, "Cliente no encontrado."));
     }
 
     @Override
-    public Optional<Cliente> findByEmail(String email) {
-        return repository.findByEmail(email);
+    public ClienteResult create(ClienteUpsertCommand command) {
+        ValidationResult validation = validateRequiredFields(command, true);
+        if (!validation.valid()) {
+            return new ClienteResult(null, validation.errorMessage());
+        }
+
+        String normalizedEmail = command.email().trim();
+        if (repository.findByEmail(normalizedEmail).isPresent()) {
+            return new ClienteResult(null, "El email ya está registrado.");
+        }
+
+        Cliente cliente = new Cliente();
+        cliente.setNombre(command.nombre().trim());
+        cliente.setApellido(command.apellido().trim());
+        cliente.setEmail(normalizedEmail);
+        cliente.setTelefono(command.telefono().trim());
+        cliente.setDireccion(command.direccion().trim());
+        cliente.setContrasenaHash(command.contrasena().trim());
+
+        return new ClienteResult(repository.save(cliente), null);
     }
 
     @Override
-    public Optional<Cliente> findByEmailAndPassword(String email, String password) {
-        return repository.findByEmailAndContrasenaHash(email, password);
+    public ClienteResult update(Long id, ClienteUpsertCommand command) {
+        if (id == null) {
+            return new ClienteResult(null, "Id inválido.");
+        }
+        ValidationResult validation = validateRequiredFields(command, false);
+        if (!validation.valid()) {
+            return new ClienteResult(null, validation.errorMessage());
+        }
+
+        Optional<Cliente> existingOpt = repository.findById(id);
+        if (existingOpt.isEmpty()) {
+            return new ClienteResult(null, "Cliente no encontrado.");
+        }
+
+        Cliente existing = existingOpt.get();
+        String normalizedEmail = command.email().trim();
+        Optional<Cliente> byEmail = repository.findByEmail(normalizedEmail);
+        if (byEmail.isPresent() && !byEmail.get().getId().equals(id)) {
+            return new ClienteResult(null, "El email ya está registrado.");
+        }
+
+        existing.setNombre(command.nombre().trim());
+        existing.setApellido(command.apellido().trim());
+        existing.setEmail(normalizedEmail);
+        existing.setTelefono(command.telefono().trim());
+        existing.setDireccion(command.direccion().trim());
+        if (command.contrasena() != null && !command.contrasena().isBlank()) {
+            existing.setContrasenaHash(command.contrasena().trim());
+        }
+
+        return new ClienteResult(repository.save(existing), null);
+    }
+
+    @Override
+    public ActionResult delete(Long id) {
+        if (id == null) {
+            return new ActionResult(false, "Id inválido.");
+        }
+        if (repository.findById(id).isEmpty()) {
+            return new ActionResult(false, "Cliente no encontrado.");
+        }
+        repository.deleteById(id);
+        return new ActionResult(true, null);
+    }
+
+    @Override
+    public ClienteResult findByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            return new ClienteResult(null, "Email no registrado.");
+        }
+        return repository.findByEmail(email.trim())
+                .map(cliente -> new ClienteResult(cliente, null))
+                .orElseGet(() -> new ClienteResult(null, "Usuario no encontrado."));
     }
 
     @Override
@@ -75,27 +136,14 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente registro(Cliente cliente) {
-        if (cliente == null) return null;
-        return repository.save(cliente);
+    public ClienteResult registro(ClienteUpsertCommand command) {
+        return create(command);
     }
 
     @Override
-    public RegistroResult registrarConValidacion(Cliente cliente) {
-        if (cliente == null) {
-            return new RegistroResult(null, "Datos inválidos.");
-        }
-        if (cliente.getEmail() == null || cliente.getEmail().isEmpty()) {
-            return new RegistroResult(null, "El email es requerido.");
-        }
-        if (cliente.getContrasenaHash() == null || cliente.getContrasenaHash().isEmpty()) {
-            return new RegistroResult(null, "La contraseña es requerida.");
-        }
-        if (repository.findByEmail(cliente.getEmail()).isPresent()) {
-            return new RegistroResult(null, "El email ya está registrado.");
-        }
-
-        return new RegistroResult(repository.save(cliente), null);
+    public RegistroResult registrarConValidacion(ClienteUpsertCommand command) {
+        ClienteResult result = create(command);
+        return new RegistroResult(result.cliente(), result.errorMessage());
     }
 
     @Override
@@ -110,56 +158,19 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ActionResult actualizarPerfil(Cliente cliente) {
-        Long clienteId = (cliente == null) ? null : cliente.getId();
-
-        if (cliente == null || clienteId == null) {
+        if (cliente == null || cliente.getId() == null) {
             return new ActionResult(false, "Datos inválidos.");
         }
-
-        // Validar campos requeridos
-        if (cliente.getNombre() == null || cliente.getNombre().isBlank()) {
-            return new ActionResult(false, "El nombre es requerido.");
-        }
-        if (cliente.getApellido() == null || cliente.getApellido().isBlank()) {
-            return new ActionResult(false, "El apellido es requerido.");
-        }
-        if (cliente.getEmail() == null || cliente.getEmail().isBlank()) {
-            return new ActionResult(false, "El email es requerido.");
-        }
-        if (cliente.getTelefono() == null || cliente.getTelefono().isBlank()) {
-            return new ActionResult(false, "El teléfono es requerido.");
-        }
-        if (cliente.getDireccion() == null || cliente.getDireccion().isBlank()) {
-            return new ActionResult(false, "La dirección es requerida.");
-        }
-
-        try {
-            Optional<Cliente> existingOpt = repository.findById(clienteId);
-            if (existingOpt.isEmpty()) {
-                return new ActionResult(false, "Cliente no encontrado en la base de datos.");
-            }
-
-            Cliente existing = existingOpt.get();
-
-            // Actualizar SOLO los campos que el usuario modificó
-            existing.setNombre(cliente.getNombre());
-            existing.setApellido(cliente.getApellido());
-            existing.setEmail(cliente.getEmail());
-            existing.setTelefono(cliente.getTelefono());
-            existing.setDireccion(cliente.getDireccion());
-            
-            // Manejar contraseña - solo actualizar si se proporcionó una nueva
-            if (cliente.getContrasenaHash() != null && !cliente.getContrasenaHash().isBlank()) {
-                existing.setContrasenaHash(cliente.getContrasenaHash());
-            }
-
-            // Las relaciones (pedidos, carrito) se preservan automáticamente
-            repository.save(existing);
-            return new ActionResult(true, null);
-
-        } catch (Exception e) {
-            return new ActionResult(false, "Error al guardar los cambios: " + e.getMessage());
-        }
+        ClienteUpsertCommand command = new ClienteUpsertCommand(
+                cliente.getNombre(),
+                cliente.getApellido(),
+                cliente.getEmail(),
+                cliente.getTelefono(),
+                cliente.getDireccion(),
+                cliente.getContrasenaHash()
+        );
+        ClienteResult result = update(cliente.getId(), command);
+        return new ActionResult(result.success(), result.errorMessage());
     }
 
     @Override
@@ -180,5 +191,23 @@ public class ClienteServiceImpl implements ClienteService {
 
         repository.deleteById(clienteId);
         return new ActionResult(true, null);
+    }
+
+    private ValidationResult validateRequiredFields(ClienteUpsertCommand command, boolean passwordRequired) {
+        if (command == null) return new ValidationResult(false, "Datos inválidos.");
+        if (isBlank(command.nombre())) return new ValidationResult(false, "El nombre es requerido.");
+        if (isBlank(command.apellido())) return new ValidationResult(false, "El apellido es requerido.");
+        if (isBlank(command.email())) return new ValidationResult(false, "El email es requerido.");
+        if (isBlank(command.telefono())) return new ValidationResult(false, "El teléfono es requerido.");
+        if (isBlank(command.direccion())) return new ValidationResult(false, "La dirección es requerida.");
+        if (passwordRequired && isBlank(command.contrasena())) return new ValidationResult(false, "La contraseña es requerida.");
+        return new ValidationResult(true, null);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
+    private record ValidationResult(boolean valid, String errorMessage) {
     }
 }
