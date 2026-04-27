@@ -42,13 +42,16 @@ public class PedidosApiController {
     }
 
     /**
-     * Obtiene todos los pedidos (para operarios).
+     * Obtiene todos los pedidos con filtros opcionales.
      * GET /api/pedidos
+     * GET /api/pedidos?clienteId=X
+     * GET /api/pedidos?productoId=X
      */
     @GetMapping
     public ResponseEntity<Object> listaPedidos(
-            @RequestParam(required = false) Long clienteId) {
-        
+            @RequestParam(required = false) Long clienteId,
+            @RequestParam(required = false) Long productoId) {
+
         // Si se proporciona clienteId, devolver solo pedidos de ese cliente
         if (clienteId != null && clienteId > 0) {
             List<ApiDtos.PedidoDto> pedidos = pedidoService.findByClienteId(clienteId)
@@ -57,13 +60,39 @@ public class PedidosApiController {
                     .toList();
             return ResponseEntity.ok(pedidos);
         }
-        
-        // Si no hay clienteId, devolver todos los pedidos (para operarios)
+
+        // Si se proporciona productoId, filtrar por producto (útil para admin)
+        if (productoId != null && productoId > 0) {
+            List<ApiDtos.PedidoDto> pedidos = pedidoService.findByProductoId(productoId)
+                    .stream()
+                    .map(ApiMappers::toPedidoDto)
+                    .toList();
+            return ResponseEntity.ok(pedidos);
+        }
+
+        // Sin filtros: devolver todos los pedidos
         List<ApiDtos.PedidoDto> todosLosPedidos = pedidoService.findAll()
                 .stream()
                 .map(ApiMappers::toPedidoDto)
                 .toList();
         return ResponseEntity.ok(todosLosPedidos);
+    }
+
+    /**
+     * Actualiza el estado de un pedido (máquina de estados).
+     * Al pasar a EN_CAMINO es obligatorio enviar domiciliarioId en el cuerpo.
+     * PATCH /api/pedidos/{id}/estado
+     */
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Object> actualizarEstado(
+            @PathVariable Long id,
+            @RequestBody ApiDtos.ActualizarEstadoPedidoRequest request) {
+
+        PedidoService.ActualizarEstadoResult result = pedidoService.actualizarEstado(id, request);
+        if (!result.success()) {
+            return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
+        }
+        return ResponseEntity.ok(ApiMappers.toPedidoDto(result.pedido()));
     }
 
     /**

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { PedidoService } from '../../../services/pedido.service';
 import { ProductoService } from '../../../services/producto.service';
 import { AdicionalService } from '../../../services/adicional.service';
+import { CarritoService } from '../../../services/carrito.service';
 import {
   CrearPedidoRequest,
   ItemPedidoRequest,
@@ -45,6 +46,7 @@ export class CrearPedidoComponent implements OnInit {
     private readonly pedidoService: PedidoService,
     private readonly productoService: ProductoService,
     private readonly adicionalService: AdicionalService,
+    private readonly carritoService: CarritoService,
     private readonly router: Router,
   ) {}
 
@@ -105,12 +107,13 @@ export class CrearPedidoComponent implements OnInit {
     if (this.lineas.length > 0) {
       return;
     }
+
+    // Prioridad 1: producto pre-seleccionado desde la página de detalle
     if (this.datosPrefill?.productoId) {
       const linea = this.crearLineaVacia();
       linea.productoId = this.datosPrefill.productoId;
       this.aplicarCambioProducto(linea);
-      const preSel: any[] =
-        this.datosPrefill.adicionesPreseleccionadas ?? [];
+      const preSel: any[] = this.datosPrefill.adicionesPreseleccionadas ?? [];
       preSel.forEach((a) => {
         if (
           linea.adicionalesFiltrados.some((ad) => ad.id === a.id) &&
@@ -120,9 +123,38 @@ export class CrearPedidoComponent implements OnInit {
         }
       });
       this.lineas = [linea];
-    } else {
-      this.lineas = [this.crearLineaVacia()];
+      return;
     }
+
+    // Prioridad 2: carrito guardado en localStorage
+    const guardadas = this.carritoService.cargar();
+    if (guardadas.length > 0) {
+      this.lineas = guardadas.map((g) => {
+        const linea = this.crearLineaVacia();
+        linea.productoId = g.productoId;
+        this.aplicarCambioProducto(linea);
+        linea.cantidad = g.cantidad;
+        linea.adicionalesSeleccionados = g.adicionalesSeleccionados.filter((id) =>
+          linea.adicionalesFiltrados.some((ad) => ad.id === id)
+        );
+        return linea;
+      });
+      return;
+    }
+
+    // Sin datos previos: línea vacía inicial
+    this.lineas = [this.crearLineaVacia()];
+  }
+
+  /** Persiste el estado actual del carrito en localStorage. */
+  private persistirCarrito(): void {
+    this.carritoService.guardar(
+      this.lineas.map((l) => ({
+        productoId: l.productoId as number,
+        cantidad: l.cantidad,
+        adicionalesSeleccionados: l.adicionalesSeleccionados,
+      }))
+    );
   }
 
   // === Gestión de líneas (carrito) ===
@@ -140,6 +172,7 @@ export class CrearPedidoComponent implements OnInit {
 
   agregarLinea(): void {
     this.lineas = [...this.lineas, this.crearLineaVacia()];
+    this.persistirCarrito();
   }
 
   eliminarLinea(uid: number): void {
@@ -147,10 +180,12 @@ export class CrearPedidoComponent implements OnInit {
     if (this.lineas.length === 0) {
       this.lineas = [this.crearLineaVacia()];
     }
+    this.persistirCarrito();
   }
 
   onProductoChangeLinea(linea: LineaPedido): void {
     this.aplicarCambioProducto(linea);
+    this.persistirCarrito();
   }
 
   private aplicarCambioProducto(linea: LineaPedido): void {
@@ -187,6 +222,11 @@ export class CrearPedidoComponent implements OnInit {
         (id) => id !== adicionalId,
       );
     }
+    this.persistirCarrito();
+  }
+
+  onCantidadChangeLinea(): void {
+    this.persistirCarrito();
   }
 
   // === Cálculos de precio ===
@@ -268,6 +308,7 @@ export class CrearPedidoComponent implements OnInit {
 
     this.pedidoService.crearPedido(parseInt(clienteId), request).subscribe({
       next: () => {
+        this.carritoService.limpiar();
         this.successMessage = 'Pedido creado exitosamente';
         this.isLoading = false;
 

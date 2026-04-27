@@ -37,6 +37,7 @@ import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-p
 import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
 import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.component';
 import { OperarioLoginComponent } from './pages/operario/login/operario-login.component';
+import { AdminPedidosComponent } from './pages/admin/pedidos/admin-pedidos.component';
 
 @NgModule({
   imports: [BrowserModule, CommonModule, FormsModule, HttpClientModule, AppRoutingModule],
@@ -72,7 +73,8 @@ import { OperarioLoginComponent } from './pages/operario/login/operario-login.co
     DetallePedidoComponent,
     MisPedidosComponent,
     PedidoPortalComponent,
-    OperarioLoginComponent
+    OperarioLoginComponent,
+    AdminPedidosComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

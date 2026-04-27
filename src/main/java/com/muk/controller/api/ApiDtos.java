@@ -83,4 +83,15 @@ public final class ApiDtos {
                                    String estado, String fechaCreacion, String fechaEntrega,
                                    List<ItemPedidoDto> items) {
     }
+
+    // Domiciliarios DTOs
+    public record DomiciliarioDto(Long id, String nombre, String celular, String cedula, Boolean disponible) {
+    }
+
+    public record DomiciliarioUpsertRequest(String nombre, String celular, String cedula) {
+    }
+
+    // Request para actualizar el estado de un pedido
+    public record ActualizarEstadoPedidoRequest(String nuevoEstado, Long domiciliarioId) {
+    }
 }

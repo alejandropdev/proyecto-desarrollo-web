@@ -1,6 +1,7 @@
 <main class="pt-24 pb-16 min-h-screen" style="background-color: #faf7f0">
   <div class="max-w-7xl mx-auto px-4">
-    
+
+    <!-- Encabezado -->
     <div class="mb-10">
       <div class="flex items-center justify-between gap-4">
         <h1 class="text-4xl font-black uppercase" style="color: #34100b">Portal de Operario</h1>
@@ -13,8 +14,17 @@
           Cerrar sesión
         </button>
       </div>
+      <p class="mt-2 font-bold text-sm" style="color: #8c0e03; opacity: 0.8">
+        Solo se muestran pedidos activos (excluye entregados y cancelados).
+      </p>
     </div>
 
+    <!-- Mensaje de error de acción -->
+    <div *ngIf="errorAccion" class="mb-4 px-4 py-3 rounded-xl font-bold text-white text-sm" style="background-color: #8c0e03">
+      {{ errorAccion }}
+    </div>
+
+    <!-- Tabla de pedidos -->
     <div class="rounded-2xl shadow-xl bg-white overflow-hidden border-2" style="border-color: #f2b705">
       <table class="w-full text-left">
         <thead>
@@ -22,33 +32,121 @@
             <th class="p-4 uppercase font-black">ID</th>
             <th class="p-4 uppercase font-black">Cliente</th>
             <th class="p-4 uppercase font-black">Estado</th>
-            <th class="p-4 uppercase font-black text-center">Acción</th>
+            <th class="p-4 uppercase font-black text-center">Avanzar</th>
+            <th class="p-4 uppercase font-black text-center">Detalle</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let p of pedidos" class="border-b">
+          <tr *ngFor="let p of pedidos" class="border-b" style="border-color: #f2b70520">
             <td class="p-4 font-bold">#{{ p.id }}</td>
             <td class="p-4 font-semibold">{{ getNombreCliente(p) }}</td>
             <td class="p-4">
-              <span [ngStyle]="{'background-color': getEstadoColor(p.estado)}" 
-                    class="px-3 py-1 rounded-full text-white text-xs font-black uppercase">
+              <span
+                [ngStyle]="{'background-color': getEstadoColor(p.estado)}"
+                class="px-3 py-1 rounded-full text-white text-xs font-black uppercase"
+              >
                 {{ p.estado }}
               </span>
             </td>
             <td class="p-4 text-center">
-              <button (click)="verDetalle(p.id)" 
-                      class="px-4 py-2 rounded-full font-black text-white uppercase text-xs"
-                      style="background-color: #8c0e03">
-                Ver Detalle
+              <button
+                *ngIf="getLabelBotonAvance(p.estado)"
+                (click)="avanzarEstado(p)"
+                [disabled]="procesando"
+                class="px-4 py-2 rounded-full font-black text-white uppercase text-xs disabled:opacity-50"
+                style="background-color: #f27405"
+              >
+                {{ getLabelBotonAvance(p.estado) }}
+              </button>
+              <span *ngIf="!getLabelBotonAvance(p.estado)" class="text-xs font-bold" style="color: #6b7280">
+                —
+              </span>
+            </td>
+            <td class="p-4 text-center">
+              <button
+                (click)="verDetalle(p.id)"
+                class="px-4 py-2 rounded-full font-black text-white uppercase text-xs"
+                style="background-color: #8c0e03"
+              >
+                Ver detalle
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-      
-      <div *ngIf="isLoading" class="p-10 text-center font-bold uppercase">
+
+      <div *ngIf="isLoading" class="p-10 text-center font-bold uppercase" style="color: #34100b">
         Cargando pedidos...
+      </div>
+
+      <div *ngIf="!isLoading && pedidos.length === 0" class="p-10 text-center font-bold" style="color: #6b7280">
+        No hay pedidos activos en este momento.
       </div>
     </div>
   </div>
 </main>
+
+<!-- Modal: Seleccionar domiciliario disponible -->
+<div
+  *ngIf="mostrarModal"
+  class="fixed inset-0 z-50 flex items-center justify-center"
+  style="background-color: rgba(0,0,0,0.6)"
+>
+  <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
+    <h2 class="text-2xl font-black uppercase mb-2" style="color: #34100b">
+      Seleccionar domiciliario
+    </h2>
+    <p class="text-sm font-bold mb-6" style="color: #8c0e03; opacity: 0.8">
+      Elige un domiciliario disponible para el pedido #{{ pedidoEnTransicion?.id }}.
+    </p>
+
+    <!-- Lista de domiciliarios disponibles -->
+    <div class="space-y-3 max-h-60 overflow-y-auto mb-6">
+      <label
+        *ngFor="let d of domiciliariosDisponibles"
+        class="flex items-center gap-3 p-3 rounded-xl cursor-pointer border-2 transition-all"
+        [ngStyle]="{
+          'border-color': domiciliarioSeleccionadoId === d.id ? '#f27405' : '#e5e7eb',
+          'background-color': domiciliarioSeleccionadoId === d.id ? '#fff7ed' : 'white'
+        }"
+      >
+        <input
+          type="radio"
+          name="domiciliario"
+          [value]="d.id"
+          [(ngModel)]="domiciliarioSeleccionadoId"
+          class="accent-orange-500"
+        />
+        <div>
+          <p class="font-black text-sm" style="color: #34100b">{{ d.nombre }}</p>
+          <p class="text-xs font-bold" style="color: #6b7280">{{ d.celular }}</p>
+        </div>
+      </label>
+
+      <p *ngIf="domiciliariosDisponibles.length === 0" class="text-center font-bold text-sm py-4" style="color: #8c0e03">
+        No hay domiciliarios disponibles en este momento.
+      </p>
+    </div>
+
+    <!-- Acciones del modal -->
+    <div class="flex gap-3 justify-end">
+      <button
+        type="button"
+        (click)="cerrarModal()"
+        class="px-5 py-2 rounded-full font-black uppercase text-xs border-2"
+        style="border-color: #34100b; color: #34100b"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        (click)="confirmarEnvio()"
+        [disabled]="!domiciliarioSeleccionadoId || domiciliariosDisponibles.length === 0"
+        class="px-5 py-2 rounded-full font-black uppercase text-xs text-white disabled:opacity-50"
+        style="background-color: #f27405"
+      >
+        Confirmar envío
+      </button>
+    </div>
+  </div>
+</div>

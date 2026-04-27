@@ -44,4 +44,24 @@ export class PedidoService {
   obtenerPedidoDetalle(id: number): Observable<PedidoDetalle> {
     return this.http.get<PedidoDetalle>(`${this.apiUrl}/${id}`);
   }
+
+  /**
+   * Actualiza el estado de un pedido.
+   * Al pasar a EN_CAMINO se debe incluir el domiciliarioId.
+   */
+  actualizarEstado(pedidoId: number, nuevoEstado: string, domiciliarioId?: number): Observable<Pedido> {
+    const body: { nuevoEstado: string; domiciliarioId?: number } = { nuevoEstado };
+    if (domiciliarioId !== undefined) {
+      body.domiciliarioId = domiciliarioId;
+    }
+    return this.http.patch<Pedido>(`${this.apiUrl}/${pedidoId}/estado`, body);
+  }
+
+  /**
+   * Obtiene todos los pedidos, con filtro opcional por productoId.
+   */
+  listarTodos(productoId?: number): Observable<Pedido[]> {
+    const params = productoId ? `?productoId=${productoId}` : '';
+    return this.http.get<Pedido[]>(`${this.apiUrl}${params}`);
+  }
 }

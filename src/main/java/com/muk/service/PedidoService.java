@@ -52,4 +52,22 @@ public interface PedidoService {
      * Obtiene los pedidos filtrados por estado.
      */
     List<Pedido> findByEstado(String estado);
+
+    /**
+     * Obtiene pedidos que contienen un producto específico.
+     */
+    List<Pedido> findByProductoId(Long productoId);
+
+    record ActualizarEstadoResult(Pedido pedido, String errorMessage) {
+        public boolean success() {
+            return pedido != null;
+        }
+    }
+
+    /**
+     * Actualiza el estado de un pedido siguiendo la máquina de estados.
+     * Al pasar a EN_CAMINO asigna domiciliario y lo marca como no disponible.
+     * Al pasar a ENTREGADO libera al domiciliario y registra la fecha de entrega.
+     */
+    ActualizarEstadoResult actualizarEstado(Long pedidoId, ApiDtos.ActualizarEstadoPedidoRequest request);
 }

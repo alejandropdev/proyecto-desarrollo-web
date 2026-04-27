@@ -94,4 +94,15 @@ public final class ApiMappers {
                 seleccion.getPrecio()
         );
     }
+
+    /** Convierte una entidad Domiciliario a su DTO plano. */
+    public static ApiDtos.DomiciliarioDto toDomiciliarioDto(Domiciliario domiciliario) {
+        return new ApiDtos.DomiciliarioDto(
+                domiciliario.getId(),
+                domiciliario.getNombre(),
+                domiciliario.getCelular(),
+                domiciliario.getCedula(),
+                domiciliario.getDisponible()
+        );
+    }
 }

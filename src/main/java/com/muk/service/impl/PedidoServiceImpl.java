@@ -22,6 +22,7 @@ public class PedidoServiceImpl implements PedidoService {
     private final ClienteRepository clienteRepository;
     private final ProductoRepository productoRepository;
     private final AdicionalRepository adicionalRepository;
+    private final DomiciliarioRepository domiciliarioRepository;
 
     @Autowired
     public PedidoServiceImpl(
@@ -30,13 +31,15 @@ public class PedidoServiceImpl implements PedidoService {
             SeleccionAdicionalPedidoRepository seleccionAdicionalPedidoRepository,
             ClienteRepository clienteRepository,
             ProductoRepository productoRepository,
-            AdicionalRepository adicionalRepository) {
+            AdicionalRepository adicionalRepository,
+            DomiciliarioRepository domiciliarioRepository) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
         this.seleccionAdicionalPedidoRepository = seleccionAdicionalPedidoRepository;
         this.clienteRepository = clienteRepository;
         this.productoRepository = productoRepository;
         this.adicionalRepository = adicionalRepository;
+        this.domiciliarioRepository = domiciliarioRepository;
     }
 
     @Override
@@ -156,5 +159,83 @@ public class PedidoServiceImpl implements PedidoService {
             return new ArrayList<>();
         }
         return pedidoRepository.findByEstado(estado);
+    }
+
+    @Override
+    public List<Pedido> findByProductoId(Long productoId) {
+        if (productoId == null) {
+            return new ArrayList<>();
+        }
+        return pedidoRepository.findByProductoId(productoId);
+    }
+
+    @Override
+    @Transactional
+    public ActualizarEstadoResult actualizarEstado(Long pedidoId, ApiDtos.ActualizarEstadoPedidoRequest request) {
+        if (pedidoId == null) {
+            return new ActualizarEstadoResult(null, "ID de pedido inválido.");
+        }
+
+        Optional<Pedido> pedidoOpt = pedidoRepository.findById(pedidoId);
+        if (pedidoOpt.isEmpty()) {
+            return new ActualizarEstadoResult(null, "Pedido no encontrado.");
+        }
+
+        Pedido pedido = pedidoOpt.get();
+        String estadoActual = pedido.getEstado();
+        String nuevoEstado = request.nuevoEstado();
+
+        // Validar transición de estados permitida
+        boolean transicionValida = switch (estadoActual) {
+            case "PENDIENTE"      -> nuevoEstado.equals("EN_PREPARACION") || nuevoEstado.equals("CANCELADO");
+            case "EN_PREPARACION" -> nuevoEstado.equals("EN_CAMINO")      || nuevoEstado.equals("CANCELADO");
+            case "EN_CAMINO"      -> nuevoEstado.equals("ENTREGADO")      || nuevoEstado.equals("CANCELADO");
+            default -> false;
+        };
+
+        if (!transicionValida) {
+            return new ActualizarEstadoResult(null,
+                    "Transición de estado no válida: " + estadoActual + " → " + nuevoEstado);
+        }
+
+        // Al pasar a EN_CAMINO se debe asignar un domiciliario disponible
+        if (nuevoEstado.equals("EN_CAMINO")) {
+            if (request.domiciliarioId() == null) {
+                return new ActualizarEstadoResult(null, "Se debe seleccionar un domiciliario para enviar el pedido.");
+            }
+            Optional<Domiciliario> domOpt = domiciliarioRepository.findById(request.domiciliarioId());
+            if (domOpt.isEmpty()) {
+                return new ActualizarEstadoResult(null, "Domiciliario no encontrado.");
+            }
+            Domiciliario dom = domOpt.get();
+            if (!Boolean.TRUE.equals(dom.getDisponible())) {
+                return new ActualizarEstadoResult(null, "El domiciliario seleccionado no está disponible.");
+            }
+            // Marcar domiciliario como ocupado (entregando)
+            dom.setDisponible(false);
+            domiciliarioRepository.save(dom);
+            pedido.setDomiciliario(dom);
+        }
+
+        // Al entregar: liberar domiciliario y registrar fecha de entrega
+        if (nuevoEstado.equals("ENTREGADO")) {
+            pedido.setFechaEntrega(LocalDateTime.now());
+            if (pedido.getDomiciliario() != null) {
+                Domiciliario dom = pedido.getDomiciliario();
+                dom.setDisponible(true);
+                domiciliarioRepository.save(dom);
+            }
+        }
+
+        // Al cancelar desde EN_CAMINO: liberar al domiciliario
+        if (nuevoEstado.equals("CANCELADO") && estadoActual.equals("EN_CAMINO")
+                && pedido.getDomiciliario() != null) {
+            Domiciliario dom = pedido.getDomiciliario();
+            dom.setDisponible(true);
+            domiciliarioRepository.save(dom);
+        }
+
+        pedido.setEstado(nuevoEstado);
+        return new ActualizarEstadoResult(pedidoRepository.save(pedido), null);
     }
 }
