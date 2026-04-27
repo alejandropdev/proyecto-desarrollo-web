@@ -34,7 +34,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
     @Override
     public Optional<Adicional> findById(Long id) {
-        return repository.findById(id).filter(this::isActivo);
+        return repository.findById(Long.valueOf(id)).filter(this::isActivo);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
     @Override
     public void delete(Long id) {
-        repository.findById(id).ifPresent(adicional -> {
+        repository.findById(Long.valueOf(id)).ifPresent(adicional -> {
             adicional.setActivo(false);
             repository.save(adicional);
         });

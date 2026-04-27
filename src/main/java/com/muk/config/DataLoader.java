@@ -122,7 +122,7 @@ public class DataLoader implements CommandLineRunner {
             new Categoria(null, "DESSERTS"),
             new Categoria(null, "DRINKS")
         );
-        categoriaRepository.saveAll(categorias);
+        categoriaRepository.saveAll((Iterable<Categoria>) categorias);
     }
 
     private void cargarAdiciones() {
@@ -163,7 +163,7 @@ public class DataLoader implements CommandLineRunner {
             new Adicional(null, "Vaso grande", drinks)
         );
 
-        adicionalRepository.saveAll(adiciones);
+        adicionalRepository.saveAll((Iterable<Adicional>) adiciones);
     }
 
     private void cargarProductos() {
@@ -219,7 +219,7 @@ public class DataLoader implements CommandLineRunner {
             new Producto(null, "Muk Tropical Drink", drinks, 10000.0, "https://images.unsplash.com/photo-1600271886742-f049cd451bba", "Bebida tropical refrescante.")
         );
 
-        productoRepository.saveAll(productos);
+        productoRepository.saveAll((Iterable<Producto>) productos);
     }
 
     private void cargarClientes() {
@@ -236,7 +236,7 @@ public class DataLoader implements CommandLineRunner {
             new Cliente(null, "Daniel", "Moreno", "daniel@muk.com", "3001111120", "Bogota", "1234")
         );
 
-        clienteRepository.saveAll(clientes);
+        clienteRepository.saveAll((Iterable<Cliente>) clientes);
     }
     private void cargarAdministradores() {
         List<Administrador> admins = List.of(
@@ -246,7 +246,7 @@ public class DataLoader implements CommandLineRunner {
                 new Administrador(null, "adminventas", "ventas123"),
                 new Administrador(null, "adminqa", "qa12345")
         );
-        administradorRepository.saveAll(admins);
+        administradorRepository.saveAll((Iterable<Administrador>) admins);
     }
 
     private void cargarOperadores() {
@@ -272,7 +272,7 @@ public class DataLoader implements CommandLineRunner {
                 new Operador(null, "Miguel Angel Porras", "operador19", "hash-op-019"),
                 new Operador(null, "Diana Marcela Benitez", "operador20", "hash-op-020")
         );
-        operadorRepository.saveAll(operadores);
+        operadorRepository.saveAll((Iterable<Operador>) operadores);
     }
 
     private void cargarDomiciliarios() {
@@ -283,7 +283,7 @@ public class DataLoader implements CommandLineRunner {
                 new Domiciliario(null, "Luis Pardo", "3205551004", "101000004"),
                 new Domiciliario(null, "Kevin Mora", "3205551005", "101000005")
         );
-        domiciliarioRepository.saveAll(domiciliarios);
+        domiciliarioRepository.saveAll((Iterable<Domiciliario>) domiciliarios);
     }
 
     private void cargarCarritos() {
@@ -299,7 +299,7 @@ public class DataLoader implements CommandLineRunner {
                 new Carrito(null, clientes.get(3)),
                 new Carrito(null, clientes.get(4))
         );
-        carritoRepository.saveAll(carritos);
+        carritoRepository.saveAll((Iterable<Carrito>) carritos);
     }
 
     private void cargarItemsCarrito() {
@@ -321,7 +321,7 @@ public class DataLoader implements CommandLineRunner {
                 new ItemCarrito(null, carritos.get(4), productos.get(8), 1, productos.get(8).getPrecio()),
                 new ItemCarrito(null, carritos.get(4), productos.get(9), 2, productos.get(9).getPrecio())
         );
-        itemCarritoRepository.saveAll(items);
+        itemCarritoRepository.saveAll((Iterable<ItemCarrito>) items);
     }
 
     private void cargarSeleccionesAdicionales() {
@@ -343,7 +343,7 @@ public class DataLoader implements CommandLineRunner {
                 new SeleccionAdicional(null, items.get(7), adicionales.get(20), adicionales.get(20).getPrecio()),
                 new SeleccionAdicional(null, items.get(8), adicionales.get(24), adicionales.get(24).getPrecio())
         );
-        seleccionAdicionalRepository.saveAll(selecciones);
+        seleccionAdicionalRepository.saveAll((Iterable<SeleccionAdicional>) selecciones);
     }
 
     private void cargarPedidos() {
@@ -354,17 +354,19 @@ public class DataLoader implements CommandLineRunner {
             return;
         }
 
+        // Pedidos sin domiciliario asignado (esperan asignaciรณn manual)
         Pedido p1 = new Pedido(null, clientes.get(0), "PENDIENTE", LocalDateTime.now().minusHours(2));
         p1.setOperador(operadores.get(0));
-        p1.setDomiciliario(domiciliarios.get(0));
+        // SIN domiciliario inicialmente
 
         Pedido p2 = new Pedido(null, clientes.get(1), "EN_PREPARACION", LocalDateTime.now().minusHours(1));
         p2.setOperador(operadores.get(1));
-        p2.setDomiciliario(domiciliarios.get(1));
+        // SIN domiciliario inicialmente
 
+        // Con domiciliario porque ya está en camino
         Pedido p3 = new Pedido(null, clientes.get(2), "EN_CAMINO", LocalDateTime.now().minusMinutes(40));
         p3.setOperador(operadores.get(2));
-        p3.setDomiciliario(domiciliarios.get(2));
+        p3.setDomiciliario(domiciliarios.get(2)); // Disponible = false automáticamente por ser EN_CAMINO
 
         Pedido p4 = new Pedido(null, clientes.get(3), "ENTREGADO", LocalDateTime.now().minusDays(1));
         p4.setOperador(operadores.get(3));
@@ -377,11 +379,11 @@ public class DataLoader implements CommandLineRunner {
 
         Pedido p6 = new Pedido(null, clientes.get(5), "PENDIENTE", LocalDateTime.now().minusMinutes(25));
         p6.setOperador(operadores.get(5));
-        p6.setDomiciliario(domiciliarios.get(0));
+        // SIN domiciliario inicialmente
 
         Pedido p7 = new Pedido(null, clientes.get(6), "EN_PREPARACION", LocalDateTime.now().minusHours(3));
         p7.setOperador(operadores.get(6));
-        p7.setDomiciliario(domiciliarios.get(1));
+        // SIN domiciliario inicialmente
 
         Pedido p8 = new Pedido(null, clientes.get(7), "EN_CAMINO", LocalDateTime.now().minusMinutes(55));
         p8.setOperador(operadores.get(7));
@@ -398,7 +400,7 @@ public class DataLoader implements CommandLineRunner {
 
         Pedido p11 = new Pedido(null, clientes.get(0), "EN_PREPARACION", LocalDateTime.now().minusHours(4));
         p11.setOperador(operadores.get(10));
-        p11.setDomiciliario(domiciliarios.get(0));
+        // SIN domiciliario inicialmente
 
         Pedido p12 = new Pedido(null, clientes.get(1), "EN_CAMINO", LocalDateTime.now().minusMinutes(70));
         p12.setOperador(operadores.get(11));
@@ -411,15 +413,16 @@ public class DataLoader implements CommandLineRunner {
 
         Pedido p14 = new Pedido(null, clientes.get(3), "PENDIENTE", LocalDateTime.now().minusMinutes(12));
         p14.setOperador(operadores.get(13));
-        p14.setDomiciliario(domiciliarios.get(3));
+        // SIN domiciliario inicialmente
 
         Pedido p15 = new Pedido(null, clientes.get(4), "CANCELADO", LocalDateTime.now().minusHours(9));
         p15.setOperador(operadores.get(14));
         p15.setDomiciliario(domiciliarios.get(4));
 
+        // Con domiciliario porque ya está en camino
         Pedido p16 = new Pedido(null, clientes.get(5), "EN_CAMINO", LocalDateTime.now().minusMinutes(33));
         p16.setOperador(operadores.get(15));
-        p16.setDomiciliario(domiciliarios.get(0));
+        p16.setDomiciliario(domiciliarios.get(0)); // Disponible = false automáticamente
 
         Pedido p17 = new Pedido(null, clientes.get(6), "ENTREGADO", LocalDateTime.now().minusDays(4));
         p17.setOperador(operadores.get(16));
@@ -428,7 +431,7 @@ public class DataLoader implements CommandLineRunner {
 
         Pedido p18 = new Pedido(null, clientes.get(7), "PENDIENTE", LocalDateTime.now().minusMinutes(8));
         p18.setOperador(operadores.get(17));
-        p18.setDomiciliario(domiciliarios.get(2));
+        // SIN domiciliario inicialmente
 
         Pedido p19 = new Pedido(null, clientes.get(8), "EN_PREPARACION", LocalDateTime.now().minusHours(6));
         p19.setOperador(operadores.get(18));
@@ -439,7 +442,7 @@ public class DataLoader implements CommandLineRunner {
         p20.setDomiciliario(domiciliarios.get(4));
         p20.setFechaEntrega(LocalDateTime.now().minusDays(5).plusMinutes(47));
 
-        pedidoRepository.saveAll(List.of(
+        pedidoRepository.saveAll((Iterable<Pedido>) List.of(
                 p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,
                 p11, p12, p13, p14, p15, p16, p17, p18, p19, p20
         ));

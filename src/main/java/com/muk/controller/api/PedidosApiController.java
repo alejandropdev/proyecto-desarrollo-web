@@ -83,4 +83,88 @@ public class PedidosApiController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("message", "Pedido no encontrado.")));
     }
+
+    /**
+     * Obtiene todos los pedidos NO completados (para operarios).
+     * Estos son los pedidos que aún están en proceso: PENDIENTE, EN_PREPARACION, LISTO, EN_CAMINO
+     * GET /api/pedidos/sin-completar/lista
+     * Devuelve PedidoOperadorDto con información del domiciliario
+     */
+    @GetMapping("/sin-completar/lista")
+    public ResponseEntity<Object> obtenerPedidosNoCompletados() {
+        List<ApiDtos.PedidoOperadorDto> pedidosNoCompletados = pedidoService.findPedidosNoCompletados()
+                .stream()
+                .map(ApiMappers::toPedidoOperadorDto)
+                .toList();
+        return ResponseEntity.ok(pedidosNoCompletados);
+    }
+
+    /**
+     * Cambia el estado de un pedido.
+     * 
+     * Estados válidos: PENDIENTE, EN_PREPARACION, LISTO, EN_CAMINO, COMPLETADO, CANCELADO
+     * 
+     * Lógica especial:
+     * - Si estado = EN_CAMINO y hay domiciliario asignado → domiciliario.disponible = false
+     * - Si estado = COMPLETADO y hay domiciliario asignado → domiciliario.disponible = true
+     * - Si estado = CANCELADO y hay domiciliario asignado → domiciliario.disponible = true
+     * 
+     * PUT /api/pedidos/{id}/cambiar-estado
+     * Body: { nuevoEstado: "EN_CAMINO" }
+     */
+    @PutMapping("/{id}/cambiar-estado")
+    public ResponseEntity<Object> cambiarEstado(
+            @PathVariable Long id,
+            @RequestBody ApiDtos.CambiarEstadoPedidoRequest request) {
+        
+        if (id == null || id <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "El ID del pedido es inválido."));
+        }
+
+        if (request.nuevoEstado() == null || request.nuevoEstado().isBlank()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "El nuevo estado del pedido es requerido."));
+        }
+
+        PedidoService.CambiarEstadoResult result = pedidoService.cambiarEstado(id, request.nuevoEstado());
+
+        if (!result.success()) {
+            return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
+        }
+
+        return ResponseEntity.ok(ApiMappers.toPedidoDto(result.pedido()));
+    }
+
+    /**
+     * Asigna un domiciliario a un pedido.
+     * 
+     * El domiciliario debe estar activo y disponible.
+     * 
+     * PUT /api/pedidos/{id}/asignar-domiciliario
+     * Body: { domiciliarioId: 1 }
+     */
+    @PutMapping("/{id}/asignar-domiciliario")
+    public ResponseEntity<Object> asignarDomiciliario(
+            @PathVariable Long id,
+            @RequestBody ApiDtos.AsignarDomiciliarioRequest request) {
+        
+        if (id == null || id <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "El ID del pedido es inválido."));
+        }
+
+        if (request.domiciliarioId() == null || request.domiciliarioId() <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "El ID del domiciliario es inválido."));
+        }
+
+        PedidoService.AsignarDomiciliarioResult result = pedidoService.asignarDomiciliario(id, request.domiciliarioId());
+
+        if (!result.success()) {
+            return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
+        }
+
+        return ResponseEntity.ok(ApiMappers.toPedidoDto(result.pedido()));
+    }
 }

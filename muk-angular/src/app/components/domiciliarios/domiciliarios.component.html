@@ -1,0 +1,108 @@
+<div class="domiciliarios-container">
+  <div class="header">
+    <h1>Gestión de Domiciliarios</h1>
+    <p class="subtitle">Administra los repartidores del sistema</p>
+  </div>
+
+  <!-- Mensajes de estado -->
+  <div *ngIf="mensajeExito" class="alert alert-success">
+    ✓ {{ mensajeExito }}
+  </div>
+  <div *ngIf="mensajeError" class="alert alert-error">
+    ✗ {{ mensajeError }}
+  </div>
+
+  <!-- Acciones -->
+  <div class="actions">
+    <button (click)="abrirFormularioNuevo()" class="btn btn-primary" [disabled]="mostrarFormulario">
+      + Nuevo Domiciliario
+    </button>
+    <button (click)="cargarDomiciliarios()" [disabled]="cargando" class="btn btn-secondary">
+      {{ cargando ? 'Cargando...' : 'Recargar' }}
+    </button>
+  </div>
+
+  <!-- Formulario -->
+  <app-domiciliario-form
+    *ngIf="mostrarFormulario"
+    [editando]="editandoDomiciliario"
+    (guardar)="onGuardarDomiciliario($event)"
+    (cancelar)="cerrarFormulario()"
+    [enviando]="formularioEnvio"
+  ></app-domiciliario-form>
+
+  <!-- Loading -->
+  <div *ngIf="cargando && domiciliarios.length === 0" class="loading">
+    <p>Cargando domiciliarios...</p>
+  </div>
+
+  <!-- Tabla de domiciliarios -->
+  <div *ngIf="!cargando || domiciliarios.length > 0" class="tabla-container">
+    <table class="tabla" *ngIf="domiciliarios.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Celular</th>
+          <th>Cédula</th>
+          <th>Activo</th>
+          <th>Disponible</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dom of domiciliarios">
+          <td>{{ dom.id }}</td>
+          <td class="nombre">{{ dom.nombre }}</td>
+          <td>{{ dom.celular }}</td>
+          <td>{{ dom.cedula }}</td>
+          <td>
+            <span
+              class="badge"
+              [style.background-color]="getActivoColor(dom.activo)"
+            >
+              {{ dom.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <span
+              class="badge"
+              [style.background-color]="getDisponibleColor(dom.disponible)"
+            >
+              {{ dom.disponible ? 'Disponible' : 'Ocupado' }}
+            </span>
+          </td>
+          <td class="acciones">
+            <button
+              (click)="abrirFormularioEditar(dom)"
+              class="btn-icon btn-edit"
+              title="Editar"
+            >
+              ✎
+            </button>
+            <button
+              (click)="onToggleActivo(dom)"
+              class="btn-icon btn-toggle"
+              [title]="dom.activo ? 'Desactivar' : 'Activar'"
+            >
+              {{ dom.activo ? '⊘' : '●' }}
+            </button>
+            <button
+              (click)="onEliminar(dom.id)"
+              class="btn-icon btn-delete"
+              title="Eliminar"
+            >
+              🗑
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Sin domiciliarios -->
+    <div *ngIf="domiciliarios.length === 0" class="empty-state">
+      <p>No hay domiciliarios registrados</p>
+      <small>Crea el primer domiciliario usando el botón "Nuevo Domiciliario"</small>
+    </div>
+  </div>
+</div>

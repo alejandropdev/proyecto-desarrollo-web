@@ -40,13 +40,13 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Optional<Producto> findById(Long id) {
-        return productoRepository.findById(id)
+        return productoRepository.findById(Long.valueOf(id))
                 .filter(this::isActivo);
     }
 
     @Override
     public Producto save(Producto producto) {
-        return productoRepository.save(producto);
+        return productoRepository.save((Producto) producto);
     }
 
     @Override

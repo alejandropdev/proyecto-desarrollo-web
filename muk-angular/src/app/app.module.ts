@@ -37,11 +37,20 @@ import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-p
 import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
 import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.component';
 import { OperarioLoginComponent } from './pages/operario/login/operario-login.component';
-
+import { DomiciliarioFormComponent } from './components/domiciliarios/domiciliario-form.component';
+import { DomiciliariosComponent } from './components/domiciliarios/domiciliarios.component';
+import { OperadorPedidosComponent } from './components/operador/operador-pedidos.component';
+import { PedidoCardComponent } from './components/operador/pedido-card.component';
+import { CambiarEstadoComponent } from './components/operador/cambiar-estado.component';
 @NgModule({
   imports: [BrowserModule, CommonModule, FormsModule, HttpClientModule, AppRoutingModule],
   declarations: [
     AppComponent,
+    DomiciliarioFormComponent,
+    DomiciliariosComponent,
+    OperadorPedidosComponent,
+    PedidoCardComponent,
+    CambiarEstadoComponent,
     HeaderComponent,
     FooterComponent,
     HomeComponent,

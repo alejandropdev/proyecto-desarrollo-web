@@ -1,1 +1,106 @@
-/* Estilos específicos del componente iría aquí si fuera necesario */
+/* Variables de color MUK */
+:host {
+  --muk-crema: #FFF8F0;
+  --muk-marron-oscuro: #3D2817;
+  --muk-marron-claro: #6B4423;
+  --muk-rojo: #C41E3A;
+  --muk-amarillo: #FFD700;
+  --muk-verde: #2ECC71;
+}
+
+.portal-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Filtros */
+.filtro-activo {
+  background-color: var(--muk-rojo);
+  color: white;
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+  transform: scale(1.05);
+}
+
+.filtro-inactivo {
+  background-color: #E5E7EB;
+  color: var(--muk-marron-oscuro);
+  transition: all 0.2s ease;
+}
+
+.filtro-inactivo:hover {
+  background-color: #D1D5DB;
+  transform: translateY(-2px);
+}
+
+/* Badges de estado */
+.badge-warning {
+  background-color: var(--muk-amarillo);
+  color: var(--muk-marron-oscuro);
+}
+
+.badge-info {
+  background-color: #3B82F6;
+  color: white;
+}
+
+.badge-primary {
+  background-color: #6366F1;
+  color: white;
+}
+
+.badge-purple {
+  background-color: #8B5CF6;
+  color: white;
+}
+
+.badge-success {
+  background-color: var(--muk-verde);
+  color: white;
+}
+
+.badge-danger {
+  background-color: var(--muk-rojo);
+  color: white;
+}
+
+.badge-secondary {
+  background-color: #6B7280;
+  color: white;
+}
+
+/* Animaciones */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .portal-container {
+    padding: 1rem 0;
+  }
+
+  .filtro-activo,
+  .filtro-inactivo {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}

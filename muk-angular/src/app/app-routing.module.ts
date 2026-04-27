@@ -25,8 +25,13 @@ import { CrearPedidoComponent } from './pages/pedidos/crear-pedido/crear-pedido.
 import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
 import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
 import { OperarioAuthGuard } from './guards/operario-auth.guard';
-
-const routes: Routes = [
+import { DomiciliariosComponent } from './components/domiciliarios/domiciliarios.component';
+import { DomiciliarioFormComponent } from './components/domiciliarios/domiciliario-form.component';
+import { OperadorPedidosComponent } from './components/operador/operador-pedidos.component';
+import { PedidoCardComponent } from './components/operador/pedido-card.component';
+import { CambiarEstadoComponent } from './components/operador/cambiar-estado.component';
+const
+ routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'menu', component: MenuComponent },
   { path: 'comida/:id', component: ComidaComponent },
@@ -49,15 +54,20 @@ const routes: Routes = [
   { path: 'admin/adiciones/nuevo', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id/editar', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id', component: AdicionDetailComponent },
+  { path: 'admin/domiciliarios', component: DomiciliariosComponent },
   // Portal del operario
   { path: 'operario/login', component: OperarioLoginComponent },
   { path: 'operario/pedidos', component: PedidoPortalComponent, canActivate: [OperarioAuthGuard] },
+  // Portal del operador (gestión de pedidos)
+  { path: 'operador', component: OperadorPedidosComponent },
   // Otras rutas
   { path: 'operadores', component: OperadoresComponent },
   { path: 'categorias', component: CategoriasComponent },
   { path: 'productos', component: ProductosComponent },
   { path: 'not-found', component: NotFoundComponent },
+  // Wildcard debe estar ÚLTIMO (para capturar rutas no definidas)
   { path: '**', component: NotFoundComponent },
+  
 ];
 
 @NgModule({

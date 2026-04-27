@@ -11,6 +11,9 @@ export interface Pedido {
   estado: string;
   fechaCreacion: string;
   fechaEntrega?: string;
+  domiciliarioId?: number | null;
+domiciliarioNombre?: string | null;
+domiciliarioDisponible?: boolean | null;
 }
 
 // Pedido con detalles completos (incluyendo items)
@@ -55,4 +58,23 @@ export interface ItemPedidoRequest {
 export interface SeleccionAdicionalRequest {
   adicionalId: number;
   precio: number;
+}
+
+/**
+ * Request para cambiar el estado de un pedido
+ */
+export interface CambiarEstadoPedidoRequest {
+  nuevoEstado: string;
+}
+
+/**
+ * Estados válidos de un pedido
+ */
+export enum EstadoPedido {
+  PENDIENTE = 'PENDIENTE',
+  EN_PREPARACION = 'EN_PREPARACION',
+  LISTO = 'LISTO',
+  EN_CAMINO = 'EN_CAMINO',
+  COMPLETADO = 'COMPLETADO',
+  CANCELADO = 'CANCELADO'
 }

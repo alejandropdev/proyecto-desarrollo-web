@@ -52,4 +52,52 @@ public interface PedidoService {
      * Obtiene los pedidos filtrados por estado.
      */
     List<Pedido> findByEstado(String estado);
+
+    /**
+     * Obtiene todos los pedidos que aún no están completados.
+     * Estados NO completados: PENDIENTE, EN_PREPARACION, LISTO, EN_CAMINO
+     */
+    List<Pedido> findPedidosNoCompletados();
+
+    /**
+     * Cambia el estado de un pedido.
+     * 
+     * Lógica especial:
+     * - Si estado = EN_CAMINO → domiciliario.disponible = false
+     * - Si estado = COMPLETADO → domiciliario.disponible = true
+     * 
+     * Estados válidos: PENDIENTE, EN_PREPARACION, LISTO, EN_CAMINO, COMPLETADO, CANCELADO
+     * 
+     * @param pedidoId ID del pedido
+     * @param nuevoEstado Estado nuevo (debe ser válido)
+     * @return El pedido actualizado
+     * @throws IllegalArgumentException si el estado es inválido o el pedido no existe
+     */
+    record CambiarEstadoResult(Pedido pedido, String errorMessage) {
+        public boolean success() {
+            return pedido != null;
+        }
+    }
+
+    CambiarEstadoResult cambiarEstado(Long pedidoId, String nuevoEstado);
+
+    /**
+     * Asigna un domiciliario a un pedido.
+     * 
+     * @param pedidoId ID del pedido
+     * @param domiciliarioId ID del domiciliario a asignar
+     * @return El pedido actualizado con el domiciliario asignado
+     */
+    record AsignarDomiciliarioResult(Pedido pedido, String errorMessage) {
+        public boolean success() {
+            return pedido != null;
+        }
+    }
+
+    AsignarDomiciliarioResult asignarDomiciliario(Long pedidoId, Long domiciliarioId);
+
+    /**
+     * Obtiene los domiciliarios disponibles (activos y con disponible = true)
+     */
+    // Este método será agregado en la interfaz DomiciliarioService
 }

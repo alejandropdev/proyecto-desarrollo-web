@@ -1,0 +1,57 @@
+<div class="operador-pedidos-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>🎯 Portal del Operador</h1>
+    <p class="subtitle">Gestión y seguimiento de pedidos</p>
+  </div>
+
+  <!-- Alertas -->
+  <div *ngIf="mensajeExito" class="alert alert-success">
+    ✓ {{ mensajeExito }}
+  </div>
+  <div *ngIf="mensajeError" class="alert alert-error">
+    ✗ {{ mensajeError }}
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros-section">
+    <div class="filtro-header">
+      <h3>Filtrar por estado:</h3>
+      <button (click)="recargar()" [disabled]="cargando" class="btn btn-refresh">
+        {{ cargando ? '⏳ Cargando...' : '🔄 Recargar' }}
+      </button>
+    </div>
+    
+    <div class="filtro-buttons">
+      <button 
+        *ngFor="let filtro of filtrosDisponibles"
+        (click)="cambiarFiltro(filtro)"
+        [class.active]="filtroActual === filtro"
+        class="btn btn-filtro"
+      >
+        {{ filtro }}
+        <span class="count">({{ (filtro === 'TODOS' ? todosPedidos : pedidosFiltrados).length }})</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Indicador de cargando -->
+  <div *ngIf="cargando" class="loading">
+    <p>⏳ Cargando pedidos...</p>
+  </div>
+
+  <!-- Lista de pedidos (Grid con tarjetas) -->
+  <div *ngIf="!cargando && pedidosFiltrados.length > 0" class="grid-container">
+    <app-pedido-card
+      *ngFor="let pedido of pedidosFiltrados"
+      [pedido]="pedido"
+      (cambiarEstadoEvent)="onCambiarEstado($event)"
+    ></app-pedido-card>
+  </div>
+
+  <!-- Estado vacío -->
+  <div *ngIf="!cargando && pedidosFiltrados.length === 0" class="empty-state">
+    <p>📭 No  hay pedidos en este estado</p>
+    <small *ngIf="filtroActual !== 'TODOS'">Intenta seleccionar otro filtro</small>
+  </div>
+</div>

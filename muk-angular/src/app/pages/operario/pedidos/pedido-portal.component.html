@@ -1,54 +1,177 @@
-<main class="pt-24 pb-16 min-h-screen" style="background-color: #faf7f0">
+<div class="portal-container" style="background: linear-gradient(135deg, #FFF8F0 0%, #FFFEF0 100%); min-height: 100vh; padding: 2rem 0">
   <div class="max-w-7xl mx-auto px-4">
-    
-    <div class="mb-10">
-      <div class="flex items-center justify-between gap-4">
-        <h1 class="text-4xl font-black uppercase" style="color: #34100b">Portal de Operario</h1>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-5xl font-black mb-2" style="color: #3D2817">🎯 Portal del Operario</h1>
+          <p class="text-sm" style="color: #6B4423">Gestión de pedidos y domiciliarios</p>
+        </div>
         <button
           type="button"
           (click)="cerrarSesion()"
-          class="px-5 py-2 rounded-full font-black text-white uppercase text-xs"
-          style="background-color: #8c0e03"
+          class="px-6 py-3 rounded-full font-black text-white uppercase text-sm transition-transform hover:scale-105"
+          style="background-color: #C41E3A"
         >
           Cerrar sesión
         </button>
       </div>
-    </div>
 
-    <div class="rounded-2xl shadow-xl bg-white overflow-hidden border-2" style="border-color: #f2b705">
-      <table class="w-full text-left">
-        <thead>
-          <tr style="background-color: #34100b; color: white">
-            <th class="p-4 uppercase font-black">ID</th>
-            <th class="p-4 uppercase font-black">Cliente</th>
-            <th class="p-4 uppercase font-black">Estado</th>
-            <th class="p-4 uppercase font-black text-center">Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of pedidos" class="border-b">
-            <td class="p-4 font-bold">#{{ p.id }}</td>
-            <td class="p-4 font-semibold">{{ getNombreCliente(p) }}</td>
-            <td class="p-4">
-              <span [ngStyle]="{'background-color': getEstadoColor(p.estado)}" 
-                    class="px-3 py-1 rounded-full text-white text-xs font-black uppercase">
-                {{ p.estado }}
-              </span>
-            </td>
-            <td class="p-4 text-center">
-              <button (click)="verDetalle(p.id)" 
-                      class="px-4 py-2 rounded-full font-black text-white uppercase text-xs"
-                      style="background-color: #8c0e03">
-                Ver Detalle
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      
-      <div *ngIf="isLoading" class="p-10 text-center font-bold uppercase">
-        Cargando pedidos...
+      <!-- Alerts -->
+      <div *ngIf="mensajeExito" class="mb-4 p-4 rounded-lg text-white font-bold" 
+           style="background-color: #2ECC71; border-left: 5px solid #27AE60; animation: slideIn 0.3s ease-out">
+        ✓ {{ mensajeExito }}
+      </div>
+      <div *ngIf="mensajeError" class="mb-4 p-4 rounded-lg text-white font-bold" 
+           style="background-color: #C41E3A; border-left: 5px solid #A01730; animation: slideIn 0.3s ease-out">
+        ✗ {{ mensajeError }}
       </div>
     </div>
+
+    <!-- Filtros Section -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8" style="border-top: 4px solid #FFD700">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-black" style="color: #3D2817">📋 Filtrar Pedidos</h2>
+        <button
+          type="button"
+          (click)="recargar()"
+          class="px-4 py-2 rounded-lg font-semibold text-white transition-transform hover:scale-105"
+          style="background-color: #3D2817"
+        >
+          🔄 Recargar
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+        <button
+          *ngFor="let filtro of filtrosDisponibles"
+          (click)="cambiarFiltro(filtro)"
+          [class.active]="filtroActual === filtro"
+          class="btn-filtro py-2 px-3 rounded-full font-bold text-sm uppercase transition-all"
+          [ngClass]="filtroActual === filtro ? 'filtro-activo' : 'filtro-inactivo'"
+        >
+          {{ filtro }}
+          <span class="ml-1 text-xs font-semibold">({{ contarPedidosPorFiltro(filtro) }})</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Lista de Pedidos -->
+      <div class="lg:col-span-2">
+        <div *ngIf="isLoading" class="bg-white rounded-xl shadow-lg p-8 text-center">
+          <p class="text-lg font-bold" style="color: #3D2817">⏳ Cargando pedidos...</p>
+          <div class="mt-4 animate-pulse">
+            <div class="h-4 bg-gray-300 rounded mb-2"></div>
+            <div class="h-4 bg-gray-300 rounded"></div>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoading && pedidosFiltrados.length === 0" class="bg-white rounded-xl shadow-lg p-8 text-center grid-col-1 lg:grid-cols-2">
+          <p class="text-6xl mb-2">📭</p>
+          <p class="text-lg font-bold" style="color: #3D2817">No hay pedidos {{ filtroActual !== 'TODOS' ? 'en estado ' + filtroActual : '' }}</p>
+          <p class="text-sm mt-2" style="color: #6B4423">Selecciona otro filtro o intenta más tarde</p>
+        </div>
+
+        <div *ngIf="!isLoading" class="grid gap-4">
+          <div
+            *ngFor="let pedido of pedidosFiltrados"
+            (click)="seleccionarPedido(pedido)"
+            class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all p-6 cursor-pointer border-l-4"
+            [ngClass]="pedidoSeleccionado?.id === pedido.id ? 'border-l-yellow-400 bg-yellow-50' : 'border-l-transparent'"
+            [style.borderLeftColor]="pedidoSeleccionado?.id === pedido.id ? '#FFD700' : '#E5E7EB'"
+          >
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="text-lg font-black" style="color: #3D2817">#{{ pedido.id }}</h3>
+                <p class="text-sm font-semibold" style="color: #6B4423">{{ getNombreCliente(pedido.clienteId) }}</p>
+              </div>
+              <span class="px-3 py-1 rounded-full text-white text-xs font-black uppercase" 
+                    [ngClass]="'badge-' + getEstadoBadgeClass(pedido.estado)">
+                {{ pedido.estado }}
+              </span>
+            </div>
+            <div class="text-xs" style="color: #6B4423">
+              <p>📅 {{ pedido.fechaCreacion | date: 'short' }}</p>
+              <p *ngIf="pedido.domiciliarioId">🚚 Domiciliario: {{ pedido.domiciliarioNombre }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Detalle (Right Side) -->
+      <div *ngIf="pedidoSeleccionado" class="lg:col-span-1">
+        <div class="bg-white rounded-xl shadow-xl p-6 sticky top-24">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-black" style="color: #3D2817">Detalles del Pedido</h3>
+            <button (click)="cerrarDetalle()" class="text-xl font-bold" style="color: #3D2817">✕</button>
+          </div>
+
+          <!-- Info Básica -->
+          <div class="space-y-4 mb-6">
+            <div>
+              <p class="text-xs font-bold uppercase" style="color: #6B4423">ID</p>
+              <p class="text-lg font-bold" style="color: #3D2817">#{{ pedidoSeleccionado.id }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase" style="color: #6B4423">Cliente</p>
+              <p class="font-semibold" style="color: #3D2817">{{ getNombreCliente(pedidoSeleccionado.clienteId) }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase" style="color: #6B4423">Estado Actual</p>
+              <p class="font-bold uppercase" [style.color]="getEstadoBadgeClass(pedidoSeleccionado.estado)">{{ pedidoSeleccionado.estado }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase" style="color: #6B4423">Domiciliario</p>
+              <p class="font-semibold" style="color: #3D2817">
+                {{ pedidoSeleccionado.domiciliarioNombre || 'No asignado' }}
+              </p>
+              <p *ngIf="pedidoSeleccionado.domiciliarioId" class="text-xs" style="color: #6B4423">
+                {{ pedidoSeleccionado.domiciliarioDisponible ? '✓ Disponible' : '✗ No disponible' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Cambiar Estado -->
+          <div class="mb-6 pb-6 border-b" style="border-color: #E5E7EB">
+            <p class="text-xs font-bold uppercase mb-3" style="color: #6B4423">Cambiar Estado</p>
+            <div class="space-y-2">
+              <button
+                *ngFor="let est of filtrosDisponibles | slice:1"
+                (click)="cambiarEstado(est)"
+                [disabled]="isLoading"
+                class="w-full py-2 px-3 rounded-lg font-bold text-sm uppercase transition-all hover:scale-105 disabled:opacity-50"
+                style="background-color: #3D2817; color: white"
+              >
+                → {{ est }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Asignar Domiciliario -->
+          <div *ngIf="pedidoSeleccionado.estado?.toUpperCase() === 'EN_CAMINO' || pedidoSeleccionado.estado?.toUpperCase() === 'LISTO'">
+            <p class="text-xs font-bold uppercase mb-3" style="color: #6B4423">Asignar Domiciliario</p>
+            <div class="space-y-2">
+              <button
+                *ngFor="let domiciliario of domiciliariosDisponibles"
+                (click)="asignarDomiciliario(domiciliario.id)"
+                [disabled]="isLoading"
+                class="w-full py-2 px-3 rounded-lg font-bold text-sm text-left transition-all hover:scale-105 disabled:opacity-50"
+                style="background-color: #FFD700; color: #3D2817"
+              >
+                🚚 {{ domiciliario.nombre }}
+              </button>
+              <p *ngIf="domiciliariosDisponibles.length === 0" class="text-xs text-center py-2" style="color: #C41E3A">
+                No hay domiciliarios disponibles
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-</main>
+</div>

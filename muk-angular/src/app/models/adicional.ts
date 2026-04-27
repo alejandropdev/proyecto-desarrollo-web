@@ -7,3 +7,12 @@ export interface Adicional {
   activo?: boolean;
   categoria?: Categoria | null;
 }
+
+export interface Domiciliario {
+  id: number;
+  nombre: string;
+  celular: string;
+  cedula: string;
+  activo: boolean;
+  disponible: boolean;
+}

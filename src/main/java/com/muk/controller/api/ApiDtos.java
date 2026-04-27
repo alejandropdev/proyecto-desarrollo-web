@@ -83,4 +83,43 @@ public final class ApiDtos {
                                    String estado, String fechaCreacion, String fechaEntrega,
                                    List<ItemPedidoDto> items) {
     }
+
+    // Domiciliarios DTOs
+    /**
+     * DTO para listar domiciliarios (información resumida)
+     */
+    public record DomiciliarioDto(Long id, String nombre, String celular, String cedula, Boolean activo, Boolean disponible) {
+    }
+
+    /**
+     * Request para crear/actualizar un domiciliario
+     */
+    public record DomiciliarioUpsertRequest(String nombre, String celular, String cedula) {
+    }
+
+    /**
+     * Request para cambiar el estado de un pedido
+     */
+    public record CambiarEstadoPedidoRequest(String nuevoEstado) {
+    }
+
+    /**
+     * Request para asignar un domiciliario a un pedido
+     */
+    public record AsignarDomiciliarioRequest(Long domiciliarioId) {
+    }
+
+    /**
+     * Response para cambiar estado de pedido
+     */
+    public record CambiarEstadoResponse(Long pedidoId, String estadoAnterior, String nuevoEstado, Boolean exito, String mensaje) {
+    }
+
+    /**
+     * DTO para pedido con domiciliario (para operador)
+     */
+    public record PedidoOperadorDto(Long id, Long clienteId, Integer cantidadProductos, Integer cantidadAdiciones,
+                                    String estado, String fechaCreacion, String fechaEntrega,
+                                    Long domiciliarioId, String domiciliarioNombre, Boolean domiciliarioDisponible) {
+    }
 }

@@ -94,4 +94,32 @@ public final class ApiMappers {
                 seleccion.getPrecio()
         );
     }
+
+    // Mappers para operario (incluye info de domiciliario)
+    public static ApiDtos.PedidoOperadorDto toPedidoOperadorDto(Pedido pedido) {
+        return new ApiDtos.PedidoOperadorDto(
+                pedido.getId(),
+                pedido.getCliente().getId(),
+                pedido.getCantidadProductos(),
+                pedido.getCantidadAdiciones(),
+                pedido.getEstado(),
+                pedido.getFechaCreacion() != null ? pedido.getFechaCreacion().toString() : null,
+                pedido.getFechaEntrega() != null ? pedido.getFechaEntrega().toString() : null,
+                pedido.getDomiciliario() != null ? pedido.getDomiciliario().getId() : null,
+                pedido.getDomiciliario() != null ? pedido.getDomiciliario().getNombre() : null,
+                pedido.getDomiciliario() != null ? pedido.getDomiciliario().getDisponible() : null
+        );
+    }
+
+    // Mappers para Domiciliarios
+    public static ApiDtos.DomiciliarioDto toDomiciliarioDto(Domiciliario domiciliario) {
+        return new ApiDtos.DomiciliarioDto(
+                domiciliario.getId(),
+                domiciliario.getNombre(),
+                domiciliario.getCelular(),
+                domiciliario.getCedula(),
+                domiciliario.getActivo(),
+                domiciliario.getDisponible()
+        );
+    }
 }
