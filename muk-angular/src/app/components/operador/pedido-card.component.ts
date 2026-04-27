@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Pedido, EstadoPedido } from '../../models/pedido';
-
 /**
  * Componente para mostrar una tarjeta individual de pedido.
  * 

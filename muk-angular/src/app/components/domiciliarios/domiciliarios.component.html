@@ -4,25 +4,34 @@
     <p class="subtitle">Administra los repartidores del sistema</p>
   </div>
 
-  <!-- Mensajes de estado -->
   <div *ngIf="mensajeExito" class="alert alert-success">
-    ✓ {{ mensajeExito }}
-  </div>
-  <div *ngIf="mensajeError" class="alert alert-error">
-    ✗ {{ mensajeError }}
+    {{ mensajeExito }}
   </div>
 
-  <!-- Acciones -->
+  <div *ngIf="mensajeError" class="alert alert-error">
+    {{ mensajeError }}
+  </div>
+
   <div class="actions">
-    <button (click)="abrirFormularioNuevo()" class="btn btn-primary" [disabled]="mostrarFormulario">
-      + Nuevo Domiciliario
+    <button
+      type="button"
+      (click)="abrirFormularioNuevo()"
+      class="btn btn-primary"
+      [disabled]="mostrarFormulario"
+    >
+      Nuevo Domiciliario
     </button>
-    <button (click)="cargarDomiciliarios()" [disabled]="cargando" class="btn btn-secondary">
+
+    <button
+      type="button"
+      (click)="cargarDomiciliarios(); cargarPedidos()"
+      [disabled]="cargando"
+      class="btn btn-secondary"
+    >
       {{ cargando ? 'Cargando...' : 'Recargar' }}
     </button>
   </div>
 
-  <!-- Formulario -->
   <app-domiciliario-form
     *ngIf="mostrarFormulario"
     [editando]="editandoDomiciliario"
@@ -31,12 +40,10 @@
     [enviando]="formularioEnvio"
   ></app-domiciliario-form>
 
-  <!-- Loading -->
   <div *ngIf="cargando && domiciliarios.length === 0" class="loading">
     <p>Cargando domiciliarios...</p>
   </div>
 
-  <!-- Tabla de domiciliarios -->
   <div *ngIf="!cargando || domiciliarios.length > 0" class="tabla-container">
     <table class="tabla" *ngIf="domiciliarios.length > 0">
       <thead>
@@ -50,59 +57,142 @@
           <th>Acciones</th>
         </tr>
       </thead>
+
       <tbody>
         <tr *ngFor="let dom of domiciliarios">
-          <td>{{ dom.id }}</td>
+          <td>#{{ dom.id }}</td>
           <td class="nombre">{{ dom.nombre }}</td>
           <td>{{ dom.celular }}</td>
           <td>{{ dom.cedula }}</td>
+
           <td>
-            <span
-              class="badge"
-              [style.background-color]="getActivoColor(dom.activo || false)"
-            >
+            <span class="badge" [style.background-color]="getActivoColor(dom.activo)">
               {{ dom.activo ? 'Activo' : 'Inactivo' }}
             </span>
           </td>
+
           <td>
-            <span
-              class="badge"
-              [style.background-color]="getDisponibleColor(dom.disponible)"
-            >
+            <span class="badge" [style.background-color]="getDisponibleColor(dom.disponible)">
               {{ dom.disponible ? 'Disponible' : 'Ocupado' }}
             </span>
           </td>
+
           <td class="acciones">
             <button
+              type="button"
               (click)="abrirFormularioEditar(dom)"
               class="btn-icon btn-edit"
               title="Editar"
             >
-              ✎
+              Editar
             </button>
+
             <button
+              type="button"
               (click)="onToggleActivo(dom)"
               class="btn-icon btn-toggle"
               [title]="dom.activo ? 'Desactivar' : 'Activar'"
             >
-              {{ dom.activo ? '⊘' : '●' }}
+              {{ dom.activo ? 'Desactivar' : 'Activar' }}
             </button>
+
             <button
+              type="button"
+              (click)="verPedidos(dom)"
+              class="btn-icon btn-view"
+              title="Ver pedidos"
+            >
+              Ver pedidos
+            </button>
+
+            <button
+              type="button"
               (click)="onEliminar(dom.id)"
               class="btn-icon btn-delete"
               title="Eliminar"
             >
-              🗑
+              Eliminar
             </button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Sin domiciliarios -->
     <div *ngIf="domiciliarios.length === 0" class="empty-state">
       <p>No hay domiciliarios registrados</p>
       <small>Crea el primer domiciliario usando el botón "Nuevo Domiciliario"</small>
     </div>
+  </div>
+
+  <div *ngIf="domiciliarioSeleccionado" class="pedidos-panel">
+    <div class="pedidos-header">
+      <div>
+        <h2>Pedidos de {{ domiciliarioSeleccionado.nombre }}</h2>
+        <p>Historial y pedidos asignados al domiciliario.</p>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="cerrarPedidos()">
+        Cerrar
+      </button>
+    </div>
+
+    <div *ngIf="pedidosDelDomiciliario.length === 0" class="empty-state">
+      <p>Este domiciliario aún no tiene pedidos asignados.</p>
+    </div>
+
+    <div *ngIf="pedidosDelDomiciliario.length > 0" class="estado-grid">
+      <div class="estado-card">
+        <h3>Pendientes</h3>
+        <p>{{ pedidosPorEstado('PENDIENTE').length }} pedidos</p>
+      </div>
+
+      <div class="estado-card">
+        <h3>En preparación</h3>
+        <p>{{ pedidosPorEstado('EN_PREPARACION').length }} pedidos</p>
+      </div>
+
+      <div class="estado-card">
+        <h3>En camino</h3>
+        <p>{{ pedidosPorEstado('EN_CAMINO').length }} pedidos</p>
+      </div>
+
+      <div class="estado-card">
+        <h3>Entregados</h3>
+        <p>{{ cantidadEntregados() }} pedidos</p>
+      </div>
+
+      <div class="estado-card">
+        <h3>Cancelados</h3>
+        <p>{{ pedidosPorEstado('CANCELADO').length }} pedidos</p>
+      </div>
+    </div>
+
+    <table class="tabla pedidos-tabla" *ngIf="pedidosDelDomiciliario.length > 0">
+      <thead>
+        <tr>
+          <th>ID Pedido</th>
+          <th>Cliente</th>
+          <th>Estado</th>
+          <th>Productos</th>
+          <th>Adiciones</th>
+          <th>Fecha creación</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let pedido of pedidosDelDomiciliario">
+          <td>#{{ pedido.id }}</td>
+          <td>Cliente #{{ pedido.clienteId }}</td>
+          <td>
+            <span class="badge pedido-estado">
+              {{ formatearEstado(pedido.estado) }}
+            </span>
+          </td>
+          <td>{{ pedido.cantidadProductos }}</td>
+          <td>{{ pedido.cantidadAdiciones }}</td>
+          <td>{{ pedido.fechaCreacion }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

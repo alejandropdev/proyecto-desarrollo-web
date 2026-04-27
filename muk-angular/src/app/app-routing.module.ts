@@ -24,13 +24,8 @@ import { OperarioLoginComponent } from './pages/operario/login/operario-login.co
 import { CrearPedidoComponent } from './pages/pedidos/crear-pedido/crear-pedido.component';
 import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
 import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
-import { AdminPedidosComponent } from './pages/admin/pedidos/admin-pedidos.component';
 import { OperarioAuthGuard } from './guards/operario-auth.guard';
 import { DomiciliariosComponent } from './components/domiciliarios/domiciliarios.component';
-import { DomiciliarioFormComponent } from './components/domiciliarios/domiciliario-form.component';
-import { OperadorPedidosComponent } from './components/operador/operador-pedidos.component';
-import { PedidoCardComponent } from './components/operador/pedido-card.component';
-import { CambiarEstadoComponent } from './components/operador/cambiar-estado.component';
 const
  routes: Routes = [
   { path: '', component: HomeComponent },
@@ -58,16 +53,14 @@ const
   // Portal del operario
   { path: 'operario/login', component: OperarioLoginComponent },
   { path: 'operario/pedidos', component: PedidoPortalComponent, canActivate: [OperarioAuthGuard] },
-  // Portal del operador (gestión de pedidos)
-    // Otras rutas
-      { path: 'admin/pedidos', component: AdminPedidosComponent },
-       { path: 'admin/domiciliarios', component: DomiciliariosComponent },
+  // Otras rutas
   { path: 'operadores', component: OperadoresComponent },
   { path: 'categorias', component: CategoriasComponent },
   { path: 'productos', component: ProductosComponent },
   { path: 'not-found', component: NotFoundComponent },
-  // Wildcard debe estar ÚLTIMO (para capturar rutas no definidas)
+    { path: 'admin/domiciliarios', component: DomiciliariosComponent },
   { path: '**', component: NotFoundComponent },
+
   
 ];
 

@@ -1,46 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { DomiciliarioService } from '../../services/domiciliario.service';
 import { Domiciliario, DomiciliarioUpsertRequest } from '../../models/domiciliario';
+import { PedidoService } from '../../services/pedido.service';
+import { Pedido } from '../../models/pedido';
 
-/**
- * Componente para gestión de domiciliarios (Admin).
- * 
- * Responsabilidades:
- * - Listar todos los domiciliarios
- * - Crear nuevo domiciliario
- * - Actualizar domiciliario existente
- * - Eliminar domiciliario
- * - Activar/desactivar domiciliario
- */
 @Component({
   selector: 'app-domiciliarios',
   templateUrl: './domiciliarios.component.html',
   styleUrls: ['./domiciliarios.component.css'],
 })
 export class DomiciliariosComponent implements OnInit {
-  // Lista de domiciliarios
   domiciliarios: Domiciliario[] = [];
+  pedidos: Pedido[] = [];
 
-  // Estados
-  cargando: boolean = false;
-  mensajeError: string = '';
-  mensajeExito: string = '';
+  domiciliarioSeleccionado: Domiciliario | null = null;
+  pedidosDelDomiciliario: Pedido[] = [];
 
-  // Controles del modal de formulario
-  mostrarFormulario: boolean = false;
+  cargando = false;
+  mensajeError = '';
+  mensajeExito = '';
+
+  mostrarFormulario = false;
   editandoDomiciliario: Domiciliario | null = null;
-  formularioEnvio: boolean = false;
+  formularioEnvio = false;
 
-  constructor(private domiciliarioService: DomiciliarioService) {}
+  constructor(
+    private domiciliarioService: DomiciliarioService,
+    private pedidoService: PedidoService
+  ) {}
 
   ngOnInit(): void {
-    console.log('✅ DomiciliariosComponent cargado correctamente');
     this.cargarDomiciliarios();
+    this.cargarPedidos();
   }
 
-  /**
-   * Carga la lista de domiciliarios desde la API
-   */
   cargarDomiciliarios(): void {
     this.cargando = true;
     this.mensajeError = '';
@@ -49,127 +42,163 @@ export class DomiciliariosComponent implements OnInit {
       next: (domiciliarios: Domiciliario[]) => {
         this.domiciliarios = domiciliarios;
         this.cargando = false;
-        console.log('Domiciliarios cargados:', domiciliarios);
       },
       error: (error) => {
-        this.mensajeError = 'Error al cargar domiciliarios. Intenta nuevamente.';
+        this.mensajeError = error?.error?.message || 'Error al cargar domiciliarios.';
         this.cargando = false;
-        console.error('Error:', error);
       },
     });
   }
 
-  /**
-   * Abre el formulario para crear nuevo domiciliario
-   */
+  cargarPedidos(): void {
+    this.pedidoService.listaPedidos().subscribe({
+      next: (pedidos: Pedido[]) => {
+        this.pedidos = pedidos;
+
+        if (this.domiciliarioSeleccionado) {
+          this.verPedidos(this.domiciliarioSeleccionado);
+        }
+      },
+      error: () => {
+        console.error('Error al cargar pedidos.');
+      },
+    });
+  }
+
   abrirFormularioNuevo(): void {
     this.editandoDomiciliario = null;
     this.mostrarFormulario = true;
   }
 
-  /**
-   * Abre el formulario para editar un domiciliario existente
-   */
   abrirFormularioEditar(domiciliario: Domiciliario): void {
     this.editandoDomiciliario = { ...domiciliario };
     this.mostrarFormulario = true;
   }
 
-  /**
-   * Cierra el formulario
-   */
   cerrarFormulario(): void {
     this.mostrarFormulario = false;
     this.editandoDomiciliario = null;
   }
 
-  /**
-   * Manejador cuando se guarda un domiciliario desde el formulario
-   */
   onGuardarDomiciliario(datos: DomiciliarioUpsertRequest): void {
     this.formularioEnvio = true;
     this.mensajeError = '';
 
-    if (this.editandoDomiciliario?.id) {
-      // Actualizar
-      this.domiciliarioService.actualizar(this.editandoDomiciliario.id, datos).subscribe({
-        next: () => {
-          this.mensajeExito = 'Domiciliario actualizado correctamente.';
-          this.cerrarFormulario();
-          this.cargarDomiciliarios();
-          setTimeout(() => (this.mensajeExito = ''), 3000);
-          this.formularioEnvio = false;
-        },
-        error: (error) => {
-          this.mensajeError = error?.error?.message || 'Error al actualizar domiciliario.';
-          this.formularioEnvio = false;
-        },
-      });
-    } else {
-      // Crear
-      this.domiciliarioService.crear(datos).subscribe({
-        next: () => {
-          this.mensajeExito = 'Domiciliario creado correctamente.';
-          this.cerrarFormulario();
-          this.cargarDomiciliarios();
-          setTimeout(() => (this.mensajeExito = ''), 3000);
-          this.formularioEnvio = false;
-        },
-        error: (error) => {
-          this.mensajeError = error?.error?.message || 'Error al crear domiciliario.';
-          this.formularioEnvio = false;
-        },
-      });
-    }
-  }
+    const operacion = this.editandoDomiciliario?.id
+      ? this.domiciliarioService.actualizar(this.editandoDomiciliario.id, datos)
+      : this.domiciliarioService.crear(datos);
 
-  /**
-   * Elimina un domiciliario
-   */
-  onEliminar(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este domiciliario?')) {
-      this.domiciliarioService.eliminar(id).subscribe({
-        next: () => {
-          this.mensajeExito = 'Domiciliario eliminado correctamente.';
-          this.cargarDomiciliarios();
-          setTimeout(() => (this.mensajeExito = ''), 3000);
-        },
-        error: (error) => {
-          this.mensajeError = error?.error?.message || 'Error al eliminar domiciliario.';
-        },
-      });
-    }
-  }
-
-  /**
-   * Activa o desactiva un domiciliario
-   */
-  onToggleActivo(domiciliario: Domiciliario): void {
-    const accion = domiciliario.activo ? this.domiciliarioService.desactivar : this.domiciliarioService.activar;
-    
-    accion.call(this.domiciliarioService, domiciliario.id).subscribe({
+    operacion.subscribe({
       next: () => {
-        const estado = domiciliario.activo ? 'desactivado' : 'activado';
-        this.mensajeExito = `Domiciliario ${estado} correctamente.`;
+        this.mensajeExito = this.editandoDomiciliario?.id
+          ? 'Domiciliario actualizado correctamente.'
+          : 'Domiciliario creado correctamente.';
+
+        this.cerrarFormulario();
         this.cargarDomiciliarios();
+        this.cargarPedidos();
+        this.formularioEnvio = false;
         setTimeout(() => (this.mensajeExito = ''), 3000);
       },
       error: (error) => {
-        this.mensajeError = error?.error?.message || 'Error al cambiar estado.';
+        this.mensajeError =
+          error?.error?.message || 'Error al guardar domiciliario.';
+        this.formularioEnvio = false;
       },
     });
   }
 
-  /**
-   * Retorna el color según el estado de activo
-   */
+  onEliminar(id: number): void {
+    if (!confirm('¿Estás seguro de que deseas eliminar este domiciliario?')) {
+      return;
+    }
+
+    this.domiciliarioService.eliminar(id).subscribe({
+      next: (response: any) => {
+        this.mensajeExito =
+          response?.message || 'Operación realizada correctamente.';
+
+        this.cargarDomiciliarios();
+        this.cargarPedidos();
+        setTimeout(() => (this.mensajeExito = ''), 4000);
+      },
+      error: (error) => {
+        this.mensajeError =
+          error?.error?.message || 'Error al eliminar domiciliario.';
+      },
+    });
+  }
+
+  onToggleActivo(domiciliario: Domiciliario): void {
+    const operacion = domiciliario.activo
+      ? this.domiciliarioService.desactivar(domiciliario.id)
+      : this.domiciliarioService.activar(domiciliario.id);
+
+    operacion.subscribe({
+      next: () => {
+        const estado = domiciliario.activo ? 'desactivado' : 'activado';
+        this.mensajeExito = `Domiciliario ${estado} correctamente.`;
+
+        this.cargarDomiciliarios();
+        this.cargarPedidos();
+        setTimeout(() => (this.mensajeExito = ''), 3000);
+      },
+      error: (error) => {
+        this.mensajeError =
+          error?.error?.message || 'Error al cambiar estado.';
+      },
+    });
+  }
+
+  verPedidos(domiciliario: Domiciliario): void {
+    this.domiciliarioSeleccionado = domiciliario;
+    this.pedidosDelDomiciliario = this.pedidos.filter(
+      (pedido) => pedido.domiciliarioId === domiciliario.id
+    );
+  }
+
+  cerrarPedidos(): void {
+    this.domiciliarioSeleccionado = null;
+    this.pedidosDelDomiciliario = [];
+  }
+
+  pedidosPorEstado(estado: string): Pedido[] {
+    return this.pedidosDelDomiciliario.filter(
+      (pedido) => pedido.estado === estado
+    );
+  }
+
+  cantidadEntregados(): number {
+    return (
+      this.pedidosPorEstado('COMPLETADO').length +
+      this.pedidosPorEstado('ENTREGADO').length
+    );
+  }
+
+  formatearEstado(estado: string): string {
+    switch (estado) {
+      case 'PENDIENTE':
+        return 'Pendiente';
+      case 'EN_PREPARACION':
+        return 'En preparación';
+      case 'LISTO':
+        return 'Listo';
+      case 'EN_CAMINO':
+        return 'En camino';
+      case 'COMPLETADO':
+      case 'ENTREGADO':
+        return 'Entregado';
+      case 'CANCELADO':
+        return 'Cancelado';
+      default:
+        return estado;
+    }
+  }
+
   getActivoColor(activo: boolean): string {
     return activo ? '#28a745' : '#dc3545';
   }
 
-  /**
-   * Retorna el color según disponibilidad
-   */
   getDisponibleColor(disponible: boolean): string {
     return disponible ? '#007bff' : '#ffc107';
   }

@@ -56,10 +56,6 @@ export interface SeleccionAdicionalRequest {
   precio: number;
 }
 
-export interface CambiarEstadoPedidoRequest {
-  nuevoEstado: string;
-}
-
 export enum EstadoPedido {
   PENDIENTE = 'PENDIENTE',
   EN_PREPARACION = 'EN_PREPARACION',

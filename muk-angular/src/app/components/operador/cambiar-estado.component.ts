@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { EstadoPedido } from '../../models/pedido';
+import { Pedido, EstadoPedido } from '../../models/pedido';
 
 /**
  * Componente modal/form para cambiar el estado de un pedido.

@@ -156,14 +156,14 @@ public final class ApiDtos {
     ) {}
 
     // ===================== DOMICILIARIOS =====================
-    public record DomiciliarioDto(
-            Long id,
-            String nombre,
-            String celular,
-            String cedula,
-            Boolean disponible
-    ) {}
-
+   public record DomiciliarioDto(
+        Long id,
+        String nombre,
+        String celular,
+        String cedula,
+        Boolean disponible,
+        Boolean activo
+) {}
     public record DomiciliarioUpsertRequest(
             String nombre,
             String celular,

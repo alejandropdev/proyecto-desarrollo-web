@@ -77,57 +77,40 @@ public class DomiciliarioServiceImpl implements DomiciliarioService {
         return new DomiciliarioResult(domiciliarioRepository.save(domiciliario), null);
     }
 
-    // 🔥 MÉTODO CLAVE ARREGLADO
-    @Override
-    public String eliminar(Long id) {
+  @Override
+public String eliminar(Long id) {
+    Optional<Domiciliario> opt = domiciliarioRepository.findById(id);
 
-        Optional<Domiciliario> opt = domiciliarioRepository.findById(id);
-
-        if (opt.isEmpty()) {
-            return "Domiciliario no encontrado.";
-        }
-
-        Domiciliario domiciliario = opt.get();
-
-        try {
-            // Intento eliminar físicamente
-            domiciliarioRepository.delete(domiciliario);
-            return "Domiciliario eliminado correctamente.";
-        } catch (Exception e) {
-
-            // Si falla (por FK → tiene pedidos)
-            try {
-                domiciliario.setActivo(false);
-            } catch (Exception ignored) {}
-
-            domiciliario.setDisponible(false);
-            domiciliarioRepository.save(domiciliario);
-
-            return "No se pudo eliminar porque tiene pedidos asociados. Se desactivó correctamente.";
-        }
+    if (opt.isEmpty()) {
+        return "Domiciliario no encontrado.";
     }
 
-    @Override
-    public void desactivar(Long id) {
-        domiciliarioRepository.findById(id).ifPresent(d -> {
-            try {
-                d.setActivo(false);
-            } catch (Exception ignored) {}
+    Domiciliario domiciliario = opt.get();
 
-            d.setDisponible(false);
-            domiciliarioRepository.save(d);
-        });
+    if (domiciliario.getPedidosAsignados() == null || domiciliario.getPedidosAsignados().isEmpty()) {
+        domiciliarioRepository.delete(domiciliario);
+        return "Domiciliario eliminado correctamente.";
     }
 
-    @Override
-    public void activar(Long id) {
-        domiciliarioRepository.findById(id).ifPresent(d -> {
-            try {
-                d.setActivo(true);
-            } catch (Exception ignored) {}
+    domiciliario.setActivo(false);
+    domiciliarioRepository.save(domiciliario);
 
-            d.setDisponible(true);
-            domiciliarioRepository.save(d);
-        });
-    }
+    return "No se pudo eliminar porque tiene pedidos asociados. Se desactivó correctamente.";
+}
+
+@Override
+public void desactivar(Long id) {
+    domiciliarioRepository.findById(id).ifPresent(d -> {
+        d.setActivo(false);
+        domiciliarioRepository.save(d);
+    });
+}
+
+@Override
+public void activar(Long id) {
+    domiciliarioRepository.findById(id).ifPresent(d -> {
+        d.setActivo(true);
+        domiciliarioRepository.save(d);
+    });
+}
 }

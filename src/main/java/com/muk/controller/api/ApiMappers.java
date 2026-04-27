@@ -138,13 +138,14 @@ public final class ApiMappers {
     }
 
     // ===================== DOMICILIARIOS =====================
-    public static ApiDtos.DomiciliarioDto toDomiciliarioDto(Domiciliario domiciliario) {
-        return new ApiDtos.DomiciliarioDto(
-                domiciliario.getId(),
-                domiciliario.getNombre(),
-                domiciliario.getCelular(),
-                domiciliario.getCedula(),
-                domiciliario.getDisponible()
-        );
-    }
+  public static ApiDtos.DomiciliarioDto toDomiciliarioDto(Domiciliario domiciliario) {
+    return new ApiDtos.DomiciliarioDto(
+            domiciliario.getId(),
+            domiciliario.getNombre(),
+            domiciliario.getCelular(),
+            domiciliario.getCedula(),
+            domiciliario.getDisponible(),
+            domiciliario.getActivo()
+    );
+}
 }

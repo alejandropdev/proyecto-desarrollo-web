@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,7 +20,7 @@ import { RegistroComponent } from './pages/registro/registro.component';
 import { AdminNavbarComponent } from './components/admin/admin-navbar/admin-navbar.component';
 import { AdminPageShellComponent } from './components/admin/admin-page-shell/admin-page-shell.component';
 import { AdminEmptyStateComponent } from './components/admin/admin-empty-state/admin-empty-state.component';
-
+import { AdminActionButtonComponent } from './components/admin/admin-action-button/admin-action-button.component';
 import { AdminFormFieldComponent } from './components/admin/admin-form-field/admin-form-field.component';
 
 import { PlatosListComponent } from './pages/admin/platos/platos-list/platos-list.component';
@@ -29,16 +30,14 @@ import { AdminLoginComponent } from './pages/admin/login/admin-login.component';
 import { OperadoresComponent } from './pages/admin/operadores/operadores.component';
 import { CategoriasComponent } from './pages/admin/categorias/categorias.component';
 import { ProductosComponent } from './pages/admin/productos/productos.component';
+
 import { AdicionesListComponent } from './pages/admin/adiciones/adiciones-list/adiciones-list.component';
+import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
 import { AdicionDetailComponent } from './pages/admin/adiciones/adicion-detail/adicion-detail.component';
 import { AdminPedidosComponent } from './pages/admin/pedidos/admin-pedidos.component';
 
 import { DomiciliarioFormComponent } from './components/domiciliarios/domiciliario-form.component';
 import { DomiciliariosComponent } from './components/domiciliarios/domiciliarios.component';
-
-import { OperadorPedidosComponent } from './components/operador/operador-pedidos.component';
-import { PedidoCardComponent } from './components/operador/pedido-card.component';
-import { CambiarEstadoComponent } from './components/operador/cambiar-estado.component';
 
 import { ComidaComponent } from './pages/comida/comida.component';
 import { UbicacionComponent } from './pages/ubicacion/ubicacion.component';
@@ -52,20 +51,10 @@ import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.co
 import { OperarioLoginComponent } from './pages/operario/login/operario-login.component';
 
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { AdminActionButtonComponent } from './components/admin/admin-action-button/admin-action-button.component';
-import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adicion-form.component';
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-  ],
   declarations: [
     AppComponent,
-
     HeaderComponent,
     FooterComponent,
 
@@ -88,6 +77,7 @@ import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adici
     OperadoresComponent,
     CategoriasComponent,
     ProductosComponent,
+
     AdicionesListComponent,
     AdicionFormComponent,
     AdicionDetailComponent,
@@ -95,10 +85,6 @@ import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adici
 
     DomiciliarioFormComponent,
     DomiciliariosComponent,
-
-    OperadorPedidosComponent,
-    PedidoCardComponent,
-    CambiarEstadoComponent,
 
     ComidaComponent,
     UbicacionComponent,
@@ -112,6 +98,14 @@ import { AdicionFormComponent } from './pages/admin/adiciones/adicion-form/adici
     OperarioLoginComponent,
 
     NotFoundComponent,
+  ],
+  imports: [
+    BrowserModule,
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    RouterModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

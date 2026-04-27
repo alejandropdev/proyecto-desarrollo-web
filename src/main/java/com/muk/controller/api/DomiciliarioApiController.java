@@ -71,12 +71,9 @@ public class DomiciliarioApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> eliminar(@PathVariable Long id) {
-        domiciliarioService.eliminar(id);
+        String mensaje = domiciliarioService.eliminar(id);
 
-        return ResponseEntity.ok(Map.of(
-                "message",
-                "Domiciliario eliminado o desactivado correctamente."
-        ));
+        return ResponseEntity.ok(Map.of("message", mensaje));
     }
 
     @PatchMapping("/{id}/activar")
