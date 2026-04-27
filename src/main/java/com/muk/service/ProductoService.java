@@ -28,4 +28,9 @@ public interface ProductoService {
     List<Producto> findByCategory(String category);
 
     List<Producto> searchByName(String query);
+
+    /**
+     * Obtiene las adiciones permitidas para un producto específico.
+     */
+    List<com.muk.entities.Adicional> obtenerAdicionalesPermitidos(Long productoId);
 }

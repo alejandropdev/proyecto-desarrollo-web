@@ -11,6 +11,8 @@ import {
 } from '../../../models/pedido';
 import { Producto } from '../../../models/producto';
 import { Adicional } from '../../../models/adicional';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface LineaPedido {
   uid: number;
@@ -41,6 +43,7 @@ export class CrearPedidoComponent implements OnInit {
   private datosPrefill: any = null;
   private productosCargados: boolean = false;
   private adicionalesCargados: boolean = false;
+  private cacheAdicionesPermitidas: Map<number, Adicional[]> = new Map();
 
   constructor(
     private readonly pedidoService: PedidoService,
@@ -112,15 +115,16 @@ export class CrearPedidoComponent implements OnInit {
     if (this.datosPrefill?.productoId) {
       const linea = this.crearLineaVacia();
       linea.productoId = this.datosPrefill.productoId;
-      this.aplicarCambioProducto(linea);
-      const preSel: any[] = this.datosPrefill.adicionesPreseleccionadas ?? [];
-      preSel.forEach((a) => {
-        if (
-          linea.adicionalesFiltrados.some((ad) => ad.id === a.id) &&
-          !linea.adicionalesSeleccionados.includes(a.id)
-        ) {
-          linea.adicionalesSeleccionados.push(a.id);
-        }
+      this.aplicarCambioProductoAsinc(linea).subscribe(() => {
+        const preSel: any[] = this.datosPrefill.adicionesPreseleccionadas ?? [];
+        preSel.forEach((a) => {
+          if (
+            linea.adicionalesFiltrados.some((ad) => ad.id === a.id) &&
+            !linea.adicionalesSeleccionados.includes(a.id)
+          ) {
+            linea.adicionalesSeleccionados.push(a.id);
+          }
+        });
       });
       this.lineas = [linea];
       return;
@@ -132,11 +136,12 @@ export class CrearPedidoComponent implements OnInit {
       this.lineas = guardadas.map((g) => {
         const linea = this.crearLineaVacia();
         linea.productoId = g.productoId;
-        this.aplicarCambioProducto(linea);
-        linea.cantidad = g.cantidad;
-        linea.adicionalesSeleccionados = g.adicionalesSeleccionados.filter((id) =>
-          linea.adicionalesFiltrados.some((ad) => ad.id === id)
-        );
+        this.aplicarCambioProductoAsinc(linea).subscribe(() => {
+          linea.cantidad = g.cantidad;
+          linea.adicionalesSeleccionados = g.adicionalesSeleccionados.filter(
+            (id) => linea.adicionalesFiltrados.some((ad) => ad.id === id),
+          );
+        });
         return linea;
       });
       return;
@@ -153,7 +158,7 @@ export class CrearPedidoComponent implements OnInit {
         productoId: l.productoId as number,
         cantidad: l.cantidad,
         adicionalesSeleccionados: l.adicionalesSeleccionados,
-      }))
+      })),
     );
   }
 
@@ -184,8 +189,55 @@ export class CrearPedidoComponent implements OnInit {
   }
 
   onProductoChangeLinea(linea: LineaPedido): void {
-    this.aplicarCambioProducto(linea);
-    this.persistirCarrito();
+    this.aplicarCambioProductoAsinc(linea).subscribe(() => {
+      this.persistirCarrito();
+    });
+  }
+
+  private aplicarCambioProductoAsinc(linea: LineaPedido): Observable<void> {
+    if (!linea.productoId) {
+      linea.producto = null;
+      linea.adicionalesFiltrados = [];
+      linea.adicionalesSeleccionados = [];
+      return new Observable((observer) => {
+        observer.next();
+        observer.complete();
+      });
+    }
+
+    linea.producto =
+      this.productos.find((p) => p.id === linea.productoId) ?? null;
+
+    if (!linea.producto) {
+      linea.adicionalesFiltrados = [];
+      linea.adicionalesSeleccionados = [];
+      return new Observable((observer) => {
+        observer.next();
+        observer.complete();
+      });
+    }
+
+    const productoId = linea.productoId as number;
+
+    // Verificar si ya está en cache
+    if (this.cacheAdicionesPermitidas.has(productoId)) {
+      linea.adicionalesFiltrados =
+        this.cacheAdicionesPermitidas.get(productoId) ?? [];
+      linea.adicionalesSeleccionados = [];
+      return new Observable((observer) => {
+        observer.next();
+        observer.complete();
+      });
+    }
+
+    // Obtener adiciones permitidas del servidor
+    return this.productoService.obtenerAdicionalesPermitidos(productoId).pipe(
+      map((adiciones: Adicional[]) => {
+        this.cacheAdicionesPermitidas.set(productoId, adiciones);
+        linea.adicionalesFiltrados = adiciones;
+        linea.adicionalesSeleccionados = [];
+      }),
+    );
   }
 
   private aplicarCambioProducto(linea: LineaPedido): void {
@@ -198,10 +250,18 @@ export class CrearPedidoComponent implements OnInit {
     linea.producto =
       this.productos.find((p) => p.id === linea.productoId) ?? null;
     if (linea.producto) {
-      const catId = linea.producto.categoria?.id;
-      linea.adicionalesFiltrados = this.todosLosAdicionales.filter(
-        (a) => a.categoria?.id === catId,
-      );
+      const productoId = linea.productoId as number;
+      // Verificar si está en cache
+      if (this.cacheAdicionesPermitidas.has(productoId)) {
+        linea.adicionalesFiltrados =
+          this.cacheAdicionesPermitidas.get(productoId) ?? [];
+      } else {
+        // Fallback: filtrar por categoría si no hay cache
+        const catId = linea.producto.categoria?.id;
+        linea.adicionalesFiltrados = this.todosLosAdicionales.filter(
+          (a) => a.categoria?.id === catId,
+        );
+      }
     } else {
       linea.adicionalesFiltrados = [];
     }
