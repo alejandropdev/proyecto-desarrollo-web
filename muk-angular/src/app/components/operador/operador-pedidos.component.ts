@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PedidoService } from '../../services/pedido.service';
 import { DomiciliarioService } from '../../services/domiciliario.service';
 import { Pedido, EstadoPedido } from '../../models/pedido';
-import { Domiciliario } from '../../models/adicional';
+import { Domiciliario } from '../../models/domiciliario';
+
 
 type FiltroEstado = 'TODOS' | 'PENDIENTE' | 'EN_PREPARACION' | 'EN_CAMINO' | 'ENTREGADO' | 'CANCELADO';
 

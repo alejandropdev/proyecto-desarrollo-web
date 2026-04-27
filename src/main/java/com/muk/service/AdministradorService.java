@@ -2,10 +2,14 @@ package com.muk.service;
 
 import com.muk.entities.Administrador;
 
-import java.util.Optional;
-
 public interface AdministradorService {
 
-    Optional<Administrador> login(String usuario, String password);
+    record LoginResult(Administrador administrador, String errorMessage) {
+        public boolean success() {
+            return administrador != null;
+        }
+    }
+
+    LoginResult login(String usuario, String password);
 }
     

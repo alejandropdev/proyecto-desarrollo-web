@@ -1,177 +1,132 @@
-<div class="portal-container" style="background: linear-gradient(135deg, #FFF8F0 0%, #FFFEF0 100%); min-height: 100vh; padding: 2rem 0">
-  <div class="max-w-7xl mx-auto px-4">
-
-    <!-- Header -->
-    <div class="mb-8">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h1 class="text-5xl font-black mb-2" style="color: #3D2817">🎯 Portal del Operario</h1>
-          <p class="text-sm" style="color: #6B4423">Gestión de pedidos y domiciliarios</p>
-        </div>
-        <button
-          type="button"
-          (click)="cerrarSesion()"
-          class="px-6 py-3 rounded-full font-black text-white uppercase text-sm transition-transform hover:scale-105"
-          style="background-color: #C41E3A"
-        >
-          Cerrar sesión
-        </button>
-      </div>
-
-      <!-- Alerts -->
-      <div *ngIf="mensajeExito" class="mb-4 p-4 rounded-lg text-white font-bold" 
-           style="background-color: #2ECC71; border-left: 5px solid #27AE60; animation: slideIn 0.3s ease-out">
-        ✓ {{ mensajeExito }}
-      </div>
-      <div *ngIf="mensajeError" class="mb-4 p-4 rounded-lg text-white font-bold" 
-           style="background-color: #C41E3A; border-left: 5px solid #A01730; animation: slideIn 0.3s ease-out">
-        ✗ {{ mensajeError }}
-      </div>
+<div class="portal-operario">
+  <header class="portal-header">
+    <div>
+      <h1>Portal de Operario</h1>
+      <p>Gestión de pedidos activos y entregas</p>
     </div>
 
-    <!-- Filtros Section -->
-    <div class="bg-white rounded-xl shadow-lg p-8 mb-8" style="border-top: 4px solid #FFD700">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-black" style="color: #3D2817">📋 Filtrar Pedidos</h2>
-        <button
-          type="button"
-          (click)="recargar()"
-          class="px-4 py-2 rounded-lg font-semibold text-white transition-transform hover:scale-105"
-          style="background-color: #3D2817"
-        >
-          🔄 Recargar
-        </button>
-      </div>
+    <button type="button" class="btn btn-secundario" (click)="cerrarSesion()">
+      Cerrar sesión
+    </button>
+  </header>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
-        <button
-          *ngFor="let filtro of filtrosDisponibles"
-          (click)="cambiarFiltro(filtro)"
-          [class.active]="filtroActual === filtro"
-          class="btn-filtro py-2 px-3 rounded-full font-bold text-sm uppercase transition-all"
-          [ngClass]="filtroActual === filtro ? 'filtro-activo' : 'filtro-inactivo'"
-        >
-          {{ filtro }}
-          <span class="ml-1 text-xs font-semibold">({{ contarPedidosPorFiltro(filtro) }})</span>
-        </button>
-      </div>
+  <section *ngIf="mensajeExito" class="alerta exito">
+    {{ mensajeExito }}
+  </section>
+
+  <section *ngIf="mensajeError" class="alerta error">
+    {{ mensajeError }}
+  </section>
+
+  <section class="panel filtros">
+    <div class="panel-titulo">
+      <h2>Pedidos</h2>
+      <button type="button" class="btn btn-oscuro" (click)="recargar()">
+        Recargar
+      </button>
     </div>
 
-    <!-- Contenido Principal -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="filtros-lista">
+      <button
+        *ngFor="let filtro of filtrosDisponibles"
+        type="button"
+        class="filtro"
+        [class.activo]="filtroActual === filtro"
+        (click)="cambiarFiltro(filtro)"
+      >
+        {{ formatearEstado(filtro) }}
+      </button>
+    </div>
+  </section>
 
-      <!-- Lista de Pedidos -->
-      <div class="lg:col-span-2">
-        <div *ngIf="isLoading" class="bg-white rounded-xl shadow-lg p-8 text-center">
-          <p class="text-lg font-bold" style="color: #3D2817">⏳ Cargando pedidos...</p>
-          <div class="mt-4 animate-pulse">
-            <div class="h-4 bg-gray-300 rounded mb-2"></div>
-            <div class="h-4 bg-gray-300 rounded"></div>
-          </div>
-        </div>
+  <section class="panel">
+    <div *ngIf="isLoading" class="cargando">
+      Cargando pedidos...
+    </div>
 
-        <div *ngIf="!isLoading && pedidosFiltrados.length === 0" class="bg-white rounded-xl shadow-lg p-8 text-center grid-col-1 lg:grid-cols-2">
-          <p class="text-6xl mb-2">📭</p>
-          <p class="text-lg font-bold" style="color: #3D2817">No hay pedidos {{ filtroActual !== 'TODOS' ? 'en estado ' + filtroActual : '' }}</p>
-          <p class="text-sm mt-2" style="color: #6B4423">Selecciona otro filtro o intenta más tarde</p>
-        </div>
+    <div *ngIf="!isLoading && pedidosFiltrados.length === 0" class="vacio">
+      No hay pedidos para este filtro.
+    </div>
 
-        <div *ngIf="!isLoading" class="grid gap-4">
-          <div
-            *ngFor="let pedido of pedidosFiltrados"
-            (click)="seleccionarPedido(pedido)"
-            class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all p-6 cursor-pointer border-l-4"
-            [ngClass]="pedidoSeleccionado?.id === pedido.id ? 'border-l-yellow-400 bg-yellow-50' : 'border-l-transparent'"
-            [style.borderLeftColor]="pedidoSeleccionado?.id === pedido.id ? '#FFD700' : '#E5E7EB'"
-          >
-            <div class="flex items-start justify-between mb-3">
-              <div>
-                <h3 class="text-lg font-black" style="color: #3D2817">#{{ pedido.id }}</h3>
-                <p class="text-sm font-semibold" style="color: #6B4423">{{ getNombreCliente(pedido.clienteId) }}</p>
-              </div>
-              <span class="px-3 py-1 rounded-full text-white text-xs font-black uppercase" 
-                    [ngClass]="'badge-' + getEstadoBadgeClass(pedido.estado)">
-                {{ pedido.estado }}
+    <div *ngIf="!isLoading && pedidosFiltrados.length > 0" class="tabla-wrapper">
+      <table class="tabla-pedidos">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Domiciliario</th>
+            <th>Productos</th>
+            <th>Adiciones</th>
+            <th>Cambiar estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let pedido of pedidosFiltrados">
+            <td>#{{ pedido.id }}</td>
+
+            <td>
+              {{ getNombreCliente(pedido.clienteId) }}
+            </td>
+
+            <td>
+              <span [class]="getEstadoClass(pedido.estado)">
+                {{ formatearEstado(pedido.estado) }}
               </span>
-            </div>
-            <div class="text-xs" style="color: #6B4423">
-              <p>📅 {{ pedido.fechaCreacion | date: 'short' }}</p>
-              <p *ngIf="pedido.domiciliarioId">🚚 Domiciliario: {{ pedido.domiciliarioNombre }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+            </td>
 
-      <!-- Panel Detalle (Right Side) -->
-      <div *ngIf="pedidoSeleccionado" class="lg:col-span-1">
-        <div class="bg-white rounded-xl shadow-xl p-6 sticky top-24">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-black" style="color: #3D2817">Detalles del Pedido</h3>
-            <button (click)="cerrarDetalle()" class="text-xl font-bold" style="color: #3D2817">✕</button>
-          </div>
+            <td>
+              <span *ngIf="pedido.domiciliarioNombre; else sinDomiciliario">
+                {{ pedido.domiciliarioNombre }}
+              </span>
 
-          <!-- Info Básica -->
-          <div class="space-y-4 mb-6">
-            <div>
-              <p class="text-xs font-bold uppercase" style="color: #6B4423">ID</p>
-              <p class="text-lg font-bold" style="color: #3D2817">#{{ pedidoSeleccionado.id }}</p>
-            </div>
-            <div>
-              <p class="text-xs font-bold uppercase" style="color: #6B4423">Cliente</p>
-              <p class="font-semibold" style="color: #3D2817">{{ getNombreCliente(pedidoSeleccionado.clienteId) }}</p>
-            </div>
-            <div>
-              <p class="text-xs font-bold uppercase" style="color: #6B4423">Estado Actual</p>
-              <p class="font-bold uppercase" [style.color]="getEstadoBadgeClass(pedidoSeleccionado.estado)">{{ pedidoSeleccionado.estado }}</p>
-            </div>
-            <div>
-              <p class="text-xs font-bold uppercase" style="color: #6B4423">Domiciliario</p>
-              <p class="font-semibold" style="color: #3D2817">
-                {{ pedidoSeleccionado.domiciliarioNombre || 'No asignado' }}
-              </p>
-              <p *ngIf="pedidoSeleccionado.domiciliarioId" class="text-xs" style="color: #6B4423">
-                {{ pedidoSeleccionado.domiciliarioDisponible ? '✓ Disponible' : '✗ No disponible' }}
-              </p>
-            </div>
-          </div>
+              <ng-template #sinDomiciliario>
+                <span class="texto-muted">Sin asignar</span>
+              </ng-template>
+            </td>
 
-          <!-- Cambiar Estado -->
-          <div class="mb-6 pb-6 border-b" style="border-color: #E5E7EB">
-            <p class="text-xs font-bold uppercase mb-3" style="color: #6B4423">Cambiar Estado</p>
-            <div class="space-y-2">
-              <button
-                *ngFor="let est of filtrosDisponibles | slice:1"
-                (click)="cambiarEstado(est)"
-                [disabled]="isLoading"
-                class="w-full py-2 px-3 rounded-lg font-bold text-sm uppercase transition-all hover:scale-105 disabled:opacity-50"
-                style="background-color: #3D2817; color: white"
+            <td>{{ pedido.cantidadProductos }}</td>
+            <td>{{ pedido.cantidadAdiciones }}</td>
+
+            <td>
+              <select
+                #estadoSelect
+                class="select-estado"
+                [value]="pedido.estado"
+                (change)="cambiarEstado(pedido, estadoSelect.value)"
               >
-                → {{ est }}
-              </button>
-            </div>
-          </div>
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="EN_PREPARACION">En preparación</option>
+                <option value="LISTO">Listo</option>
+                <option value="EN_CAMINO">En camino</option>
+                <option value="COMPLETADO">Entregado</option>
+                <option value="CANCELADO">Cancelado</option>
+              </select>
 
-          <!-- Asignar Domiciliario -->
-          <div *ngIf="pedidoSeleccionado.estado?.toUpperCase() === 'EN_CAMINO' || pedidoSeleccionado.estado?.toUpperCase() === 'LISTO'">
-            <p class="text-xs font-bold uppercase mb-3" style="color: #6B4423">Asignar Domiciliario</p>
-            <div class="space-y-2">
-              <button
-                *ngFor="let domiciliario of domiciliariosDisponibles"
-                (click)="asignarDomiciliario(domiciliario.id)"
-                [disabled]="isLoading"
-                class="w-full py-2 px-3 rounded-lg font-bold text-sm text-left transition-all hover:scale-105 disabled:opacity-50"
-                style="background-color: #FFD700; color: #3D2817"
-              >
-                🚚 {{ domiciliario.nombre }}
+              <small *ngIf="pedido.estado === 'EN_CAMINO' && pedido.domiciliarioNombre" class="nota">
+                Domiciliario ocupado
+              </small>
+            </td>
+
+            <td class="acciones">
+              <button type="button" class="btn btn-oscuro" (click)="verDetalle(pedido.id)">
+                Ver detalle
               </button>
-              <p *ngIf="domiciliariosDisponibles.length === 0" class="text-xs text-center py-2" style="color: #C41E3A">
-                No hay domiciliarios disponibles
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+
+              <button
+                type="button"
+                class="btn btn-rojo"
+                [disabled]="pedido.estado === 'CANCELADO' || pedido.estado === 'COMPLETADO'"
+                (click)="cancelarPedido(pedido)"
+              >
+                Cancelar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-  </div>
+  </section>
 </div>

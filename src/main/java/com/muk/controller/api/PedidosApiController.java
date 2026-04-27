@@ -85,16 +85,15 @@ public class PedidosApiController {
     }
 
     /**
-     * Obtiene todos los pedidos NO completados (para operarios).
+     * Obtiene todos los pedidos NO completados (para operadores).
      * Estos son los pedidos que aún están en proceso: PENDIENTE, EN_PREPARACION, LISTO, EN_CAMINO
      * GET /api/pedidos/sin-completar/lista
-     * Devuelve PedidoOperadorDto con información del domiciliario
      */
     @GetMapping("/sin-completar/lista")
     public ResponseEntity<Object> obtenerPedidosNoCompletados() {
-        List<ApiDtos.PedidoOperadorDto> pedidosNoCompletados = pedidoService.findPedidosNoCompletados()
+        List<ApiDtos.PedidoDto> pedidosNoCompletados = pedidoService.findPedidosNoCompletados()
                 .stream()
-                .map(ApiMappers::toPedidoOperadorDto)
+                .map(ApiMappers::toPedidoDto)
                 .toList();
         return ResponseEntity.ok(pedidosNoCompletados);
     }

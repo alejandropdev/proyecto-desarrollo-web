@@ -1,0 +1,127 @@
+<app-admin-navbar></app-admin-navbar>
+
+<app-admin-page-shell
+  title="Historial de pedidos"
+  subtitle="Consulta todos los pedidos activos y completados del sistema."
+>
+  <!-- Panel de filtros -->
+  <div class="rounded-2xl bg-white shadow p-6 mb-8 border" style="border-color: #f2b70540">
+    <h2 class="font-black uppercase text-sm mb-4" style="color: #34100b">Filtros</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <!-- Filtro por estado -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-black uppercase" style="color: #8c0e03">Estado</label>
+        <select
+          [(ngModel)]="filtroEstado"
+          (change)="aplicarFiltros()"
+          class="border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none"
+          style="border-color: #e5e7eb; color: #34100b"
+        >
+          <option value="">Todos</option>
+          <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+        </select>
+      </div>
+
+      <!-- Filtro fecha desde -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-black uppercase" style="color: #8c0e03">Desde</label>
+        <input
+          type="date"
+          [(ngModel)]="filtroFechaDesde"
+          (change)="aplicarFiltros()"
+          class="border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none"
+          style="border-color: #e5e7eb; color: #34100b"
+        />
+      </div>
+
+      <!-- Filtro fecha hasta -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-black uppercase" style="color: #8c0e03">Hasta</label>
+        <input
+          type="date"
+          [(ngModel)]="filtroFechaHasta"
+          (change)="aplicarFiltros()"
+          class="border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none"
+          style="border-color: #e5e7eb; color: #34100b"
+        />
+      </div>
+
+      <!-- Filtro por producto -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-black uppercase" style="color: #8c0e03">Producto</label>
+        <select
+          [(ngModel)]="filtroProductoId"
+          (change)="onProductoFiltroChange()"
+          class="border rounded-xl px-3 py-2 text-sm font-bold focus:outline-none"
+          style="border-color: #e5e7eb; color: #34100b"
+        >
+          <option [ngValue]="null">Todos los productos</option>
+          <option *ngFor="let p of productos" [ngValue]="p.id">{{ p.nombre }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-4 flex justify-end">
+      <button
+        type="button"
+        (click)="limpiarFiltros()"
+        class="px-4 py-2 rounded-full text-xs font-black uppercase border-2"
+        style="border-color: #34100b; color: #34100b"
+      >
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- Contador de resultados -->
+  <p class="mb-4 font-bold text-sm" style="color: #6b7280">
+    Mostrando {{ pedidosFiltrados.length }} de {{ todosPedidos.length }} pedidos
+  </p>
+
+  <!-- Tabla de pedidos -->
+  <div class="rounded-3xl shadow-2xl overflow-hidden bg-white">
+    <div *ngIf="!isLoading && pedidosFiltrados.length > 0; else estadoVacio" class="overflow-x-auto">
+      <table class="w-full">
+        <thead style="background-color: #34100b">
+          <tr>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color: #f2b705">ID</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color: #f2b705">Cliente</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color: #f2b705">Estado</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color: #f2b705">Productos</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color: #f2b705">Fecha creación</th>
+            <th class="text-left px-6 py-4 text-xs font-black uppercase tracking-widest" style="color: #f2b705">Fecha entrega</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of pedidosFiltrados" class="border-t" style="border-color: #f2b70520">
+            <td class="px-6 py-4 font-bold" style="color: #34100b">#{{ p.id }}</td>
+            <td class="px-6 py-4 font-semibold" style="color: #34100b">{{ getNombreCliente(p) }}</td>
+            <td class="px-6 py-4">
+              <span
+                [ngStyle]="{'background-color': getEstadoColor(p.estado)}"
+                class="px-3 py-1 rounded-full text-white text-xs font-black uppercase"
+              >
+                {{ p.estado }}
+              </span>
+            </td>
+            <td class="px-6 py-4 font-bold" style="color: #34100b">{{ p.cantidadProductos }}</td>
+            <td class="px-6 py-4 text-sm font-bold" style="color: #6b7280">
+              {{ formatearFecha(p.fechaCreacion) }}
+            </td>
+            <td class="px-6 py-4 text-sm font-bold" style="color: #6b7280">
+              {{ formatearFecha(p.fechaEntrega || undefined) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #estadoVacio>
+      <div class="p-16 text-center">
+        <p *ngIf="isLoading" class="font-bold uppercase" style="color: #34100b">Cargando pedidos...</p>
+        <p *ngIf="!isLoading" class="font-bold" style="color: #6b7280">No hay pedidos que coincidan con los filtros seleccionados.</p>
+      </div>
+    </ng-template>
+  </div>
+</app-admin-page-shell>

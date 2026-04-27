@@ -1,78 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Domiciliario, DomiciliarioUpsertRequest } from '../models/domiciliario';
+import { Domiciliario } from '../models/domiciliario';
 
-/**
- * Servicio para gestión de Domiciliarios
- * 
- * Responsabilidades:
- * - CRUD de domiciliarios
- * - Activar/desactivar domiciliarios
- * - Consultar domiciliarios disponibles
- */
+export interface DomiciliarioUpsertRequest {
+  nombre: string;
+  celular: string;
+  cedula: string;
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DomiciliarioService {
   private readonly apiUrl = '/api/domiciliarios';
 
   constructor(private readonly http: HttpClient) {}
 
-  /**
-   * Obtiene todos los domiciliarios
-   */
   listarTodos(): Observable<Domiciliario[]> {
     return this.http.get<Domiciliario[]>(this.apiUrl);
   }
 
-  /**
-   * Obtiene un domiciliario por su ID
-   */
-  obtenerPorId(id: number): Observable<Domiciliario> {
-    return this.http.get<Domiciliario>(`${this.apiUrl}/${id}`);
+  listar(): Observable<Domiciliario[]> {
+    return this.listarTodos();
   }
 
-  /**
-   * Obtiene todos los domiciliarios que están activos y disponibles
-   * (pueden recibir nuevas asignaciones de pedidos)
-   */
+  listarDisponibles(): Observable<Domiciliario[]> {
+    return this.http.get<Domiciliario[]>(`${this.apiUrl}/disponibles`);
+  }
+
   obtenerActivosDisponibles(): Observable<Domiciliario[]> {
-    return this.http.get<Domiciliario[]>(`${this.apiUrl}/activos/disponibles`);
+    return this.listarDisponibles();
   }
 
-  /**
-   * Crea un nuevo domiciliario
-   */
-  crear(request: DomiciliarioUpsertRequest): Observable<Domiciliario> {
-    return this.http.post<Domiciliario>(this.apiUrl, request);
+  crear(data: DomiciliarioUpsertRequest): Observable<Domiciliario> {
+    return this.http.post<Domiciliario>(this.apiUrl, data);
   }
 
-  /**
-   * Actualiza un domiciliario existente
-   */
-  actualizar(id: number, request: DomiciliarioUpsertRequest): Observable<Domiciliario> {
-    return this.http.put<Domiciliario>(`${this.apiUrl}/${id}`, request);
+  actualizar(id: number, data: DomiciliarioUpsertRequest): Observable<Domiciliario> {
+    return this.http.put<Domiciliario>(`${this.apiUrl}/${id}`, data);
   }
 
-  /**
-   * Elimina un domiciliario
-   */
-  eliminar(id: number): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  eliminar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  /**
-   * Activa un domiciliario (marca como activo=true)
-   */
-  activar(id: number): Observable<Domiciliario> {
-    return this.http.put<Domiciliario>(`${this.apiUrl}/${id}/activar`, {});
+  activar(id: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}/activar`, {});
   }
 
-  /**
-   * Desactiva un domiciliario (marca como activo=false)
-   */
-  desactivar(id: number): Observable<Domiciliario> {
-    return this.http.put<Domiciliario>(`${this.apiUrl}/${id}/desactivar`, {});
+  desactivar(id: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}/desactivar`, {});
   }
 }

@@ -6,8 +6,6 @@ import com.muk.service.AdministradorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class AdministradorServiceImpl implements AdministradorService {
 
@@ -19,7 +17,12 @@ public class AdministradorServiceImpl implements AdministradorService {
     }
 
     @Override
-    public Optional<Administrador> login(String usuario, String password) {
-        return administradorRepository.findByUsuarioAndContrasenaHash(usuario, password);
+    public LoginResult login(String usuario, String password) {
+        if (usuario == null || usuario.isBlank() || password == null || password.isBlank()) {
+            return new LoginResult(null, "Usuario o contraseña incorrectos");
+        }
+        return administradorRepository.findByUsuarioAndContrasenaHash(usuario.trim(), password)
+                .map(administrador -> new LoginResult(administrador, null))
+                .orElseGet(() -> new LoginResult(null, "Usuario o contraseña incorrectos"));
     }
 }

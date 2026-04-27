@@ -24,6 +24,7 @@ import { OperarioLoginComponent } from './pages/operario/login/operario-login.co
 import { CrearPedidoComponent } from './pages/pedidos/crear-pedido/crear-pedido.component';
 import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.component';
 import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
+import { AdminPedidosComponent } from './pages/admin/pedidos/admin-pedidos.component';
 import { OperarioAuthGuard } from './guards/operario-auth.guard';
 import { DomiciliariosComponent } from './components/domiciliarios/domiciliarios.component';
 import { DomiciliarioFormComponent } from './components/domiciliarios/domiciliario-form.component';
@@ -54,13 +55,13 @@ const
   { path: 'admin/adiciones/nuevo', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id/editar', component: AdicionFormComponent },
   { path: 'admin/adiciones/:id', component: AdicionDetailComponent },
-  { path: 'admin/domiciliarios', component: DomiciliariosComponent },
   // Portal del operario
   { path: 'operario/login', component: OperarioLoginComponent },
   { path: 'operario/pedidos', component: PedidoPortalComponent, canActivate: [OperarioAuthGuard] },
   // Portal del operador (gestión de pedidos)
-  { path: 'operador', component: OperadorPedidosComponent },
-  // Otras rutas
+    // Otras rutas
+      { path: 'admin/pedidos', component: AdminPedidosComponent },
+       { path: 'admin/domiciliarios', component: DomiciliariosComponent },
   { path: 'operadores', component: OperadoresComponent },
   { path: 'categorias', component: CategoriasComponent },
   { path: 'productos', component: ProductosComponent },

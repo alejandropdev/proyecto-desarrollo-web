@@ -2,7 +2,6 @@ import { Producto } from './producto';
 import { Cliente } from './cliente';
 import { Adicional } from './adicional';
 
-// Pedido en listado (simplificado)
 export interface Pedido {
   id: number;
   clienteId: number;
@@ -10,13 +9,13 @@ export interface Pedido {
   cantidadAdiciones: number;
   estado: string;
   fechaCreacion: string;
-  fechaEntrega?: string;
+  fechaEntrega?: string | null;
+
   domiciliarioId?: number | null;
-domiciliarioNombre?: string | null;
-domiciliarioDisponible?: boolean | null;
+  domiciliarioNombre?: string | null;
+  domiciliarioDisponible?: boolean | null;
 }
 
-// Pedido con detalles completos (incluyendo items)
 export interface PedidoDetalle {
   id: number;
   cliente: Cliente;
@@ -24,11 +23,10 @@ export interface PedidoDetalle {
   cantidadAdiciones: number;
   estado: string;
   fechaCreacion: string;
-  fechaEntrega?: string;
+  fechaEntrega?: string | null;
   items: ItemPedido[];
 }
 
-// Item dentro de un pedido
 export interface ItemPedido {
   id: number;
   producto: Producto;
@@ -37,14 +35,12 @@ export interface ItemPedido {
   selecciones: SeleccionAdicional[];
 }
 
-// Selección de adicionales en un item
 export interface SeleccionAdicional {
   id: number;
   adicional: Adicional;
   precio: number;
 }
 
-// Request para crear pedido
 export interface CrearPedidoRequest {
   items: ItemPedidoRequest[];
 }
@@ -60,21 +56,15 @@ export interface SeleccionAdicionalRequest {
   precio: number;
 }
 
-/**
- * Request para cambiar el estado de un pedido
- */
 export interface CambiarEstadoPedidoRequest {
   nuevoEstado: string;
 }
 
-/**
- * Estados válidos de un pedido
- */
 export enum EstadoPedido {
   PENDIENTE = 'PENDIENTE',
   EN_PREPARACION = 'EN_PREPARACION',
   LISTO = 'LISTO',
   EN_CAMINO = 'EN_CAMINO',
   COMPLETADO = 'COMPLETADO',
-  CANCELADO = 'CANCELADO'
+  CANCELADO = 'CANCELADO',
 }

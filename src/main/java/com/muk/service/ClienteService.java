@@ -3,12 +3,24 @@ package com.muk.service;
 import com.muk.entities.Cliente;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interfaz del servicio de clientes.
  */
 public interface ClienteService {
+
+    record ClienteUpsertCommand(String nombre, String apellido, String email, String telefono, String direccion,
+                                String contrasena) {
+    }
+
+    record ClienteResult(Cliente cliente, String errorMessage) {
+        public boolean success() {
+            return cliente != null;
+        }
+    }
+
+    record ClientesResult(List<Cliente> clientes) {
+    }
 
     record LoginResult(Cliente cliente, String errorMessage) {
         public boolean success() {
@@ -31,23 +43,20 @@ public interface ClienteService {
     record ActionResult(boolean success, String errorMessage) {
     }
 
-    List<Cliente> findAll();
+    ClientesResult findAll();
 
-    Optional<Cliente> findById(Long id);
+    ClienteResult findById(Long id);
 
-    Cliente save(Cliente cliente);
+    ClienteResult create(ClienteUpsertCommand command);
 
-    void delete(Long id);
+    ClienteResult update(Long id, ClienteUpsertCommand command);
+
+    ActionResult delete(Long id);
 
     /**
      * Busca un cliente por email para login.
      */
-    Optional<Cliente> findByEmail(String email);
-
-    /**
-     * Busca un cliente cuyo email y contraseña coinciden (texto plano).
-     */
-    Optional<Cliente> findByEmailAndPassword(String email, String password);
+    ClienteResult findByEmail(String email);
 
     /**
      * Valida login en capa de servicio (credenciales en texto plano).
@@ -57,12 +66,12 @@ public interface ClienteService {
     /**
      * Registra un nuevo cliente.
      */
-    Cliente registro(Cliente cliente);
+    ClienteResult registro(ClienteUpsertCommand command);
 
     /**
      * Registra cliente con validaciones de negocio.
      */
-    RegistroResult registrarConValidacion(Cliente cliente);
+    RegistroResult registrarConValidacion(ClienteUpsertCommand command);
 
     /**
      * Obtiene perfil por email con validaciones de acceso.
