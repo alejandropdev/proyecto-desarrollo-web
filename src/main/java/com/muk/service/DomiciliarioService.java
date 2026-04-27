@@ -33,7 +33,7 @@ public interface DomiciliarioService {
     DomiciliarioResult actualizar(Long id, ApiDtos.DomiciliarioUpsertRequest request);
 
     /** 🔥 ELIMINAR (o desactivar) */
-    void eliminar(Long id);
+public String eliminar(Long id);
 
     /** Desactiva (no disponible) */
     void desactivar(Long id);

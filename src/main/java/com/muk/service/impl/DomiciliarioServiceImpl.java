@@ -37,9 +37,6 @@ public class DomiciliarioServiceImpl implements DomiciliarioService {
 
     @Override
     public DomiciliarioResult crear(ApiDtos.DomiciliarioUpsertRequest request) {
-        if (request == null) {
-            return new DomiciliarioResult(null, "Datos inválidos.");
-        }
 
         if (domiciliarioRepository.findByCelular(request.celular()).isPresent()) {
             return new DomiciliarioResult(null, "Ya existe un domiciliario con ese número de celular.");
@@ -50,56 +47,64 @@ public class DomiciliarioServiceImpl implements DomiciliarioService {
         }
 
         Domiciliario domiciliario = new Domiciliario();
-        domiciliario.setNombre(request.nombre().trim());
-        domiciliario.setCelular(request.celular().trim());
-        domiciliario.setCedula(request.cedula().trim());
+        domiciliario.setNombre(request.nombre());
+        domiciliario.setCelular(request.celular());
+        domiciliario.setCedula(request.cedula());
         domiciliario.setDisponible(true);
 
-        // Si tu entidad Domiciliario tiene activo, lo dejamos activo al crearlo.
+        // Si tienes campo activo
         try {
             domiciliario.setActivo(true);
-        } catch (Exception ignored) {
-            // Compatibilidad si la entidad aún no tiene el campo activo.
-        }
+        } catch (Exception ignored) {}
 
         return new DomiciliarioResult(domiciliarioRepository.save(domiciliario), null);
     }
 
     @Override
     public DomiciliarioResult actualizar(Long id, ApiDtos.DomiciliarioUpsertRequest request) {
-        Optional<Domiciliario> opt = findById(id);
+
+        Optional<Domiciliario> opt = domiciliarioRepository.findById(id);
 
         if (opt.isEmpty()) {
             return new DomiciliarioResult(null, "Domiciliario no encontrado.");
         }
 
         Domiciliario domiciliario = opt.get();
-
-        domiciliario.setNombre(request.nombre().trim());
-        domiciliario.setCelular(request.celular().trim());
-        domiciliario.setCedula(request.cedula().trim());
+        domiciliario.setNombre(request.nombre());
+        domiciliario.setCelular(request.celular());
+        domiciliario.setCedula(request.cedula());
 
         return new DomiciliarioResult(domiciliarioRepository.save(domiciliario), null);
     }
 
+    // 🔥 MÉTODO CLAVE ARREGLADO
     @Override
-    public void eliminar(Long id) {
-        domiciliarioRepository.findById(id).ifPresent(domiciliario -> {
-            try {
-                domiciliarioRepository.delete(domiciliario);
-            } catch (Exception e) {
-                // Si tiene pedidos asociados, no se puede borrar físicamente.
-                // En ese caso se deja inactivo/no disponible.
-                try {
-                    domiciliario.setActivo(false);
-                } catch (Exception ignored) {
-                    // Compatibilidad si la entidad aún no tiene activo.
-                }
+    public String eliminar(Long id) {
 
-                domiciliario.setDisponible(false);
-                domiciliarioRepository.save(domiciliario);
-            }
-        });
+        Optional<Domiciliario> opt = domiciliarioRepository.findById(id);
+
+        if (opt.isEmpty()) {
+            return "Domiciliario no encontrado.";
+        }
+
+        Domiciliario domiciliario = opt.get();
+
+        try {
+            // Intento eliminar físicamente
+            domiciliarioRepository.delete(domiciliario);
+            return "Domiciliario eliminado correctamente.";
+        } catch (Exception e) {
+
+            // Si falla (por FK → tiene pedidos)
+            try {
+                domiciliario.setActivo(false);
+            } catch (Exception ignored) {}
+
+            domiciliario.setDisponible(false);
+            domiciliarioRepository.save(domiciliario);
+
+            return "No se pudo eliminar porque tiene pedidos asociados. Se desactivó correctamente.";
+        }
     }
 
     @Override
@@ -107,9 +112,7 @@ public class DomiciliarioServiceImpl implements DomiciliarioService {
         domiciliarioRepository.findById(id).ifPresent(d -> {
             try {
                 d.setActivo(false);
-            } catch (Exception ignored) {
-                // Compatibilidad si la entidad aún no tiene activo.
-            }
+            } catch (Exception ignored) {}
 
             d.setDisponible(false);
             domiciliarioRepository.save(d);
@@ -121,9 +124,7 @@ public class DomiciliarioServiceImpl implements DomiciliarioService {
         domiciliarioRepository.findById(id).ifPresent(d -> {
             try {
                 d.setActivo(true);
-            } catch (Exception ignored) {
-                // Compatibilidad si la entidad aún no tiene activo.
-            }
+            } catch (Exception ignored) {}
 
             d.setDisponible(true);
             domiciliarioRepository.save(d);
