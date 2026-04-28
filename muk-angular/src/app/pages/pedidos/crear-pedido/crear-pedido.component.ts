@@ -40,7 +40,6 @@ export class CrearPedidoComponent implements OnInit {
   clienteEmail: string = '';
 
   private uidCounter: number = 0;
-  private datosPrefill: any = null;
   private productosCargados: boolean = false;
   private adicionalesCargados: boolean = false;
   private cacheAdicionesPermitidas: Map<number, Adicional[]> = new Map();
@@ -59,16 +58,6 @@ export class CrearPedidoComponent implements OnInit {
     if (!this.clienteEmail) {
       this.router.navigate(['/login']);
       return;
-    }
-
-    const datosGuardados = sessionStorage.getItem('datosPedido');
-    if (datosGuardados) {
-      try {
-        this.datosPrefill = JSON.parse(datosGuardados);
-      } catch (e) {
-        this.datosPrefill = null;
-      }
-      sessionStorage.removeItem('datosPedido');
     }
 
     this.cargarProductos();
@@ -111,26 +100,7 @@ export class CrearPedidoComponent implements OnInit {
       return;
     }
 
-    // Prioridad 1: producto pre-seleccionado desde la página de detalle
-    if (this.datosPrefill?.productoId) {
-      const linea = this.crearLineaVacia();
-      linea.productoId = this.datosPrefill.productoId;
-      this.aplicarCambioProductoAsinc(linea).subscribe(() => {
-        const preSel: any[] = this.datosPrefill.adicionesPreseleccionadas ?? [];
-        preSel.forEach((a) => {
-          if (
-            linea.adicionalesFiltrados.some((ad) => ad.id === a.id) &&
-            !linea.adicionalesSeleccionados.includes(a.id)
-          ) {
-            linea.adicionalesSeleccionados.push(a.id);
-          }
-        });
-      });
-      this.lineas = [linea];
-      return;
-    }
-
-    // Prioridad 2: carrito guardado en localStorage
+    // Prioridad 1: carrito guardado en localStorage
     const guardadas = this.carritoService.cargar();
     if (guardadas.length > 0) {
       this.lineas = guardadas.map((g) => {
@@ -384,7 +354,7 @@ export class CrearPedidoComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/menu']);
   }
 
   // === Helpers de template ===

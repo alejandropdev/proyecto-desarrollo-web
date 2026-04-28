@@ -8,17 +8,17 @@
         class="text-3xl sm:text-4xl font-black uppercase tracking-tighter"
         style="color: #34100b"
       >
-        Crear Pedido
+        Carrito
       </h1>
       <p
         class="text-center font-bold mt-2"
         style="color: #8c0e03; opacity: 0.8"
       >
-        Agrega todos los productos que quieras en un mismo pedido.
+        Revisa, ajusta y confirma los productos que agregaste.
       </p>
 
       <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
-        <!-- LÍNEAS DEL PEDIDO -->
+        <!-- LÍNEAS DEL CARRITO -->
         <div
           *ngFor="let linea of lineas; let i = index; trackBy: trackLineaByUid"
           class="rounded-2xl p-6 space-y-5"
@@ -163,7 +163,7 @@
           </div>
         </div>
 
-        <!-- Añadir otro producto -->
+        <!-- Añadir otro producto manualmente -->
         <button
           type="button"
           (click)="agregarLinea()"
@@ -173,7 +173,7 @@
           + Añadir otro producto
         </button>
 
-        <!-- RESUMEN TOTAL -->
+        <!-- RESUMEN DEL CARRITO -->
         <div
           class="rounded-2xl p-6 space-y-3"
           style="background-color: #34100b20; border: 2px solid #34100b"
@@ -231,7 +231,7 @@
             class="flex-1 py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl transition-all hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
             style="background-color: #f27405"
           >
-            {{ isLoading ? "Creando Pedido..." : "Confirmar Pedido" }}
+            {{ isLoading ? "Creando Pedido..." : "Realizar Pedido" }}
           </button>
           <button
             type="button"
@@ -239,7 +239,7 @@
             class="flex-1 py-4 font-black rounded-full uppercase tracking-widest border-2 transition-all hover:bg-gray-100"
             style="border-color: #f2b705; color: #f2b705"
           >
-            Cancelar
+            Seguir comprando
           </button>
         </div>
       </form>

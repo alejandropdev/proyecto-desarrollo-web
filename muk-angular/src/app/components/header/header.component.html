@@ -44,11 +44,25 @@
     <!-- Enlaces de Pedidos (Solo si está autenticado) -->
     <a
       *ngIf="isAuthenticated"
-      routerLink="/pedidos/crear"
-      class="font-extrabold uppercase tracking-wide text-xl transition-all opacity-80 hover:opacity-100"
+      routerLink="/carrito"
+      class="font-extrabold uppercase tracking-wide text-xl transition-all opacity-80 hover:opacity-100 inline-flex items-center gap-2"
       style="color: #f2b705"
     >
-      Hacer Pedido
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="w-5 h-5"
+      >
+        <circle cx="9" cy="20" r="1"></circle>
+        <circle cx="20" cy="20" r="1"></circle>
+        <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      Carrito
     </a>
 
     <a
@@ -155,12 +169,26 @@
     <!-- Enlaces de Pedidos Mobile (Solo si está autenticado) -->
     <a
       *ngIf="isAuthenticated"
-      routerLink="/pedidos/crear"
-      class="font-bold uppercase tracking-widest text-sm"
+      routerLink="/carrito"
+      class="font-bold uppercase tracking-widest text-sm inline-flex items-center gap-2"
       style="color: #f2b705"
       (click)="closeMobileMenu()"
     >
-      Hacer Pedido
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="w-4 h-4"
+      >
+        <circle cx="9" cy="20" r="1"></circle>
+        <circle cx="20" cy="20" r="1"></circle>
+        <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      Carrito
     </a>
 
     <a

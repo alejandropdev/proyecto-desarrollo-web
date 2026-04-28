@@ -39,6 +39,7 @@ const
   { path: 'clientes/perfil', component: PerfilComponent },
   // Rutas de pedidos para clientes
   { path: 'pedidos/crear', component: CrearPedidoComponent },
+  { path: 'carrito', component: CrearPedidoComponent },
   { path: 'pedidos/mis-pedidos', component: MisPedidosComponent },
   { path: 'pedidos/detalle/:id', component: DetallePedidoComponent },
   // Rutas de admin

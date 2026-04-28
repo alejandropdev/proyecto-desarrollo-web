@@ -39,4 +39,36 @@ export class CarritoService {
   limpiar(): void {
     localStorage.removeItem(this.STORAGE_KEY);
   }
+
+  /**
+   * Agrega una línea al carrito manteniendo las que ya existan.
+   * Si ya existe una línea con mismo producto y mismas adiciones, suma la cantidad.
+   */
+  agregarLinea(nuevaLinea: LineaCarritoGuardada): void {
+    const lineas = this.cargar();
+    const adicionalesNormalizados = [...(nuevaLinea.adicionalesSeleccionados ?? [])].sort((a, b) => a - b);
+
+    const indiceExistente = lineas.findIndex((linea) => {
+      if (linea.productoId !== nuevaLinea.productoId) {
+        return false;
+      }
+      const actuales = [...(linea.adicionalesSeleccionados ?? [])].sort((a, b) => a - b);
+      if (actuales.length !== adicionalesNormalizados.length) {
+        return false;
+      }
+      return actuales.every((id, index) => id === adicionalesNormalizados[index]);
+    });
+
+    if (indiceExistente >= 0) {
+      lineas[indiceExistente].cantidad += nuevaLinea.cantidad;
+    } else {
+      lineas.push({
+        productoId: nuevaLinea.productoId,
+        cantidad: nuevaLinea.cantidad,
+        adicionalesSeleccionados: adicionalesNormalizados,
+      });
+    }
+
+    this.guardar(lineas);
+  }
 }

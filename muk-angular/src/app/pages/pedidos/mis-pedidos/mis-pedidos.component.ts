@@ -56,7 +56,7 @@ export class MisPedidosComponent implements OnInit {
   }
 
   crearNuevoPedido(): void {
-    this.router.navigate(['/pedidos/crear']);
+    this.router.navigate(['/carrito']);
   }
 
   getEstadoColor(estado: string): string {

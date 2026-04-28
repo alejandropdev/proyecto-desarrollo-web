@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Producto } from '../../models/producto';
 import { Adicional } from '../../models/adicional';
 import { MenuService } from '../../services/menu.service';
+import { CarritoService } from '../../services/carrito.service';
 
 @Component({
   selector: 'app-comida',
@@ -13,11 +14,13 @@ export class ComidaComponent implements OnInit {
   producto?: Producto;
   adiciones: Adicional[] = [];
   selectedAdiciones: number[] = [];
+  successMessage: string = '';
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly menuService: MenuService,
+    private readonly carritoService: CarritoService,
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +58,7 @@ export class ComidaComponent implements OnInit {
     return !!localStorage.getItem('clienteEmail');
   }
 
-  hacerPedido(): void {
+  anadirAlCarrito(): void {
     if (!this.isAuthenticated()) {
       this.router.navigate(['/login']);
       return;
@@ -65,28 +68,13 @@ export class ComidaComponent implements OnInit {
       return;
     }
 
-    // Mapear IDs de adiciones a objetos con información completa
-    const adicionesConInfo = this.selectedAdiciones
-      .map((adicionId) => this.adiciones.find((a) => a.id === adicionId))
-      .filter((a) => a !== undefined) as Adicional[];
-
-    // Guardar en sessionStorage para transferencia segura
-    const datosTransferencia = {
+    const datosLinea = {
       productoId: this.producto.id,
-      productoNombre: this.producto.nombre,
-      productoPrecio: this.producto.precio,
-      productoCategoriaId: this.producto.categoria?.id,
-      adicionesPreseleccionadas: adicionesConInfo.map((a) => ({
-        id: a.id,
-        nombre: a.nombre,
-        precio: a.precio,
-      })),
+      cantidad: 1,
+      adicionalesSeleccionados: [...this.selectedAdiciones],
     };
-
-    sessionStorage.setItem('datosPedido', JSON.stringify(datosTransferencia));
-
-    // Navegar a crear-pedido
-    this.router.navigate(['/pedidos/crear']);
+    this.carritoService.agregarLinea(datosLinea);
+    this.successMessage = 'Producto agregado al carrito.';
   }
 
   private loadAdicionesForCategoria(categoryName?: string): void {
