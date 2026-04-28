@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -121,5 +122,18 @@ public class ProductoServiceImpl implements ProductoService {
 
     private boolean isActivo(Producto producto) {
         return Boolean.TRUE.equals(producto.getActivo());
+    }
+
+    @Override
+    public List<com.muk.entities.Adicional> obtenerAdicionalesPermitidos(Long productoId) {
+        if (productoId == null) {
+            return new ArrayList<>();
+        }
+        Optional<Producto> producto = findById(productoId);
+        if (producto.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<com.muk.entities.Adicional> adicionalesPermitidos = producto.get().getAdicionalesPermitidos();
+        return adicionalesPermitidos != null ? adicionalesPermitidos : new ArrayList<>();
     }
 }

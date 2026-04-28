@@ -4,6 +4,7 @@ import { Producto } from '../models/producto';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Plato } from '../models/plato';
+import { Adicional } from '../models/adicional';
 
 export interface ProductoPayload {
   nombre: string;
@@ -91,5 +92,14 @@ export class ProductoService {
 
   deleteProducto(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  }
+
+  /**
+   * Obtiene las adiciones permitidas para un producto específico.
+   */
+  obtenerAdicionalesPermitidos(productoId: number): Observable<Adicional[]> {
+    return this.http.get<Adicional[]>(
+      `${this.apiUrl}/${productoId}/adiciones-permitidas`,
+    );
   }
 }

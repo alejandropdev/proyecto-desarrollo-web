@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Categoria } from '../models/categoria';
 import { Plato } from '../models/plato';
+import { Adicional } from '../models/adicional';
 import { Observable } from 'rxjs';
 
 export interface PlatoFormModel {
@@ -14,7 +15,7 @@ export interface PlatoFormModel {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PlatoService {
   private readonly apiUrl = '/api/admin/platos';
@@ -39,7 +40,7 @@ export class PlatoService {
       categoriaId: null,
       precio: null,
       imagenUrl: '',
-      descripcion: ''
+      descripcion: '',
     };
   }
 
@@ -50,7 +51,7 @@ export class PlatoService {
       categoriaId: plato.categoria?.id ?? null,
       precio: plato.precio,
       imagenUrl: plato.imagenUrl,
-      descripcion: plato.descripcion
+      descripcion: plato.descripcion,
     };
   }
 
@@ -60,7 +61,7 @@ export class PlatoService {
       descripcion: formData.descripcion.trim(),
       precio: formData.precio,
       imagenUrl: formData.imagenUrl.trim(),
-      categoriaId: formData.categoriaId
+      categoriaId: formData.categoriaId,
     };
     if (formData.id === undefined) {
       return this.http.post<Plato>(this.apiUrl, payload);
@@ -68,13 +69,15 @@ export class PlatoService {
     return this.http.put<Plato>(`${this.apiUrl}/${formData.id}`, payload);
   }
 
-  savePlato(input: Omit<Plato, 'id' | 'activo'> & { id?: number }): Observable<Plato> {
+  savePlato(
+    input: Omit<Plato, 'id' | 'activo'> & { id?: number },
+  ): Observable<Plato> {
     const payload = {
       nombre: input.nombre.trim(),
       descripcion: input.descripcion.trim(),
       precio: input.precio,
       imagenUrl: input.imagenUrl.trim(),
-      categoriaId: input.categoria?.id ?? null
+      categoriaId: input.categoria?.id ?? null,
     };
     if (input.id === undefined) {
       return this.http.post<Plato>(this.apiUrl, payload);
@@ -84,5 +87,14 @@ export class PlatoService {
 
   deletePlato(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  }
+
+  /**
+   * Obtiene las adiciones permitidas para un plato específico.
+   */
+  obtenerAdicionalesPermitidos(platoId: number): Observable<Adicional[]> {
+    return this.http.get<Adicional[]>(
+      `${this.apiUrl}/${platoId}/adiciones-permitidas`,
+    );
   }
 }

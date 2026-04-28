@@ -61,4 +61,17 @@ public class AdminPlatosApiController {
         productoService.delete(id);
         return ResponseEntity.ok(new ApiDtos.MessageResponse("Producto eliminado."));
     }
+
+    /**
+     * Obtiene las adiciones permitidas para un plato específico.
+     * GET /api/admin/platos/{id}/adiciones-permitidas
+     */
+    @GetMapping("/{id}/adiciones-permitidas")
+    public ResponseEntity<List<ApiDtos.AdicionalDto>> obtenerAdicionalesPermitidos(@PathVariable Long id) {
+        List<com.muk.entities.Adicional> adiciones = productoService.obtenerAdicionalesPermitidos(id);
+        List<ApiDtos.AdicionalDto> dtos = adiciones.stream()
+                .map(ApiMappers::toAdicionalDto)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
 }
