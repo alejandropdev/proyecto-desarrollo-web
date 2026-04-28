@@ -26,6 +26,7 @@ import { MisPedidosComponent } from './pages/pedidos/mis-pedidos/mis-pedidos.com
 import { DetallePedidoComponent } from './pages/pedidos/detalle-pedido/detalle-pedido.component';
 import { OperarioAuthGuard } from './guards/operario-auth.guard';
 import { DomiciliariosComponent } from './components/domiciliarios/domiciliarios.component';
+import { AdminPedidosComponent } from './pages/admin/pedidos/admin-pedidos.component';
 const
  routes: Routes = [
   { path: '', component: HomeComponent },
@@ -59,6 +60,7 @@ const
   { path: 'productos', component: ProductosComponent },
   { path: 'not-found', component: NotFoundComponent },
     { path: 'admin/domiciliarios', component: DomiciliariosComponent },
+    { path: 'admin/pedidos', component: AdminPedidosComponent },
   { path: '**', component: NotFoundComponent },
 
   
