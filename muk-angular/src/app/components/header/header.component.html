@@ -45,7 +45,7 @@
     <a
       *ngIf="isAuthenticated"
       routerLink="/carrito"
-      class="font-extrabold uppercase tracking-wide text-xl transition-all opacity-80 hover:opacity-100 inline-flex items-center gap-2"
+      class="relative font-extrabold uppercase tracking-wide text-xl transition-all opacity-80 hover:opacity-100 inline-flex items-center gap-2"
       style="color: #f2b705"
     >
       <svg
@@ -63,6 +63,13 @@
         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
       </svg>
       Carrito
+      <span
+        *ngIf="cantidadCarrito > 0"
+        class="absolute -top-2 -right-4 min-w-[1.4rem] h-6 px-1 rounded-full text-xs font-black flex items-center justify-center"
+        style="background-color: #f27405; color: white"
+      >
+        {{ cantidadCarrito }}
+      </span>
     </a>
 
     <a
@@ -170,7 +177,7 @@
     <a
       *ngIf="isAuthenticated"
       routerLink="/carrito"
-      class="font-bold uppercase tracking-widest text-sm inline-flex items-center gap-2"
+      class="relative font-bold uppercase tracking-widest text-sm inline-flex items-center gap-2"
       style="color: #f2b705"
       (click)="closeMobileMenu()"
     >
@@ -189,6 +196,13 @@
         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
       </svg>
       Carrito
+      <span
+        *ngIf="cantidadCarrito > 0"
+        class="absolute -top-2 -right-4 min-w-[1.2rem] h-5 px-1 rounded-full text-[10px] font-black flex items-center justify-center"
+        style="background-color: #f27405; color: white"
+      >
+        {{ cantidadCarrito }}
+      </span>
     </a>
 
     <a

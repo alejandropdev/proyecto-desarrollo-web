@@ -1,9 +1,10 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import localeEsCo from '@angular/common/locales/es-CO';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -51,6 +52,8 @@ import { PedidoPortalComponent } from './pages/operario/pedidos/pedido-portal.co
 import { OperarioLoginComponent } from './pages/operario/login/operario-login.component';
 
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+
+registerLocaleData(localeEsCo);
 
 @NgModule({
   declarations: [
@@ -107,7 +110,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     RouterModule,
     AppRoutingModule,
   ],
-  providers: [],
+  providers: [{ provide: LOCALE_ID, useValue: 'es-CO' }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

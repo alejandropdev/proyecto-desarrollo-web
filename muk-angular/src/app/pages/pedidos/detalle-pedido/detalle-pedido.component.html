@@ -147,7 +147,7 @@
                     Subtotal
                   </p>
                   <p class="text-lg font-black" style="color: #f27405">
-                    ${{ item.precioUnitario * item.cantidad | number: "1.0-0" }}
+                    ${{ item.precioUnitario * item.cantidad | number: "1.0-0":"es-CO" }}
                   </p>
                 </div>
               </div>
@@ -170,7 +170,7 @@
                   {{ item.cantidad }} =
                   <span class="font-black" style="color: #f27405"
                     >${{
-                      adicion.precio * item.cantidad | number: "1.0-0"
+                      adicion.precio * item.cantidad | number: "1.0-0":"es-CO"
                     }}</span
                   >
                 </p>
@@ -192,14 +192,14 @@
             style="color: #f2b705"
           >
             <span>Subtotal Productos:</span>
-            <span>${{ calcularSubtotal() | number: "1.0-0" }}</span>
+            <span>${{ calcularSubtotal() | number: "1.0-0":"es-CO" }}</span>
           </div>
           <div
             class="flex justify-between text-lg font-bold"
             style="color: #f2b705"
           >
             <span>Total Adiciones:</span>
-            <span>${{ calcularTotalAdiciones() | number: "1.0-0" }}</span>
+            <span>${{ calcularTotalAdiciones() | number: "1.0-0":"es-CO" }}</span>
           </div>
         </div>
 
@@ -208,7 +208,7 @@
           style="color: #f27405"
         >
           <span>TOTAL:</span>
-          <span>${{ calcularTotal() | number: "1.0-0" }}</span>
+          <span>${{ calcularTotal() | number: "1.0-0":"es-CO" }}</span>
         </div>
       </div>
 

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
+import { CarritoService } from '../../services/carrito.service';
 
 @Component({
   selector: 'app-header',
@@ -12,9 +13,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   clienteEmail: string = '';
   isMobileMenuOpen: boolean = false;
+  cantidadCarrito: number = 0;
   private destroy$ = new Subject<void>();
 
-  constructor(private router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly carritoService: CarritoService,
+  ) {}
 
   ngOnInit(): void {
     this.checkAuthentication();
@@ -33,6 +38,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   checkAuthentication(): void {
     this.clienteEmail = localStorage.getItem('clienteEmail') || '';
     this.isAuthenticated = !!this.clienteEmail;
+    this.cantidadCarrito = this.carritoService
+      .cargar()
+      .reduce((total, linea) => total + (linea.cantidad || 0), 0);
   }
 
   toggleMobileMenu(): void {
@@ -46,8 +54,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   logout(): void {
     localStorage.removeItem('clienteEmail');
     localStorage.removeItem('clienteId');
+    this.carritoService.limpiar();
     this.isAuthenticated = false;
     this.clienteEmail = '';
+    this.cantidadCarrito = 0;
     this.closeMobileMenu();
     this.router.navigate(['/']);
   }

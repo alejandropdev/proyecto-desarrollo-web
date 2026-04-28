@@ -42,7 +42,7 @@
           class="mt-4 text-xl sm:text-2xl font-black italic"
           style="color: #8c0e03"
         >
-          ${{ producto.precio }} COP
+          ${{ producto.precio | number: "1.0-0":"es-CO" }}
         </p>
         <p
           class="mt-6 text-base sm:text-lg font-bold leading-relaxed"
@@ -74,7 +74,7 @@
                 color: isAdicionSelected(adicion.id) ? '#F2B705' : '#34100B',
               }"
             >
-              {{ adicion.nombre }} (+${{ adicion.precio }})
+              {{ adicion.nombre }} (+${{ adicion.precio | number: "1.0-0":"es-CO" }})
             </button>
           </div>
         </section>
