@@ -88,6 +88,7 @@ public class DataLoader implements CommandLineRunner {
         if (productoRepository.count() == 0) {
             cargarProductos();
         }
+        cargarAdicionesPermitidasProductos();
         if (clienteRepository.count() == 0) {
             cargarClientes();
         }
@@ -136,31 +137,31 @@ public class DataLoader implements CommandLineRunner {
         Categoria drinks = categoriasPorNombre.get("DRINKS");
 
         List<Adicional> adiciones = List.of(
-            new Adicional(null, "Salsa BBQ extra", bbq),
-            new Adicional(null, "Papas fritas", bbq),
-            new Adicional(null, "Ensalada", bbq),
-            new Adicional(null, "Pan de ajo", bbq),
-            new Adicional(null, "Coleslaw", bbq),
-            new Adicional(null, "Papas fritas", burgers),
-            new Adicional(null, "Pepinillos", burgers),
-            new Adicional(null, "Queso extra", burgers),
-            new Adicional(null, "Bacon", burgers),
-            new Adicional(null, "Huevo", burgers),
-            new Adicional(null, "Papas fritas", chicken),
-            new Adicional(null, "Salsa ranch", chicken),
-            new Adicional(null, "Aros de cebolla", chicken),
-            new Adicional(null, "Ensalada", chicken),
-            new Adicional(null, "Dip de queso", chicken),
-            new Adicional(null, "Helado extra", desserts),
-            new Adicional(null, "Crema batida", desserts),
-            new Adicional(null, "Salsa de chocolate", desserts),
-            new Adicional(null, "Frutos rojos", desserts),
-            new Adicional(null, "Nuez", desserts),
-            new Adicional(null, "Hielo extra", drinks),
-            new Adicional(null, "Limón", drinks),
-            new Adicional(null, "Crema", drinks),
-            new Adicional(null, "Doble shot", drinks),
-            new Adicional(null, "Vaso grande", drinks)
+            new Adicional(null, "Salsa BBQ extra", 2500.0, bbq),
+            new Adicional(null, "Papas fritas", 6000.0, bbq),
+            new Adicional(null, "Ensalada", 4500.0, bbq),
+            new Adicional(null, "Pan de ajo", 3500.0, bbq),
+            new Adicional(null, "Coleslaw", 4000.0, bbq),
+            new Adicional(null, "Papas fritas", 6000.0, burgers),
+            new Adicional(null, "Pepinillos", 1500.0, burgers),
+            new Adicional(null, "Queso extra", 3500.0, burgers),
+            new Adicional(null, "Bacon", 4500.0, burgers),
+            new Adicional(null, "Huevo", 2500.0, burgers),
+            new Adicional(null, "Papas fritas", 6000.0, chicken),
+            new Adicional(null, "Salsa ranch", 2000.0, chicken),
+            new Adicional(null, "Aros de cebolla", 5000.0, chicken),
+            new Adicional(null, "Ensalada", 4500.0, chicken),
+            new Adicional(null, "Dip de queso", 3000.0, chicken),
+            new Adicional(null, "Helado extra", 4000.0, desserts),
+            new Adicional(null, "Crema batida", 2500.0, desserts),
+            new Adicional(null, "Salsa de chocolate", 2500.0, desserts),
+            new Adicional(null, "Frutos rojos", 3500.0, desserts),
+            new Adicional(null, "Nuez", 3000.0, desserts),
+            new Adicional(null, "Hielo extra", 500.0, drinks),
+            new Adicional(null, "Limón", 800.0, drinks),
+            new Adicional(null, "Crema", 2000.0, drinks),
+            new Adicional(null, "Doble shot", 4000.0, drinks),
+            new Adicional(null, "Vaso grande", 1500.0, drinks)
         );
 
         adicionalRepository.saveAll((Iterable<Adicional>) adiciones);
@@ -220,6 +221,29 @@ public class DataLoader implements CommandLineRunner {
         );
 
         productoRepository.saveAll((Iterable<Producto>) productos);
+    }
+
+    private void cargarAdicionesPermitidasProductos() {
+        List<Producto> productos = productoRepository.findAll();
+        if (productos.isEmpty()) {
+            return;
+        }
+
+        Map<Long, List<Adicional>> adicionalesPorCategoriaId = adicionalRepository.findAll().stream()
+                .filter(a -> a.getCategoria() != null && a.getCategoria().getId() != null)
+                .collect(Collectors.groupingBy(a -> a.getCategoria().getId()));
+
+        for (Producto producto : productos) {
+            if (producto.getCategoria() == null || producto.getCategoria().getId() == null) {
+                producto.setAdicionalesPermitidos(List.of());
+                continue;
+            }
+
+            List<Adicional> permitidos = adicionalesPorCategoriaId.getOrDefault(producto.getCategoria().getId(), List.of());
+            producto.setAdicionalesPermitidos(permitidos);
+        }
+
+        productoRepository.saveAll(productos);
     }
 
     private void cargarClientes() {

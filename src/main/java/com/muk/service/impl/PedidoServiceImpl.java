@@ -99,10 +99,11 @@ public class PedidoServiceImpl implements PedidoService {
                     Optional<Adicional> adicionalOpt = adicionalRepository.findById(adicionalRequest.adicionalId());
 
                     if (adicionalOpt.isPresent()) {
+                        Adicional adicional = adicionalOpt.get();
                         SeleccionAdicionalPedido seleccion = new SeleccionAdicionalPedido();
                         seleccion.setItemPedido(itemPedido);
-                        seleccion.setAdicional(adicionalOpt.get());
-                        seleccion.setPrecio(adicionalRequest.precio());
+                        seleccion.setAdicional(adicional);
+                        seleccion.setPrecio(adicional.getPrecio());
 
                         itemPedido.getSelecciones().add(seleccion);
                         adicionesEnItem++;
