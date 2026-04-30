@@ -56,7 +56,7 @@ const
   { path: 'operario/login', component: OperarioLoginComponent },
   { path: 'operario/pedidos', component: PedidoPortalComponent, canActivate: [OperarioAuthGuard] },
   // Otras rutas
-  { path: 'operadores', component: OperadoresComponent },
+  { path: 'admin/operadores', component: OperadoresComponent },
   { path: 'categorias', component: CategoriasComponent },
   { path: 'productos', component: ProductosComponent },
   { path: 'not-found', component: NotFoundComponent },

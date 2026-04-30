@@ -20,13 +20,24 @@ export class OperadoresComponent implements OnInit {
   }
 
   edit(operador: Operador): void {
-    this.form = this.operadorService.mapToFormState(operador);
+    this.form = { ...this.operadorService.mapToFormState(operador) };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cancelEdit(): void {
+    this.form = this.operadorService.buildInitialFormState();
   }
 
   save(): void {
-    this.operadorService.save(this.form).subscribe(() => {
-      this.form = this.operadorService.buildInitialFormState();
-      this.load();
+    this.operadorService.save(this.form).subscribe({
+      next: () => {
+        this.form = this.operadorService.buildInitialFormState();
+        this.load();
+      },
+      error: (err) => {
+        console.error(err);
+        alert(err.error?.message || 'Ocurrió un error al guardar.');
+      }
     });
   }
 

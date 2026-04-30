@@ -1,10 +1,13 @@
 <app-admin-page-shell title="Operadores" subtitle="CRUD de operadores.">
   <div class="rounded-3xl shadow-2xl p-8 mb-6" style="background-color:white">
-    <form class="grid grid-cols-1 sm:grid-cols-3 gap-3" (ngSubmit)="save()">
+    <form class="grid grid-cols-1 sm:grid-cols-4 gap-3" (ngSubmit)="save()">
       <input [(ngModel)]="form.nombre" name="nombre" placeholder="Nombre" required class="px-4 py-3 rounded-xl border-2" />
       <input [(ngModel)]="form.usuario" name="usuario" placeholder="Usuario" required class="px-4 py-3 rounded-xl border-2" />
       <input [(ngModel)]="form.contrasena" name="contrasena" [placeholder]="form.id ? 'Nueva contraseña (opcional)' : 'Contraseña'" class="px-4 py-3 rounded-xl border-2" [required]="!form.id" />
-      <button type="submit" class="px-6 py-3 rounded-xl font-black text-white uppercase" style="background-color:#d93d04">{{ form.id ? 'Actualizar' : 'Crear' }}</button>
+      <div class="flex gap-2">
+        <button type="submit" class="flex-1 px-6 py-3 rounded-xl font-black text-white uppercase" style="background-color:#d93d04">{{ form.id ? 'Actualizar' : 'Crear' }}</button>
+        <button *ngIf="form.id" type="button" (click)="cancelEdit()" class="px-4 py-3 rounded-xl font-black text-white uppercase bg-gray-500 hover:bg-gray-600 transition-colors">X</button>
+      </div>
     </form>
   </div>
 
