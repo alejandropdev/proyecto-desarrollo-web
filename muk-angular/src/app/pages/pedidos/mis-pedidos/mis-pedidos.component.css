@@ -1,1 +1,65 @@
-/* Estilos específicos para mis-pedidos si es necesario */
+/* Estilos para la página de mis pedidos */
+
+/* Secciones de pedidos */
+:host ::ng-deep {
+  /* Estilos para la sección de pedidos en curso */
+  .pedidos-en-curso {
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #f2b705;
+    margin-bottom: 2rem;
+  }
+
+  /* Subrayado decorativo bajo los títulos */
+  h2 {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Mejorar la diferenciación visual de tablas */
+  thead {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+  }
+
+  /* Cards de pedidos en curso tienen más opacidad/destacadas */
+  .card-en-curso {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card-en-curso:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Cards de pedidos finalizados tienen aspecto más apagado */
+  .card-finalizado {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card-finalizado:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Tabla con bordes redondeados */
+  .overflow-x-auto {
+    border-radius: 1rem;
+  }
+
+  /* Filas alternadas en tablas */
+  tbody tr:nth-child(even) {
+    background-color: rgba(242, 183, 5, 0.05);
+  }
+
+  /* Responsive: asegurar que el contenido sea legible */
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    .card-en-curso,
+    .card-finalizado {
+      padding: 1rem;
+    }
+  }
+}
