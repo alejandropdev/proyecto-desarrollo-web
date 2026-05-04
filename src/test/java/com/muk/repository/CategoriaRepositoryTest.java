@@ -1,0 +1,132 @@
+package com.muk.repository;
+
+import com.muk.entities.Categoria;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DataJpaTest
+@ActiveProfiles("test")
+class CategoriaRepositoryTest {
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private TestEntityManager entityManager;
+
+    private Categoria bebidas;
+    private Categoria platos;
+    private Categoria postres;
+
+    @BeforeEach
+    void setUp() {
+        bebidas = new Categoria(null, "Bebidas", "Bebidas frias y calientes");
+        platos = new Categoria(null, "Platos", "Platos fuertes");
+        postres = new Categoria(null, "Postres", "Dulces");
+        entityManager.persist(bebidas);
+        entityManager.persist(platos);
+        entityManager.persist(postres);
+        entityManager.flush();
+    }
+
+    @Test
+    void guardarPersisteYGeneraId() {
+        // Arrange
+        Categoria nueva = new Categoria(null, "Entradas", "Para compartir");
+        // Act
+        Categoria guardada = categoriaRepository.save(nueva);
+        // Assert
+        assertThat(guardada.getId()).isNotNull();
+        assertThat(guardada.getNombre()).isEqualTo("Entradas");
+        assertThat(guardada.getDescription()).isEqualTo("Para compartir");
+    }
+
+    @Test
+    void findByIdDevuelveCategoriaCuandoExiste() {
+        // Arrange
+        Long id = bebidas.getId();
+        // Act
+        Optional<Categoria> resultado = categoriaRepository.findById(id);
+        // Assert
+        assertThat(resultado).isPresent();
+        assertThat(resultado.get().getNombre()).isEqualTo("Bebidas");
+    }
+
+    @Test
+    void findByIdVacíoCuandoNoExiste() {
+        // Act
+        Optional<Categoria> resultado = categoriaRepository.findById(9_999L);
+        // Assert
+        assertThat(resultado).isEmpty();
+    }
+
+    @Test
+    void actualizarModificaDatosPersistidos() {
+        // Arrange
+        bebidas.setDescription("Actualizada");
+        // Act
+        categoriaRepository.save(bebidas);
+        entityManager.flush();
+        entityManager.clear();
+        // Assert
+        Optional<Categoria> recargada = categoriaRepository.findById(bebidas.getId());
+        assertThat(recargada).isPresent();
+        assertThat(recargada.get().getDescription()).isEqualTo("Actualizada");
+    }
+
+    @Test
+    void deleteByIdEliminaYCambiaFindById() {
+        // Arrange
+        Long id = postres.getId();
+        // Act
+        categoriaRepository.deleteById(id);
+        entityManager.flush();
+        // Assert
+        assertThat(categoriaRepository.findById(id)).isEmpty();
+    }
+
+    @Test
+    void findAllIncluyeDatosDelSetUp() {
+        // Act
+        List<Categoria> todas = categoriaRepository.findAll();
+        // Assert
+        assertThat(todas).hasSize(3);
+    }
+
+    @Test
+    void findByNombreIgnoreCaseEncuentraCoincidencia() {
+        // Act
+        Optional<Categoria> resultado = categoriaRepository.findByNombreIgnoreCase("bebidas");
+        // Assert
+        assertThat(resultado).isPresent();
+        assertThat(resultado.get().getNombre()).isEqualTo("Bebidas");
+    }
+
+    @Test
+    void findByNombreIgnoreCaseVacíoSiNoHayCoincidencia() {
+        // Act
+        Optional<Categoria> resultado = categoriaRepository.findByNombreIgnoreCase("CategoriaInexistente");
+        // Assert
+        assertThat(resultado).isEmpty();
+    }
+
+    @Test
+    void findAllByOrderByNombreAscOrdenaAlfabeticamente() {
+        // Act
+        List<Categoria> ordenadas = categoriaRepository.findAllByOrderByNombreAsc();
+        // Assert
+        assertThat(ordenadas).hasSize(3);
+        assertThat(ordenadas)
+                .extracting(Categoria::getNombre)
+                .containsExactly("Bebidas", "Platos", "Postres");
+    }
+}
