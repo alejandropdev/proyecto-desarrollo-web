@@ -8,4 +8,7 @@ import java.util.List;
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByCategoria_NombreIgnoreCase(String nombre);
     List<Producto> findByNombreContainingIgnoreCase(String q);
+    List<Producto> findByPrecioLessThanEqual(Double precio);
+    List<Producto> findByActivoTrue();
+    List<Producto> findAllByOrderByPrecioAsc();
 }
