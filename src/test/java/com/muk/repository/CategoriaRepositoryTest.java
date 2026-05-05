@@ -3,15 +3,16 @@ package com.muk.repository;
 import com.muk.entities.Categoria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -19,9 +20,6 @@ class CategoriaRepositoryTest {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     private Categoria bebidas;
     private Categoria platos;
@@ -32,10 +30,8 @@ class CategoriaRepositoryTest {
         bebidas = new Categoria(null, "Bebidas", "Bebidas frias y calientes");
         platos = new Categoria(null, "Platos", "Platos fuertes");
         postres = new Categoria(null, "Postres", "Dulces");
-        entityManager.persist(bebidas);
-        entityManager.persist(platos);
-        entityManager.persist(postres);
-        entityManager.flush();
+        categoriaRepository.saveAll(List.of(bebidas, platos, postres));
+        categoriaRepository.flush();
     }
 
     @Test
@@ -74,9 +70,7 @@ class CategoriaRepositoryTest {
         // Arrange
         bebidas.setDescription("Actualizada");
         // Act
-        categoriaRepository.save(bebidas);
-        entityManager.flush();
-        entityManager.clear();
+        categoriaRepository.saveAndFlush(bebidas);
         // Assert
         Optional<Categoria> recargada = categoriaRepository.findById(bebidas.getId());
         assertThat(recargada).isPresent();
@@ -89,7 +83,7 @@ class CategoriaRepositoryTest {
         Long id = postres.getId();
         // Act
         categoriaRepository.deleteById(id);
-        entityManager.flush();
+        categoriaRepository.flush();
         // Assert
         assertThat(categoriaRepository.findById(id)).isEmpty();
     }
@@ -128,5 +122,47 @@ class CategoriaRepositoryTest {
         assertThat(ordenadas)
                 .extracting(Categoria::getNombre)
                 .containsExactly("Bebidas", "Platos", "Postres");
+    }
+
+    @Test
+    void guardarFallaCuandoNombreEsNull() {
+        // Arrange
+        Categoria invalida = new Categoria(null, null, "Sin nombre");
+        // Act + Assert
+        assertThatThrownBy(() -> {
+            categoriaRepository.saveAndFlush(invalida);
+        }).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void guardarFallaCuandoNombreEstaDuplicado() {
+        // Arrange
+        Categoria duplicada = new Categoria(null, "Bebidas", "Nombre repetido");
+        // Act + Assert
+        assertThatThrownBy(() -> {
+            categoriaRepository.saveAndFlush(duplicada);
+        }).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void guardarFallaCuandoNombreSuperaLongitudMaxima() {
+        // Arrange
+        String nombreLargo = "A".repeat(51);
+        Categoria invalida = new Categoria(null, nombreLargo, "Nombre demasiado largo");
+        // Act + Assert
+        assertThatThrownBy(() -> {
+            categoriaRepository.saveAndFlush(invalida);
+        }).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void guardarFallaCuandoDescriptionSuperaLongitudMaxima() {
+        // Arrange
+        String descripcionLarga = "B".repeat(256);
+        Categoria invalida = new Categoria(null, "Entradas", descripcionLarga);
+        // Act + Assert
+        assertThatThrownBy(() -> {
+            categoriaRepository.saveAndFlush(invalida);
+        }).isInstanceOf(DataIntegrityViolationException.class);
     }
 }
