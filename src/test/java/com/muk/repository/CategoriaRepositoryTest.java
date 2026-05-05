@@ -3,6 +3,7 @@ package com.muk.repository;
 import com.muk.entities.Categoria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -128,5 +130,51 @@ class CategoriaRepositoryTest {
         assertThat(ordenadas)
                 .extracting(Categoria::getNombre)
                 .containsExactly("Bebidas", "Platos", "Postres");
+    }
+
+    @Test
+    void guardarFallaCuandoNombreEsNull() {
+        // Arrange
+        Categoria invalida = new Categoria(null, null, "Sin nombre");
+        // Act + Assert
+        assertThatThrownBy(() -> {
+            categoriaRepository.save(invalida);
+            entityManager.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void guardarFallaCuandoNombreEstaDuplicado() {
+        // Arrange
+        Categoria duplicada = new Categoria(null, "Bebidas", "Nombre repetido");
+        // Act + Assert
+        assertThatThrownBy(() -> {
+            categoriaRepository.save(duplicada);
+            entityManager.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void guardarFallaCuandoNombreSuperaLongitudMaxima() {
+        // Arrange
+        String nombreLargo = "A".repeat(51);
+        Categoria invalida = new Categoria(null, nombreLargo, "Nombre demasiado largo");
+        // Act + Assert
+        assertThatThrownBy(() -> {
+            categoriaRepository.save(invalida);
+            entityManager.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void guardarFallaCuandoDescriptionSuperaLongitudMaxima() {
+        // Arrange
+        String descripcionLarga = "B".repeat(256);
+        Categoria invalida = new Categoria(null, "Entradas", descripcionLarga);
+        // Act + Assert
+        assertThatThrownBy(() -> {
+            categoriaRepository.save(invalida);
+            entityManager.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
     }
 }
