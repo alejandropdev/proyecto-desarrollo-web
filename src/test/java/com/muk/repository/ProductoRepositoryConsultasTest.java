@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class ProductoRepositoryConsultasTest {
     private ProductoRepository productoRepository;
 
     @Autowired
-    private TestEntityManager entityManager;
+    private CategoriaRepository categoriaRepository;
 
     private Producto p1;
     private Producto p2;
@@ -27,10 +26,13 @@ public class ProductoRepositoryConsultasTest {
 
     @BeforeEach
     void setUp() {
+        productoRepository.deleteAll();
+        categoriaRepository.deleteAll();
+
         Categoria cat1 = new Categoria(null, "Bebidas", "Bebidas frias y calientes");
         Categoria cat2 = new Categoria(null, "Postres", "Dulces");
-        entityManager.persist(cat1);
-        entityManager.persist(cat2);
+        categoriaRepository.save(cat1);
+        categoriaRepository.save(cat2);
 
         p1 = new Producto(null, "Coca Cola", cat1, 2.50, "url1", "Refresco");
         p1.setActivo(true);
@@ -39,10 +41,9 @@ public class ProductoRepositoryConsultasTest {
         p3 = new Producto(null, "Agua Mineral", cat1, 1.50, "url3", "Agua sin gas");
         p3.setActivo(false);
 
-        entityManager.persist(p1);
-        entityManager.persist(p2);
-        entityManager.persist(p3);
-        entityManager.flush();
+        productoRepository.save(p1);
+        productoRepository.save(p2);
+        productoRepository.save(p3);
     }
 
     @Test
@@ -53,10 +54,22 @@ public class ProductoRepositoryConsultasTest {
     }
 
     @Test
+    void testBuscarPorNombreParcial_NoEncontrado() {
+        List<Producto> resultados = productoRepository.findByNombreContainingIgnoreCase("pepsi");
+        assertThat(resultados).isEmpty();
+    }
+
+    @Test
     void testBuscarPorPrecioMenorOIgual() {
         List<Producto> resultados = productoRepository.findByPrecioLessThanEqual(2.50);
         assertThat(resultados).hasSize(2);
         assertThat(resultados).extracting(Producto::getNombre).containsExactlyInAnyOrder("Coca Cola", "Agua Mineral");
+    }
+
+    @Test
+    void testBuscarPorPrecioMenorOIgual_NoEncontrado() {
+        List<Producto> resultados = productoRepository.findByPrecioLessThanEqual(1.00);
+        assertThat(resultados).isEmpty();
     }
 
     @Test
@@ -67,10 +80,22 @@ public class ProductoRepositoryConsultasTest {
     }
 
     @Test
+    void testBuscarPorCategoria_NoEncontrado() {
+        List<Producto> resultados = productoRepository.findByCategoria_NombreIgnoreCase("carnes");
+        assertThat(resultados).isEmpty();
+    }
+
+    @Test
     void testBuscarProductosActivos() {
         List<Producto> resultados = productoRepository.findByActivoTrue();
         assertThat(resultados).hasSize(2);
         assertThat(resultados).extracting(Producto::getNombre).containsExactlyInAnyOrder("Coca Cola", "Torta de Chocolate");
+    }
+
+    @Test
+    void testBuscarProductosActivos_NoEncuentraInactivos() {
+        List<Producto> resultados = productoRepository.findByActivoTrue();
+        assertThat(resultados).extracting(Producto::getNombre).doesNotContain("Agua Mineral");
     }
 
     @Test
