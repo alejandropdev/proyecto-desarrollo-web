@@ -4,6 +4,7 @@ import { Producto } from '../../models/producto';
 import { Adicional } from '../../models/adicional';
 import { MenuService } from '../../services/menu.service';
 import { CarritoService } from '../../services/carrito.service';
+import { ProductoService } from '../../services/producto.service';
 
 @Component({
   selector: 'app-comida',
@@ -21,6 +22,7 @@ export class ComidaComponent implements OnInit {
     private readonly router: Router,
     private readonly menuService: MenuService,
     private readonly carritoService: CarritoService,
+    private readonly productoService: ProductoService,
   ) {}
 
   ngOnInit(): void {
@@ -32,7 +34,7 @@ export class ComidaComponent implements OnInit {
     this.menuService.getComida(id).subscribe({
       next: (producto) => {
         this.producto = producto;
-        this.loadAdicionesForCategoria(producto.categoria?.nombre);
+        this.loadAdicionesPermitidas(id);
       },
       error: () => {
         this.router.navigate(['/not-found']);
@@ -77,15 +79,11 @@ export class ComidaComponent implements OnInit {
     this.successMessage = 'Producto agregado al carrito.';
   }
 
-  private loadAdicionesForCategoria(categoryName?: string): void {
+  private loadAdicionesPermitidas(productoId: number): void {
     this.selectedAdiciones = [];
-    if (!categoryName) {
-      this.adiciones = [];
-      return;
-    }
-    this.menuService.getMenu({ category: categoryName }).subscribe({
-      next: (response) => {
-        this.adiciones = response.adiciones;
+    this.productoService.obtenerAdicionalesPermitidos(productoId).subscribe({
+      next: (adiciones) => {
+        this.adiciones = adiciones;
       },
       error: () => {
         this.adiciones = [];

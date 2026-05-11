@@ -153,6 +153,10 @@
                     <includes>
                         <include>**/*IT.java</include>
                     </includes>
+                    <!-- Permite que Chrome muestre ventana en Windows al ejecutar IT con mvn -->
+                    <systemPropertyVariables>
+                        <java.awt.headless>false</java.awt.headless>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

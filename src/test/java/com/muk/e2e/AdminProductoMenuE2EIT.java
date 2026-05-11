@@ -21,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,10 +38,21 @@ class AdminProductoMenuE2EIT {
 
     @BeforeAll
     static void openBrowser() {
+        // En Windows + Maven/Failsafe el fork a veces arranca con headless AWT y Chrome no muestra ventana.
+        System.setProperty("java.awt.headless", "false");
+
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1400,900");
+        options.addArguments(
+                "--remote-allow-origins=*",
+                "--disable-search-engine-choice-screen",
+                "--window-position=80,48",
+                "--start-maximized");
+        if (Boolean.getBoolean("e2e.headless")) {
+            options.addArguments("--headless=new", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage");
+        }
         driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 
@@ -118,11 +130,24 @@ class AdminProductoMenuE2EIT {
         tarjeta.click();
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-testid^=comida-adicion-]")));
-
-        List<WebElement> adicionBtns = driver.findElements(By.cssSelector("[data-testid^=comida-adicion-]"));
-        assertThat(adicionBtns).isNotEmpty();
-        assertThat(adicionBtns.stream().map(WebElement::getText).anyMatch(t -> t.contains("Pepinillos"))).isTrue();
-        assertThat(adicionBtns.stream().map(WebElement::getText).anyMatch(t -> t.contains("Queso extra"))).isTrue();
+        wait.until(d -> {
+            List<WebElement> btns = d.findElements(By.cssSelector("[data-testid^=comida-adicion-]"));
+            if (btns.size() < 2) {
+                return false;
+            }
+            String joined = btns.stream()
+                    .map(b -> {
+                        String t = b.getText();
+                        if (t == null || t.isBlank()) {
+                            String inner = b.getDomProperty("innerText");
+                            return inner != null ? inner : "";
+                        }
+                        return t;
+                    })
+                    .collect(Collectors.joining(" "))
+                    .toLowerCase();
+            return joined.contains("pepinillos") && joined.contains("queso extra");
+        });
 
         driver.close();
         driver.switchTo().window(adminWindow);
