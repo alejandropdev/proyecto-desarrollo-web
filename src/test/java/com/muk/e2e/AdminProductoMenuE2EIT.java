@@ -151,5 +151,69 @@ class AdminProductoMenuE2EIT {
 
         driver.close();
         driver.switchTo().window(adminWindow);
+
+        // --- EXTENSIÓN DEL E2E ---
+        // 1. El administrador detecta que falta un adicional y regresa al portal de productos
+        driver.get(base + "/admin/productos");
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-testid=producto-nombre]")));
+
+        // 2. Edita el producto previamente creado.
+        WebElement btnEditar = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//tr[td[contains(normalize-space(.),'" + nombreUnico + "')]]//button[contains(text(),'Editar')]")));
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", btnEditar);
+        wait.until(ExpectedConditions.elementToBeClickable(btnEditar));
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btnEditar);
+
+        // Espera a que el formulario se llene con los datos del producto
+        wait.until(ExpectedConditions.attributeToBe(By.cssSelector("[data-testid=producto-nombre]"), "value", nombreUnico));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-testid=producto-adiciones-panel]")));
+
+        // 3. Agrega un tercer adicional al producto ("Bacon").
+        WebElement bacon = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//label[contains(.,'Bacon')]//input[@type='checkbox']")));
+        if (!bacon.isSelected()) {
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", bacon);
+            wait.until(ExpectedConditions.elementToBeClickable(bacon));
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", bacon);
+        }
+
+        // 4. Guarda los cambios.
+        driver.findElement(By.cssSelector("[data-testid=producto-submit]")).click();
+
+        // Espera a que el formulario se limpie, indicando que el guardado fue exitoso
+        wait.until(ExpectedConditions.attributeToBe(By.cssSelector("[data-testid=producto-nombre]"), "value", ""));
+
+        // 5. Navega nuevamente al menú.
+        String newAdminWindow = driver.getWindowHandle();
+        driver.switchTo().newWindow(WindowType.TAB);
+        driver.get(base + "/menu");
+
+        // 6. Verifica que el producto ahora muestre los 3 adicionales seleccionados.
+        WebElement tarjetaEditada = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//a[contains(@href,'/comida/')][.//h3[contains(.,'" + nombreUnico + "')]]")));
+        tarjetaEditada.click();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-testid^=comida-adicion-]")));
+        wait.until(d -> {
+            List<WebElement> btns = d.findElements(By.cssSelector("[data-testid^=comida-adicion-]"));
+            if (btns.size() < 3) {
+                return false;
+            }
+            String joined = btns.stream()
+                    .map(b -> {
+                        String t = b.getText();
+                        if (t == null || t.isBlank()) {
+                            String inner = b.getDomProperty("innerText");
+                            return inner != null ? inner : "";
+                        }
+                        return t;
+                    })
+                    .collect(Collectors.joining(" "))
+                    .toLowerCase();
+            return joined.contains("pepinillos") && joined.contains("queso extra") && joined.contains("bacon");
+        });
+
+        driver.close();
+        driver.switchTo().window(newAdminWindow);
     }
 }
