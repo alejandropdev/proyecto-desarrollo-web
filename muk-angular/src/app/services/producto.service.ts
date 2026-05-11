@@ -12,6 +12,7 @@ export interface ProductoPayload {
   precio: number;
   imagenUrl: string;
   categoriaId: number;
+  adicionalesPermitidosIds: number[];
 }
 
 export interface ProductoFormState extends ProductoPayload {
@@ -34,6 +35,7 @@ export class ProductoService {
       precio: 0,
       imagenUrl: '',
       categoriaId: 0,
+      adicionalesPermitidosIds: [],
     };
   }
 
@@ -45,6 +47,7 @@ export class ProductoService {
       precio: producto.precio,
       imagenUrl: producto.imagenUrl,
       categoriaId: producto.categoria.id,
+      adicionalesPermitidosIds: producto.adicionalesPermitidosIds ? [...producto.adicionalesPermitidosIds] : [],
     };
   }
 
@@ -55,6 +58,7 @@ export class ProductoService {
       precio: form.precio,
       imagenUrl: form.imagenUrl,
       categoriaId: form.categoriaId,
+      adicionalesPermitidosIds: [...form.adicionalesPermitidosIds],
     };
   }
 

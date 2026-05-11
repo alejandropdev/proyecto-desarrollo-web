@@ -139,7 +139,8 @@ public class ProductosApiControllerTest {
                 "Deliciosa hamburguesa con carne de res",
                 18000.0,
                 "https://example.com/hamburguesa.jpg",
-                1L
+                1L,
+                null
         );
 
         when(productoService.createProducto(any(ApiDtos.ProductoUpsertRequest.class)))
@@ -162,7 +163,7 @@ public class ProductosApiControllerTest {
     @Test
     void POST_crearProducto_datosInvalidos_retorna400() throws Exception {
         ApiDtos.ProductoUpsertRequest requestInvalida = new ApiDtos.ProductoUpsertRequest(
-                null, null, -5.0, null, null
+                null, null, -5.0, null, null, null
         );
 
         when(productoService.createProducto(any(ApiDtos.ProductoUpsertRequest.class)))
@@ -195,7 +196,8 @@ public class ProductosApiControllerTest {
                 "Hamburguesa con queso doble",
                 22000.0,
                 "https://example.com/hamburguesa-especial.jpg",
-                1L
+                1L,
+                null
         );
 
         when(productoService.updateProducto(eq(1L), any(ApiDtos.ProductoUpsertRequest.class)))
@@ -218,7 +220,7 @@ public class ProductosApiControllerTest {
     @Test
     void PUT_actualizarProducto_inexistente_retorna404() throws Exception {
         ApiDtos.ProductoUpsertRequest request = new ApiDtos.ProductoUpsertRequest(
-                "Nombre", "Descripcion", 10000.0, "url", 1L
+                "Nombre", "Descripcion", 10000.0, "url", 1L, null
         );
 
         when(productoService.updateProducto(eq(99L), any(ApiDtos.ProductoUpsertRequest.class)))

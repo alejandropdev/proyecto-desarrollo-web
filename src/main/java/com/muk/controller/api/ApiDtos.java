@@ -14,7 +14,8 @@ public final class ApiDtos {
             Double precio,
             String imagenUrl,
             boolean activo,
-            CategoriaDto categoria
+            CategoriaDto categoria,
+            List<Long> adicionalesPermitidosIds
     ) {}
 
     public record CategoriaDto(Long id, String nombre, String description) {}
@@ -52,8 +53,14 @@ public final class ApiDtos {
             String descripcion,
             Double precio,
             String imagenUrl,
-            Long categoriaId
-    ) {}
+            Long categoriaId,
+            List<Long> adicionalesPermitidosIds
+    ) {
+        public ProductoUpsertRequest {
+            adicionalesPermitidosIds =
+                    adicionalesPermitidosIds == null ? null : List.copyOf(adicionalesPermitidosIds);
+        }
+    }
 
     public record CategoriaRequest(String nombre) {}
 

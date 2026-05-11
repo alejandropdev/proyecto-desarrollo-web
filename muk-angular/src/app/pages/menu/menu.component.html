@@ -42,7 +42,7 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <a *ngFor="let dish of productos" [routerLink]="['/comida', dish.id]" class="group block">
+      <a *ngFor="let dish of productos" [routerLink]="['/comida', dish.id]" [attr.data-testid]="'menu-producto-' + dish.id" class="group block">
         <div class="rounded-[28px] shadow-2xl overflow-hidden transform transition-all group-hover:scale-[1.02]" style="background-color:#F2B705">
           <div class="h-52 sm:h-56 relative overflow-hidden">
             <img [src]="dish.imagenUrl" [alt]="dish.nombre" class="w-full h-full object-cover transform transition-transform group-hover:scale-110" />

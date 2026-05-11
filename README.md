@@ -59,6 +59,26 @@ cd muk-angular
 npm run build
 ```
 
+## Prueba E2E (Selenium + Angular embebido)
+
+La clase `AdminProductoMenuE2EIT` arranca Spring Boot en un **puerto aleatorio**, sirve el build de Angular desde `classpath:/spa/` (generado en la fase Maven `prepare-package`) y ejecuta el flujo en **Chrome headless**.
+
+**Requisitos adicionales:** Node.js 18+ y npm (para el `frontend-maven-plugin`), y **Google Chrome** instalado (WebDriverManager descarga el ChromeDriver adecuado).
+
+Ejecutar solo la integración E2E (incluye `npm install` / `npm run build:maven` en `muk-angular`), sin tests unitarios de Surefire:
+
+```bash
+mvn verify -DskipUnitTests=true
+```
+
+O el ciclo completo (tests unitarios + E2E):
+
+```bash
+mvn verify
+```
+
+Los tests unitarios (`mvn test`) **no** construyen el frontend; el build de Angular para la SPA embebida se ejecuta al empaquetar (`mvn package` o `mvn verify`).
+
 ## Estructura principal
 
 ```text

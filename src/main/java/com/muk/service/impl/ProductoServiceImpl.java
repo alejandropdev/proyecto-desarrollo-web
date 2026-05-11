@@ -1,8 +1,10 @@
 package com.muk.service.impl;
 
 import com.muk.controller.api.ApiDtos;
+import com.muk.entities.Adicional;
 import com.muk.entities.Categoria;
 import com.muk.entities.Producto;
+import com.muk.repository.AdicionalRepository;
 import com.muk.repository.CategoriaRepository;
 import com.muk.repository.ItemCarritoRepository;
 import com.muk.repository.ProductoRepository;
@@ -12,8 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
@@ -21,15 +25,18 @@ public class ProductoServiceImpl implements ProductoService {
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
     private final ItemCarritoRepository itemCarritoRepository;
+    private final AdicionalRepository adicionalRepository;
 
     @Autowired
     public ProductoServiceImpl(
             ProductoRepository productoRepository,
             CategoriaRepository categoriaRepository,
-            ItemCarritoRepository itemCarritoRepository) {
+            ItemCarritoRepository itemCarritoRepository,
+            AdicionalRepository adicionalRepository) {
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
         this.itemCarritoRepository = itemCarritoRepository;
+        this.adicionalRepository = adicionalRepository;
     }
 
     @Override
@@ -61,6 +68,7 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setImagenUrl(request.imagenUrl().trim());
         producto.setCategoria(categoria);
         producto.setActivo(true);
+        producto.setAdicionalesPermitidos(resolveAdicionalesForCreate(categoria, request.adicionalesPermitidosIds()));
         return save(producto);
     }
 
@@ -78,6 +86,15 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setPrecio(request.precio());
         producto.setImagenUrl(request.imagenUrl().trim());
         producto.setCategoria(categoria);
+        List<Long> adIds = request.adicionalesPermitidosIds();
+        if (adIds == null) {
+            // Campo ausente en JSON: no tocar la lista actual
+        } else if (adIds.isEmpty()) {
+            producto.setAdicionalesPermitidos(adicionalRepository.findByCategoria_IdAndActivoTrueOrderByNombreAsc(
+                    categoria.getId()));
+        } else {
+            producto.setAdicionalesPermitidos(resolveExplicitAdicionales(categoria, adIds));
+        }
         return Optional.of(save(producto));
     }
 
@@ -122,6 +139,41 @@ public class ProductoServiceImpl implements ProductoService {
 
     private boolean isActivo(Producto producto) {
         return Boolean.TRUE.equals(producto.getActivo());
+    }
+
+    private List<Adicional> resolveAdicionalesForCreate(Categoria categoria, List<Long> ids) {
+        if (categoria.getId() == null) {
+            throw new IllegalArgumentException("Categoría inválida.");
+        }
+        if (ids == null || ids.isEmpty()) {
+            return adicionalRepository.findByCategoria_IdAndActivoTrueOrderByNombreAsc(categoria.getId());
+        }
+        return resolveExplicitAdicionales(categoria, ids);
+    }
+
+    private List<Adicional> resolveExplicitAdicionales(Categoria categoria, List<Long> ids) {
+        if (categoria.getId() == null) {
+            throw new IllegalArgumentException("Categoría inválida.");
+        }
+        List<Adicional> loaded = adicionalRepository.findAllById(ids);
+        if (loaded.size() != ids.size()) {
+            throw new IllegalArgumentException("Uno o más adicionales no existen.");
+        }
+        Set<Long> requested = new HashSet<>(ids);
+        for (Adicional adicional : loaded) {
+            if (!Boolean.TRUE.equals(adicional.getActivo())) {
+                throw new IllegalArgumentException("Adicional inactivo: " + adicional.getId());
+            }
+            if (adicional.getCategoria() == null || adicional.getCategoria().getId() == null
+                    || !adicional.getCategoria().getId().equals(categoria.getId())) {
+                throw new IllegalArgumentException("El adicional no pertenece a la categoría del producto.");
+            }
+            requested.remove(adicional.getId());
+        }
+        if (!requested.isEmpty()) {
+            throw new IllegalArgumentException("Uno o más adicionales no existen.");
+        }
+        return loaded;
     }
 
     @Override

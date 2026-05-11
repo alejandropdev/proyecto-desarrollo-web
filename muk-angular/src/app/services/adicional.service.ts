@@ -27,6 +27,11 @@ export class AdicionalService {
     return this.http.get<Adicional[]>(this.apiUrl);
   }
 
+  /** Adiciones activas de una categoría (API pública para formularios de producto). */
+  getAdicionesPorCategoria(categoriaId: number): Observable<Adicional[]> {
+    return this.http.get<Adicional[]>('/api/adiciones', { params: { categoriaId: String(categoriaId) } });
+  }
+
   getAdicionById(id: number): Observable<Adicional> {
     return this.http.get<Adicional>(`${this.apiUrl}/${id}`);
   }

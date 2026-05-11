@@ -52,6 +52,27 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "maven": {
+              "outputPath": "../target/classes/spa",
+              "outputHashing": "none",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "optimization": true,
+              "buildOptimizer": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "namedChunks": false
             }
           },
           "defaultConfiguration": "production"

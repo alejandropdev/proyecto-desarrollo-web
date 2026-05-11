@@ -8,4 +8,5 @@ export interface Producto {
   imagenUrl: string;
   activo: boolean;
   categoria: Categoria;
+  adicionalesPermitidosIds?: number[];
 }

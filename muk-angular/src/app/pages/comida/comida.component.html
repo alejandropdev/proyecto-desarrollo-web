@@ -63,6 +63,7 @@
               type="button"
               *ngFor="let adicion of adiciones"
               (click)="toggleAdicion(adicion.id)"
+              [attr.data-testid]="'comida-adicion-' + adicion.id"
               class="px-4 py-2 rounded-full border-2 font-black text-xs sm:text-sm uppercase tracking-wider transition-all"
               [ngStyle]="{
                 'background-color': isAdicionSelected(adicion.id)

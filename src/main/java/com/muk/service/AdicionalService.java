@@ -16,6 +16,8 @@ public interface AdicionalService {
 
     List<Adicional> findForMenuCategory(String category);
 
+    List<Adicional> findActivosByCategoriaId(Long categoriaId);
+
     Adicional createAdicion(ApiDtos.AdicionalUpsertRequest request);
 
     Optional<Adicional> updateAdicion(Long id, ApiDtos.AdicionalUpsertRequest request);

@@ -53,6 +53,14 @@ public class AdicionalServiceImpl implements AdicionalService {
     }
 
     @Override
+    public List<Adicional> findActivosByCategoriaId(Long categoriaId) {
+        if (categoriaId == null) {
+            return Collections.emptyList();
+        }
+        return repository.findByCategoria_IdAndActivoTrueOrderByNombreAsc(categoriaId);
+    }
+
+    @Override
     public Adicional createAdicion(ApiDtos.AdicionalUpsertRequest request) {
         Categoria categoria = categoriaRepository.findById(request.categoriaId())
                 .orElseThrow(() -> new IllegalArgumentException("Categoría inválida."));

@@ -67,7 +67,7 @@ class ProductosApiControllerTest {
 
     @Test
     void testCrearProducto() throws Exception {
-        ApiDtos.ProductoUpsertRequest request = new ApiDtos.ProductoUpsertRequest("Coca Cola", "Refresco", 2.50, "url", 1L);
+        ApiDtos.ProductoUpsertRequest request = new ApiDtos.ProductoUpsertRequest("Coca Cola", "Refresco", 2.50, "url", 1L, null);
 
         Mockito.when(productoService.createProducto(any(ApiDtos.ProductoUpsertRequest.class))).thenReturn(productoEjemplo);
 
@@ -80,7 +80,7 @@ class ProductosApiControllerTest {
 
     @Test
     void testActualizarProducto_Exito() throws Exception {
-        ApiDtos.ProductoUpsertRequest request = new ApiDtos.ProductoUpsertRequest("Coca Cola Editada", "Refresco Editado", 3.00, "url", 1L);
+        ApiDtos.ProductoUpsertRequest request = new ApiDtos.ProductoUpsertRequest("Coca Cola Editada", "Refresco Editado", 3.00, "url", 1L, null);
         
         Producto productoEditado = new Producto(1L, "Coca Cola Editada", productoEjemplo.getCategoria(), 3.00, "url", "Refresco Editado");
 

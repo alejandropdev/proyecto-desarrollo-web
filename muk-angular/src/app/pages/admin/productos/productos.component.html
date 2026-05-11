@@ -1,15 +1,29 @@
 <app-admin-page-shell title="Productos" subtitle="CRUD completo de productos.">
   <div class="rounded-3xl shadow-2xl p-8 mb-6" style="background-color:white">
     <form class="grid grid-cols-1 sm:grid-cols-2 gap-3" (ngSubmit)="save()">
-      <input [(ngModel)]="form.nombre" name="nombre" placeholder="Nombre" required class="px-4 py-3 rounded-xl border-2" />
-      <input [(ngModel)]="form.precio" name="precio" type="number" placeholder="Precio" required class="px-4 py-3 rounded-xl border-2" />
-      <input [(ngModel)]="form.imagenUrl" name="imagenUrl" placeholder="URL imagen" required class="px-4 py-3 rounded-xl border-2" />
-      <select [(ngModel)]="form.categoriaId" name="categoriaId" required class="px-4 py-3 rounded-xl border-2">
+      <input data-testid="producto-nombre" [(ngModel)]="form.nombre" name="nombre" placeholder="Nombre" required class="px-4 py-3 rounded-xl border-2" />
+      <input data-testid="producto-precio" [(ngModel)]="form.precio" name="precio" type="number" placeholder="Precio" required class="px-4 py-3 rounded-xl border-2" />
+      <input data-testid="producto-imagen" [(ngModel)]="form.imagenUrl" name="imagenUrl" placeholder="URL imagen" required class="px-4 py-3 rounded-xl border-2" />
+      <select data-testid="producto-categoria" [(ngModel)]="form.categoriaId" (change)="onCategoriaChange()" name="categoriaId" required class="px-4 py-3 rounded-xl border-2">
         <option [ngValue]="0" disabled>Selecciona categoría</option>
         <option *ngFor="let c of categorias" [ngValue]="c.id">{{ c.nombre }}</option>
       </select>
-      <textarea [(ngModel)]="form.descripcion" name="descripcion" placeholder="Descripción" required class="sm:col-span-2 px-4 py-3 rounded-xl border-2"></textarea>
-      <button type="submit" class="px-6 py-3 rounded-xl font-black text-white uppercase sm:col-span-2" style="background-color:#d93d04">{{ form.id ? 'Actualizar' : 'Crear' }}</button>
+      <textarea data-testid="producto-descripcion" [(ngModel)]="form.descripcion" name="descripcion" placeholder="Descripción" required class="sm:col-span-2 px-4 py-3 rounded-xl border-2"></textarea>
+      <div *ngIf="adicionesDisponibles.length" class="sm:col-span-2" data-testid="producto-adiciones-panel">
+        <p class="font-black text-sm uppercase mb-2" style="color:#8c0e03">Adiciones permitidas</p>
+        <div class="flex flex-wrap gap-2">
+          <label *ngFor="let ad of adicionesDisponibles" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border-2 cursor-pointer font-bold text-sm" style="border-color:#f2b705">
+            <input
+              type="checkbox"
+              [checked]="isAdicionalSelected(ad.id)"
+              (change)="toggleAdicional(ad.id)"
+              [attr.data-testid]="'producto-adicional-' + ad.id"
+            />
+            <span>{{ ad.nombre }}</span>
+          </label>
+        </div>
+      </div>
+      <button data-testid="producto-submit" type="submit" class="px-6 py-3 rounded-xl font-black text-white uppercase sm:col-span-2" style="background-color:#d93d04">{{ form.id ? 'Actualizar' : 'Crear' }}</button>
     </form>
   </div>
 

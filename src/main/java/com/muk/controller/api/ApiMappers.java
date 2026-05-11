@@ -12,6 +12,10 @@ public final class ApiMappers {
         ApiDtos.CategoriaDto categoria =
                 producto.getCategoria() == null ? null : toCategoriaDto(producto.getCategoria());
 
+        List<Long> adicionalesIds = producto.getAdicionalesPermitidos() == null
+                ? List.of()
+                : producto.getAdicionalesPermitidos().stream().map(Adicional::getId).toList();
+
         return new ApiDtos.ProductoDto(
                 producto.getId(),
                 producto.getNombre(),
@@ -19,7 +23,8 @@ public final class ApiMappers {
                 producto.getPrecio(),
                 producto.getImagenUrl(),
                 Boolean.TRUE.equals(producto.getActivo()),
-                categoria
+                categoria,
+                adicionalesIds
         );
     }
 

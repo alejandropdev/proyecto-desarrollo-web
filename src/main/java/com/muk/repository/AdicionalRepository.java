@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AdicionalRepository extends JpaRepository<Adicional, Long> {
     List<Adicional> findByCategoria_NombreIgnoreCaseOrderByNombreAsc(String nombre);
+
+    List<Adicional> findByCategoria_IdAndActivoTrueOrderByNombreAsc(Long categoriaId);
 }

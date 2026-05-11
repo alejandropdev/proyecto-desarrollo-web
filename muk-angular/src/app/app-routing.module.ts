@@ -58,7 +58,8 @@ const
   // Otras rutas
   { path: 'admin/operadores', component: OperadoresComponent },
   { path: 'categorias', component: CategoriasComponent },
-  { path: 'productos', component: ProductosComponent },
+  { path: 'productos', redirectTo: '/admin/productos', pathMatch: 'full' },
+  { path: 'admin/productos', component: ProductosComponent },
   { path: 'not-found', component: NotFoundComponent },
     { path: 'admin/domiciliarios', component: DomiciliariosComponent },
     { path: 'admin/pedidos', component: AdminPedidosComponent },
