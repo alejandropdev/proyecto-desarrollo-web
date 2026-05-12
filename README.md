@@ -59,23 +59,51 @@ cd muk-angular
 npm run build
 ```
 
-## Prueba E2E (Selenium + Angular embebido)
+## Pruebas E2E (Selenium + Angular embebido)
 
-La clase `AdminProductoMenuE2EIT` arranca Spring Boot en un **puerto aleatorio**, sirve el build de Angular desde `classpath:/spa/` (generado en la fase Maven `prepare-package`) y ejecuta el flujo en **Chrome con ventana visible** (por defecto). Para CI sin interfaz gráfica usa `-De2e.headless=true`.
+Cada clase E2E arranca Spring Boot en un **puerto aleatorio**, sirve el build de Angular desde `classpath:/spa/` (generado en la fase Maven `prepare-package`) y ejecuta el flujo en **Chrome con ventana visible** (por defecto). Para CI sin interfaz gráfica usa `-De2e.headless=true`.
+
+**Requisitos adicionales:** Node.js 18+ y npm (para el `frontend-maven-plugin`), y **Google Chrome** instalado (WebDriverManager descarga el ChromeDriver adecuado).
+
+### Caso 1 — `AdminProductoMenuE2EIT`
+
+Flujo de administrador: crea un producto con adiciones y verifica que aparece en el menú. Luego edita el producto añadiendo un tercer adicional y confirma la actualización en el menú.
 
 ```bash
 cd muk-angular && npm run build:maven && cd .. && mvn failsafe:integration-test failsafe:verify -Dit.test=com.muk.e2e.AdminProductoMenuE2EIT
 ```
 
-**Requisitos adicionales:** Node.js 18+ y npm (para el `frontend-maven-plugin`), y **Google Chrome** instalado (WebDriverManager descarga el ChromeDriver adecuado).
+### Caso 2 — `ClientePedidoE2EIT`
 
-Ejecutar solo la integración E2E (incluye `npm install` / `npm run build:maven` en `muk-angular`), sin tests unitarios de Surefire:
+Flujo completo de cliente + operador en dos pestañas del navegador:
+
+1. Un usuario registrado inicia sesión y agrega al menos 2 comidas con 2 adicionales cada una.
+2. Verifica que el carrito es correcto (productos, adicionales y total) antes de confirmar.
+3. Confirma el pedido y espera actualizaciones de estado.
+4. En otra pestaña, un operador inicia sesión, selecciona el pedido y lo avanza por todos los estados (`EN_PREPARACION → LISTO → EN_CAMINO → COMPLETADO`). Al pasar a `EN_CAMINO` se auto-asigna un domiciliario disponible.
+5. Se verifica en la pestaña del usuario que el cambio de estado es visible.
+6. Cuando el pedido queda completado, el usuario revisa su historial: se comprueba que aparecen todos los productos y adicionales seleccionados, y que el total del detalle coincide con el mostrado en el carrito (sin hardcodear el valor).
+
+```bash
+cd muk-angular && npm run build:maven && cd .. && mvn failsafe:integration-test failsafe:verify -Dit.test=com.muk.e2e.ClientePedidoE2EIT
+```
+
+**Credenciales de prueba usadas** (precargadas por `DataLoader`):
+
+| Rol      | Usuario / Email   | Contraseña  |
+|----------|-------------------|-------------|
+| Cliente  | `sara@muk.com`    | `1234`      |
+| Operador | `operador1`       | `hash-op-001` |
+
+### Ejecutar todos los tests E2E
+
+Sin tests unitarios de Surefire:
 
 ```bash
 mvn verify -DskipUnitTests=true
 ```
 
-O el ciclo completo (tests unitarios + E2E):
+Ciclo completo (tests unitarios + E2E):
 
 ```bash
 mvn verify
