@@ -1,0 +1,648 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.muk:muk-website-backend >---------------------
+[INFO] Building muk-website-backend 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ muk-website-backend ---
+[INFO] Deleting C:\Users\samue\vsc\proyecto-desarrollo-web\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ muk-website-backend ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ muk-website-backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 59 source files with javac [debug release 17] to target\classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[138,29] method findById(java.lang.Long) is already defined in class com.muk.service.impl.PedidoServiceImpl
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/entities/Producto.java:[26,35] no suitable constructor found for Categoria(no arguments)
+    constructor com.muk.entities.Categoria.Categoria(java.lang.Long,java.lang.String) is not applicable
+      (actual and formal argument lists differ in length)
+    constructor com.muk.entities.Categoria.Categoria(java.lang.Long,java.lang.String,java.lang.String) is not applicable
+      (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[70,25] constructor Pedido in class com.muk.entities.Pedido cannot be applied to given types;
+  required: java.lang.Long,com.muk.entities.Cliente,java.lang.String,java.time.LocalDateTime
+  found:    no arguments
+  reason: actual and formal argument lists differ in length
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[71,15] cannot find symbol
+  symbol:   method setCliente(com.muk.entities.Cliente)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[72,15] cannot find symbol
+  symbol:   method setEstado(java.lang.String)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[73,15] cannot find symbol
+  symbol:   method setFechaCreacion(java.time.LocalDateTime)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[74,15] cannot find symbol
+  symbol:   method setItems(java.util.ArrayList<java.lang.Object>)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[88,37] constructor ItemPedido in class com.muk.entities.ItemPedido cannot be applied to given types;
+  required: java.lang.Long,com.muk.entities.Pedido,com.muk.entities.Producto,java.lang.Integer,java.lang.Double
+  found:    no arguments
+  reason: actual and formal argument lists differ in length
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[89,23] cannot find symbol
+  symbol:   method setPedido(com.muk.entities.Pedido)
+  location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[90,23] cannot find symbol
+  symbol:   method setProducto(com.muk.entities.Producto)
+  location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[91,23] cannot find symbol
+  symbol:   method setCantidad(java.lang.Integer)
+  location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[92,50] cannot find symbol
+  symbol:   method getPrecio()
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[93,23] cannot find symbol
+  symbol:   method setSelecciones(java.util.ArrayList<java.lang.Object>)
+  location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[103,62] constructor SeleccionAdicionalPedido in class com.muk.entities.SeleccionAdicionalPedido cannot be applied to given types;
+  required: java.lang.Long,com.muk.entities.ItemPedido,com.muk.entities.Adicional,java.lang.Double
+  found:    no arguments
+  reason: actual and formal argument lists differ in length
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[104,34] cannot find symbol
+  symbol:   method setItemPedido(com.muk.entities.ItemPedido)
+  location: variable seleccion of type com.muk.entities.SeleccionAdicionalPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[105,34] cannot find symbol
+  symbol:   method setAdicional(com.muk.entities.Adicional)
+  location: variable seleccion of type com.muk.entities.SeleccionAdicionalPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[106,54] cannot find symbol
+  symbol:   method getPrecio()
+  location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[108,35] cannot find symbol
+  symbol:   method getSelecciones()
+  location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[114,19] cannot find symbol
+  symbol:   method getItems()
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[119,15] cannot find symbol
+  symbol:   method setCantidadProductos(int)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[120,15] cannot find symbol
+  symbol:   method setCantidadAdiciones(int)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[148,19] cannot find symbol
+  symbol:   method getItems()
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[149,59] cannot find symbol
+  symbol:   method getItems()
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[150,25] cannot find symbol
+  symbol:   method getProducto()
+  location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[151,25] cannot find symbol
+  symbol:   method getProducto()
+  location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[152,29] cannot find symbol
+  symbol:   method getProducto()
+  location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[153,29] cannot find symbol
+  symbol:   method getProducto()
+  location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[156,21] cannot find symbol
+  symbol:   method getSelecciones()
+  location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[157,74] cannot find symbol
+  symbol:   method getSelecciones()
+  location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[158,28] cannot find symbol
+  symbol:   method getAdicional()
+  location: variable sel of type com.muk.entities.SeleccionAdicionalPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[159,28] cannot find symbol
+  symbol:   method getAdicional()
+  location: variable sel of type com.muk.entities.SeleccionAdicionalPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[175,62] cannot find symbol
+  symbol:   method getEstado()
+  location: variable p of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[176,61] cannot find symbol
+  symbol:   method getEstado()
+  location: variable p of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[209,23] cannot find symbol
+  symbol:   method getDomiciliario()
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[212,39] cannot find symbol
+  symbol:   method getActivo()
+  location: variable d of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[212,84] cannot find symbol
+  symbol:   method getActivo()
+  location: variable d of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[220,29] cannot find symbol
+  symbol:   method setDisponible(boolean)
+  location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[223,23] cannot find symbol
+  symbol:   method setDomiciliario(com.muk.entities.Domiciliario)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[225,51] cannot find symbol
+  symbol:   method getDomiciliario()
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[226,29] cannot find symbol
+  symbol:   method setDisponible(boolean)
+  location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[232,19] cannot find symbol
+  symbol:   method setFechaEntrega(java.time.LocalDateTime)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[240,15] cannot find symbol
+  symbol:   method setEstado(java.lang.String)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[264,25] cannot find symbol
+  symbol:   method getActivo()
+  location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[264,82] cannot find symbol
+  symbol:   method getActivo()
+  location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[268,46] cannot find symbol
+  symbol:   method getDisponible()
+  location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[273,15] cannot find symbol
+  symbol:   method setDomiciliario(com.muk.entities.Domiciliario)
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[279,19] cannot find symbol
+  symbol:   method getDomiciliario()
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[280,47] cannot find symbol
+  symbol:   method getDomiciliario()
+  location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[281,25] cannot find symbol
+  symbol:   method setDisponible(boolean)
+  location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[64,29] constructor Producto in class com.muk.entities.Producto cannot be applied to given types;
+  required: java.lang.Long,java.lang.String,com.muk.entities.Categoria,java.lang.Double,java.lang.String,java.lang.String
+  found:    no arguments
+  reason: actual and formal argument lists differ in length
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[65,17] cannot find symbol
+  symbol:   method setNombre(java.lang.String)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[66,17] cannot find symbol
+  symbol:   method setDescripcion(java.lang.String)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[67,17] cannot find symbol
+  symbol:   method setPrecio(java.lang.Double)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[68,17] cannot find symbol
+  symbol:   method setImagenUrl(java.lang.String)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[69,17] cannot find symbol
+  symbol:   method setCategoria(com.muk.entities.Categoria)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[70,17] cannot find symbol
+  symbol:   method setActivo(boolean)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[71,17] cannot find symbol
+  symbol:   method setAdicionalesPermitidos(java.util.List<com.muk.entities.Adicional>)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[84,17] cannot find symbol
+  symbol:   method setNombre(java.lang.String)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[85,17] cannot find symbol
+  symbol:   method setDescripcion(java.lang.String)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[86,17] cannot find symbol
+  symbol:   method setPrecio(java.lang.Double)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[87,17] cannot find symbol
+  symbol:   method setImagenUrl(java.lang.String)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[88,17] cannot find symbol
+  symbol:   method setCategoria(com.muk.entities.Categoria)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[94,30] cannot find symbol
+  symbol:   method getId()
+  location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[96,21] cannot find symbol
+  symbol:   method setAdicionalesPermitidos(java.util.List<com.muk.entities.Adicional>)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[121,21] cannot find symbol
+  symbol:   method setActivo(boolean)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[141,44] cannot find symbol
+  symbol:   method getActivo()
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[145,22] cannot find symbol
+  symbol:   method getId()
+  location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[149,97] cannot find symbol
+  symbol:   method getId()
+  location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[155,22] cannot find symbol
+  symbol:   method getId()
+  location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[164,47] cannot find symbol
+  symbol:   method getActivo()
+  location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[165,86] cannot find symbol
+  symbol:   method getId()
+  location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[167,26] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[167,62] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[168,34] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[168,74] cannot find symbol
+  symbol:   method getId()
+  location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[171,39] cannot find symbol
+  symbol:   method getId()
+  location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[188,80] cannot find symbol
+  symbol:   method getAdicionalesPermitidos()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[131,43] invalid method reference
+  cannot find symbol
+    symbol:   method getNombre()
+    location: class com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[171,43] invalid method reference
+  cannot find symbol
+    symbol:   method getNombre()
+    location: class com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[276,31] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable a of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[276,59] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable a of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[277,54] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable a of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[280,25] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[280,60] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[281,25] cannot find symbol
+  symbol:   method setAdicionalesPermitidos(java.util.List<java.lang.Object>)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[285,89] cannot find symbol
+  symbol:   method getCategoria()
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[287,21] cannot find symbol
+  symbol:   method setAdicionalesPermitidos(java.util.List<com.muk.entities.Adicional>)
+  location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[377,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[378,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[379,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[380,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[381,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[382,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[383,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[384,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[385,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[386,93] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[398,98] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[399,98] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[400,98] cannot find symbol
+  symbol:   method getPrecio()
+  location: class com.muk.entities.Adicional
+[INFO] 100 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.222 s
+[INFO] Finished at: 2026-05-13T23:02:49-05:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project muk-website-backend: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[138,29] method findById(java.lang.Long) is already defined in class com.muk.service.impl.PedidoServiceImpl
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/entities/Producto.java:[26,35] no suitable constructor found for Categoria(no arguments)
+[ERROR]     constructor com.muk.entities.Categoria.Categoria(java.lang.Long,java.lang.String) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR]     constructor com.muk.entities.Categoria.Categoria(java.lang.Long,java.lang.String,java.lang.String) is not applicable
+[ERROR]       (actual and formal argument lists differ in length)
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[70,25] constructor Pedido in class com.muk.entities.Pedido cannot be applied to given types;
+[ERROR]   required: java.lang.Long,com.muk.entities.Cliente,java.lang.String,java.time.LocalDateTime
+[ERROR]   found:    no arguments
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[71,15] cannot find symbol
+[ERROR]   symbol:   method setCliente(com.muk.entities.Cliente)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[72,15] cannot find symbol
+[ERROR]   symbol:   method setEstado(java.lang.String)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[73,15] cannot find symbol
+[ERROR]   symbol:   method setFechaCreacion(java.time.LocalDateTime)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[74,15] cannot find symbol
+[ERROR]   symbol:   method setItems(java.util.ArrayList<java.lang.Object>)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[88,37] constructor ItemPedido in class com.muk.entities.ItemPedido cannot be applied to given types;
+[ERROR]   required: java.lang.Long,com.muk.entities.Pedido,com.muk.entities.Producto,java.lang.Integer,java.lang.Double
+[ERROR]   found:    no arguments
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[89,23] cannot find symbol
+[ERROR]   symbol:   method setPedido(com.muk.entities.Pedido)
+[ERROR]   location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[90,23] cannot find symbol
+[ERROR]   symbol:   method setProducto(com.muk.entities.Producto)
+[ERROR]   location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[91,23] cannot find symbol
+[ERROR]   symbol:   method setCantidad(java.lang.Integer)
+[ERROR]   location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[92,50] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[93,23] cannot find symbol
+[ERROR]   symbol:   method setSelecciones(java.util.ArrayList<java.lang.Object>)
+[ERROR]   location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[103,62] constructor SeleccionAdicionalPedido in class com.muk.entities.SeleccionAdicionalPedido cannot be applied to given types;
+[ERROR]   required: java.lang.Long,com.muk.entities.ItemPedido,com.muk.entities.Adicional,java.lang.Double
+[ERROR]   found:    no arguments
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[104,34] cannot find symbol
+[ERROR]   symbol:   method setItemPedido(com.muk.entities.ItemPedido)
+[ERROR]   location: variable seleccion of type com.muk.entities.SeleccionAdicionalPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[105,34] cannot find symbol
+[ERROR]   symbol:   method setAdicional(com.muk.entities.Adicional)
+[ERROR]   location: variable seleccion of type com.muk.entities.SeleccionAdicionalPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[106,54] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[108,35] cannot find symbol
+[ERROR]   symbol:   method getSelecciones()
+[ERROR]   location: variable itemPedido of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[114,19] cannot find symbol
+[ERROR]   symbol:   method getItems()
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[119,15] cannot find symbol
+[ERROR]   symbol:   method setCantidadProductos(int)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[120,15] cannot find symbol
+[ERROR]   symbol:   method setCantidadAdiciones(int)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[148,19] cannot find symbol
+[ERROR]   symbol:   method getItems()
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[149,59] cannot find symbol
+[ERROR]   symbol:   method getItems()
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[150,25] cannot find symbol
+[ERROR]   symbol:   method getProducto()
+[ERROR]   location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[151,25] cannot find symbol
+[ERROR]   symbol:   method getProducto()
+[ERROR]   location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[152,29] cannot find symbol
+[ERROR]   symbol:   method getProducto()
+[ERROR]   location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[153,29] cannot find symbol
+[ERROR]   symbol:   method getProducto()
+[ERROR]   location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[156,21] cannot find symbol
+[ERROR]   symbol:   method getSelecciones()
+[ERROR]   location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[157,74] cannot find symbol
+[ERROR]   symbol:   method getSelecciones()
+[ERROR]   location: variable item of type com.muk.entities.ItemPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[158,28] cannot find symbol
+[ERROR]   symbol:   method getAdicional()
+[ERROR]   location: variable sel of type com.muk.entities.SeleccionAdicionalPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[159,28] cannot find symbol
+[ERROR]   symbol:   method getAdicional()
+[ERROR]   location: variable sel of type com.muk.entities.SeleccionAdicionalPedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[175,62] cannot find symbol
+[ERROR]   symbol:   method getEstado()
+[ERROR]   location: variable p of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[176,61] cannot find symbol
+[ERROR]   symbol:   method getEstado()
+[ERROR]   location: variable p of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[209,23] cannot find symbol
+[ERROR]   symbol:   method getDomiciliario()
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[212,39] cannot find symbol
+[ERROR]   symbol:   method getActivo()
+[ERROR]   location: variable d of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[212,84] cannot find symbol
+[ERROR]   symbol:   method getActivo()
+[ERROR]   location: variable d of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[220,29] cannot find symbol
+[ERROR]   symbol:   method setDisponible(boolean)
+[ERROR]   location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[223,23] cannot find symbol
+[ERROR]   symbol:   method setDomiciliario(com.muk.entities.Domiciliario)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[225,51] cannot find symbol
+[ERROR]   symbol:   method getDomiciliario()
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[226,29] cannot find symbol
+[ERROR]   symbol:   method setDisponible(boolean)
+[ERROR]   location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[232,19] cannot find symbol
+[ERROR]   symbol:   method setFechaEntrega(java.time.LocalDateTime)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[240,15] cannot find symbol
+[ERROR]   symbol:   method setEstado(java.lang.String)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[264,25] cannot find symbol
+[ERROR]   symbol:   method getActivo()
+[ERROR]   location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[264,82] cannot find symbol
+[ERROR]   symbol:   method getActivo()
+[ERROR]   location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[268,46] cannot find symbol
+[ERROR]   symbol:   method getDisponible()
+[ERROR]   location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[273,15] cannot find symbol
+[ERROR]   symbol:   method setDomiciliario(com.muk.entities.Domiciliario)
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[279,19] cannot find symbol
+[ERROR]   symbol:   method getDomiciliario()
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[280,47] cannot find symbol
+[ERROR]   symbol:   method getDomiciliario()
+[ERROR]   location: variable pedido of type com.muk.entities.Pedido
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/PedidoServiceImpl.java:[281,25] cannot find symbol
+[ERROR]   symbol:   method setDisponible(boolean)
+[ERROR]   location: variable domiciliario of type com.muk.entities.Domiciliario
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[64,29] constructor Producto in class com.muk.entities.Producto cannot be applied to given types;
+[ERROR]   required: java.lang.Long,java.lang.String,com.muk.entities.Categoria,java.lang.Double,java.lang.String,java.lang.String
+[ERROR]   found:    no arguments
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[65,17] cannot find symbol
+[ERROR]   symbol:   method setNombre(java.lang.String)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[66,17] cannot find symbol
+[ERROR]   symbol:   method setDescripcion(java.lang.String)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[67,17] cannot find symbol
+[ERROR]   symbol:   method setPrecio(java.lang.Double)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[68,17] cannot find symbol
+[ERROR]   symbol:   method setImagenUrl(java.lang.String)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[69,17] cannot find symbol
+[ERROR]   symbol:   method setCategoria(com.muk.entities.Categoria)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[70,17] cannot find symbol
+[ERROR]   symbol:   method setActivo(boolean)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[71,17] cannot find symbol
+[ERROR]   symbol:   method setAdicionalesPermitidos(java.util.List<com.muk.entities.Adicional>)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[84,17] cannot find symbol
+[ERROR]   symbol:   method setNombre(java.lang.String)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[85,17] cannot find symbol
+[ERROR]   symbol:   method setDescripcion(java.lang.String)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[86,17] cannot find symbol
+[ERROR]   symbol:   method setPrecio(java.lang.Double)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[87,17] cannot find symbol
+[ERROR]   symbol:   method setImagenUrl(java.lang.String)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[88,17] cannot find symbol
+[ERROR]   symbol:   method setCategoria(com.muk.entities.Categoria)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[94,30] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[96,21] cannot find symbol
+[ERROR]   symbol:   method setAdicionalesPermitidos(java.util.List<com.muk.entities.Adicional>)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[121,21] cannot find symbol
+[ERROR]   symbol:   method setActivo(boolean)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[141,44] cannot find symbol
+[ERROR]   symbol:   method getActivo()
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[145,22] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[149,97] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[155,22] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[164,47] cannot find symbol
+[ERROR]   symbol:   method getActivo()
+[ERROR]   location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[165,86] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[167,26] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[167,62] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[168,34] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[168,74] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable categoria of type com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[171,39] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable adicional of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/service/impl/ProductoServiceImpl.java:[188,80] cannot find symbol
+[ERROR]   symbol:   method getAdicionalesPermitidos()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[131,43] invalid method reference
+[ERROR]   cannot find symbol
+[ERROR]     symbol:   method getNombre()
+[ERROR]     location: class com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[171,43] invalid method reference
+[ERROR]   cannot find symbol
+[ERROR]     symbol:   method getNombre()
+[ERROR]     location: class com.muk.entities.Categoria
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[276,31] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable a of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[276,59] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable a of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[277,54] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable a of type com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[280,25] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[280,60] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[281,25] cannot find symbol
+[ERROR]   symbol:   method setAdicionalesPermitidos(java.util.List<java.lang.Object>)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[285,89] cannot find symbol
+[ERROR]   symbol:   method getCategoria()
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[287,21] cannot find symbol
+[ERROR]   symbol:   method setAdicionalesPermitidos(java.util.List<com.muk.entities.Adicional>)
+[ERROR]   location: variable producto of type com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[377,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[378,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[379,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[380,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[381,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[382,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[383,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[384,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[385,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[386,93] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Producto
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[398,98] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[399,98] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Adicional
+[ERROR] /C:/Users/samue/vsc/proyecto-desarrollo-web/src/main/java/com/muk/config/DataLoader.java:[400,98] cannot find symbol
+[ERROR]   symbol:   method getPrecio()
+[ERROR]   location: class com.muk.entities.Adicional
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

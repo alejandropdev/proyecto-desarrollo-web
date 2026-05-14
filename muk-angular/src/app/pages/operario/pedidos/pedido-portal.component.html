@@ -49,7 +49,7 @@
     </div>
 
     <div *ngIf="!isLoading && pedidosFiltrados.length > 0" class="tabla-wrapper">
-      <table class="tabla-pedidos">
+      <table class="tabla-pedidos" data-testid="operario-tabla-pedidos">
         <thead>
           <tr>
             <th>ID</th>
@@ -96,6 +96,7 @@
                 class="select-estado"
                 [value]="pedido.estado"
                 (change)="cambiarEstado(pedido, estadoSelect.value)"
+                [attr.data-testid]="'operario-estado-' + pedido.id"
               >
                 <option value="PENDIENTE">Pendiente</option>
                 <option value="EN_PREPARACION">En preparación</option>

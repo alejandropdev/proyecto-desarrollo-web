@@ -108,7 +108,7 @@
                 class="w-20 h-20 rounded-xl object-cover shadow-md"
               />
               <div class="flex-1">
-                <h3 class="font-black text-lg uppercase" style="color: #34100b">
+                <h3 class="font-black text-lg uppercase" style="color: #34100b" data-testid="detalle-item-nombre">
                   {{ item.producto.nombre }}
                 </h3>
                 <p class="font-bold mt-1" style="color: #8c0e03">
@@ -165,7 +165,7 @@
                 class="text-sm mb-2"
                 style="color: #34100b"
               >
-                <p class="font-semibold">
+                <p class="font-semibold" data-testid="detalle-adicion-nombre">
                   {{ adicion.adicional.nombre }} - ${{ adicion.precio }} x
                   {{ item.cantidad }} =
                   <span class="font-black" style="color: #f27405"
@@ -208,7 +208,7 @@
           style="color: #f27405"
         >
           <span>TOTAL:</span>
-          <span>${{ calcularTotal() | number: "1.0-0":"es-CO" }}</span>
+          <span data-testid="detalle-total">${{ calcularTotal() | number: "1.0-0":"es-CO" }}</span>
         </div>
       </div>
 

@@ -30,6 +30,8 @@ public interface PedidoService {
 
     Optional<Pedido> findById(Long id);
 
+    Optional<Pedido> findByIdWithDetails(Long id);
+
     List<Pedido> findByClienteId(Long clienteId);
 
     CrearPedidoResult crearPedido(Long clienteId, ApiDtos.CrearPedidoRequest request);

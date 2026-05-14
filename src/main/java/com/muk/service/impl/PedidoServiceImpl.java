@@ -134,6 +134,31 @@ public class PedidoServiceImpl implements PedidoService {
         }
     }
 
+
+    @Transactional(readOnly = true)
+    public Optional<Pedido> findByIdWithDetails(Long id) {
+        Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
+        if (pedidoOpt.isPresent()) {
+            Pedido pedido = pedidoOpt.get();
+            pedido.getItems().size();
+            for (com.muk.entities.ItemPedido item : pedido.getItems()) {
+                if (item.getProducto() != null) {
+                    item.getProducto().getNombre();
+                    if (item.getProducto().getCategoria() != null) {
+                        item.getProducto().getCategoria().getNombre();
+                    }
+                }
+                item.getSelecciones().size();
+                for (com.muk.entities.SeleccionAdicionalPedido sel : item.getSelecciones()) {
+                    if (sel.getAdicional() != null) {
+                        sel.getAdicional().getNombre();
+                    }
+                }
+            }
+        }
+        return pedidoOpt;
+    }
+
     public List<Pedido> findByEstado(String estado) {
         if (estado == null || estado.isBlank()) return new ArrayList<>();
         return pedidoRepository.findByEstado(estado);

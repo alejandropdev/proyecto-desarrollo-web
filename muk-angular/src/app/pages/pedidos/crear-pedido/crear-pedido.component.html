@@ -77,7 +77,7 @@
               <p class="text-xs font-black uppercase" style="color: #8c0e03">
                 Producto
               </p>
-              <p class="text-lg font-black" style="color: #34100b">
+              <p class="text-lg font-black" style="color: #34100b" data-testid="carrito-producto-nombre">
                 {{ linea.producto.nombre }}
               </p>
             </div>
@@ -230,6 +230,7 @@
             [disabled]="!puedeEnviar()"
             class="flex-1 py-4 font-black rounded-full uppercase tracking-widest text-white shadow-xl transition-all hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
             style="background-color: #f27405"
+            data-testid="carrito-btn-confirmar"
           >
             {{ isLoading ? "Creando Pedido..." : "Realizar Pedido" }}
           </button>

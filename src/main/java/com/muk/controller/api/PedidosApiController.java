@@ -65,7 +65,7 @@ public class PedidosApiController {
                     .body(Map.of("message", "El ID del pedido es inválido."));
         }
 
-        return pedidoService.findById(id)
+        return pedidoService.findByIdWithDetails(id)
                 .<ResponseEntity<Object>>map(pedido -> ResponseEntity.ok(
                         ApiMappers.toPedidoDetalleDto(pedido)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)

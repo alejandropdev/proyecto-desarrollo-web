@@ -88,9 +88,9 @@ export class MisPedidosComponent implements OnInit {
    * @returns Array de pedidos con estado en curso
    */
   getPedidosEnCurso(): Pedido[] {
-    return this.pedidos.filter((pedido) =>
-      this.ESTADOS_EN_CURSO.includes(pedido.estado.toUpperCase()),
-    );
+    return this.pedidos
+      .filter((pedido) => this.ESTADOS_EN_CURSO.includes(pedido.estado.toUpperCase()))
+      .sort((a, b) => b.id - a.id);
   }
 
   /**
@@ -98,9 +98,9 @@ export class MisPedidosComponent implements OnInit {
    * @returns Array de pedidos con estado finalizado
    */
   getPedidosFinalizados(): Pedido[] {
-    return this.pedidos.filter((pedido) =>
-      this.ESTADOS_FINALIZADOS.includes(pedido.estado.toUpperCase()),
-    );
+    return this.pedidos
+      .filter((pedido) => this.ESTADOS_FINALIZADOS.includes(pedido.estado.toUpperCase()))
+      .sort((a, b) => b.id - a.id);
   }
 
   /**
