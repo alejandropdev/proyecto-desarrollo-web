@@ -1,5 +1,7 @@
 package com.muk.controller.api;
 
+import com.muk.dto.ClienteResponseDto;
+import com.muk.mapper.ClienteMapper;
 import com.muk.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,21 +10,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 @RestController
 @RequestMapping("/api/clientes")
 @CrossOrigin(origins = "*")
 public class ClientesApiController {
 
     private final ClienteService clienteService;
+    private final ClienteMapper clienteMapper;
 
     @Autowired
-    public ClientesApiController(ClienteService clienteService) {
+    public ClientesApiController(ClienteService clienteService, ClienteMapper clienteMapper) {
         this.clienteService = clienteService;
+        this.clienteMapper = clienteMapper;
     }
 
     @GetMapping
-    public List<ApiDtos.ClienteDto> clientes() {
-        return clienteService.findAll().clientes().stream().map(ApiMappers::toClienteDto).toList();
+    public List<ClienteResponseDto> clientes() {
+        return clienteMapper.toDtoList(clienteService.findAll().clientes());
     }
 
     @GetMapping("/{id}")
@@ -31,7 +36,7 @@ public class ClientesApiController {
         if (!result.success()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(ApiMappers.toClienteDto(result.cliente()));
+        return ResponseEntity.ok(clienteMapper.toDto(result.cliente()));
     }
 
     @PostMapping
@@ -40,7 +45,7 @@ public class ClientesApiController {
         if (!result.success()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toClienteDto(result.cliente()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteMapper.toDto(result.cliente()));
     }
 
     @PutMapping("/{id}")
@@ -50,7 +55,7 @@ public class ClientesApiController {
             HttpStatus status = "Cliente no encontrado.".equals(result.errorMessage()) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
             return ResponseEntity.status(status).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(ApiMappers.toClienteDto(result.cliente()));
+        return ResponseEntity.ok(clienteMapper.toDto(result.cliente()));
     }
 
     @DeleteMapping("/{id}")
@@ -69,7 +74,7 @@ public class ClientesApiController {
         if (!result.success()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(ApiMappers.toClienteDto(result.cliente()));
+        return ResponseEntity.ok(clienteMapper.toDto(result.cliente()));
     }
 
     @PostMapping("/registro")
@@ -78,7 +83,7 @@ public class ClientesApiController {
         if (!result.success()) {
             return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toClienteDto(result.cliente()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteMapper.toDto(result.cliente()));
     }
 
     @GetMapping("/perfil")
@@ -87,7 +92,7 @@ public class ClientesApiController {
         if (!result.success()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(ApiMappers.toClienteDto(result.cliente()));
+        return ResponseEntity.ok(clienteMapper.toDto(result.cliente()));
     }
 
     @PutMapping("/perfil")
@@ -100,7 +105,7 @@ public class ClientesApiController {
         if (!result.success()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(ApiMappers.toClienteDto(result.cliente()));
+        return ResponseEntity.ok(clienteMapper.toDto(result.cliente()));
     }
 
     @DeleteMapping("/perfil")

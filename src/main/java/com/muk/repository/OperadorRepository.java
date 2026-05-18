@@ -10,6 +10,4 @@ import java.util.Optional;
 public interface OperadorRepository extends JpaRepository<Operador, Long> {
 
     Optional<Operador> findByUsuario(String usuario);
-
-    Optional<Operador> findByUsuarioAndContrasenaHash(String usuario, String contrasenaHash);
 }

@@ -1,5 +1,6 @@
 package com.muk.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +20,13 @@ public class Administrador {
     @Column(nullable = false, unique = true, length = 50)
     private String usuario;
 
-    @Column(nullable = false, length = 100, name = "contraseña_hash")
+    @Transient
     private String contrasenaHash;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     public Administrador(Long id, String usuario, String contrasenaHash) {
         this.id = id;

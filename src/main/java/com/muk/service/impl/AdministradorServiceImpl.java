@@ -1,6 +1,7 @@
 package com.muk.service.impl;
 
 import com.muk.entities.Administrador;
+import com.muk.entities.UserEntity;
 import com.muk.repository.AdministradorRepository;
 import com.muk.service.AdministradorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,12 @@ public class AdministradorServiceImpl implements AdministradorService {
         if (usuario == null || usuario.isBlank() || password == null || password.isBlank()) {
             return new LoginResult(null, "Usuario o contraseña incorrectos");
         }
-        return administradorRepository.findByUsuarioAndContrasenaHash(usuario.trim(), password)
-                .map(administrador -> new LoginResult(administrador, null))
+        return administradorRepository.findByUsuario(usuario.trim())
+                .filter(admin -> {
+                    UserEntity user = admin.getUserEntity();
+                    return user != null && password.equals(user.getPassword());
+                })
+                .map(admin -> new LoginResult(admin, null))
                 .orElseGet(() -> new LoginResult(null, "Usuario o contraseña incorrectos"));
     }
 }

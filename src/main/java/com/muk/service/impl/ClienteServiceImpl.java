@@ -1,22 +1,29 @@
 package com.muk.service.impl;
 
 import com.muk.entities.Cliente;
+import com.muk.entities.Role;
+import com.muk.entities.UserEntity;
 import com.muk.repository.ClienteRepository;
+import com.muk.repository.RoleRepository;
 import com.muk.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository repository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public ClienteServiceImpl(ClienteRepository repository) {
+    public ClienteServiceImpl(ClienteRepository repository, RoleRepository roleRepository) {
         this.repository = repository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -52,7 +59,15 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setEmail(normalizedEmail);
         cliente.setTelefono(command.telefono().trim());
         cliente.setDireccion(command.direccion().trim());
-        cliente.setContrasenaHash(command.contrasena().trim());
+
+        Set<Role> roles = new HashSet<>();
+        roleRepository.findByName("ROLE_CLIENTE").ifPresent(roles::add);
+        UserEntity user = UserEntity.builder()
+                .username(normalizedEmail)
+                .password(command.contrasena().trim())
+                .roles(roles)
+                .build();
+        cliente.setUserEntity(user);
 
         return new ClienteResult(repository.save(cliente), null);
     }
@@ -84,8 +99,13 @@ public class ClienteServiceImpl implements ClienteService {
         existing.setEmail(normalizedEmail);
         existing.setTelefono(command.telefono().trim());
         existing.setDireccion(command.direccion().trim());
-        if (command.contrasena() != null && !command.contrasena().isBlank()) {
-            existing.setContrasenaHash(command.contrasena().trim());
+
+        UserEntity user = existing.getUserEntity();
+        if (user != null) {
+            user.setUsername(normalizedEmail);
+            if (command.contrasena() != null && !command.contrasena().isBlank()) {
+                user.setPassword(command.contrasena().trim());
+            }
         }
 
         return new ClienteResult(repository.save(existing), null);
@@ -128,7 +148,8 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         Cliente cliente = byEmail.get();
-        if (!password.equals(cliente.getContrasenaHash())) {
+        UserEntity user = cliente.getUserEntity();
+        if (user == null || !password.equals(user.getPassword())) {
             return new LoginResult(null, "Credenciales inválidas.");
         }
 
@@ -161,13 +182,14 @@ public class ClienteServiceImpl implements ClienteService {
         if (cliente == null || cliente.getId() == null) {
             return new ActionResult(false, "Datos inválidos.");
         }
+        // contrasena null → no se actualiza la contraseña
         ClienteUpsertCommand command = new ClienteUpsertCommand(
                 cliente.getNombre(),
                 cliente.getApellido(),
                 cliente.getEmail(),
                 cliente.getTelefono(),
                 cliente.getDireccion(),
-                cliente.getContrasenaHash()
+                null
         );
         ClienteResult result = update(cliente.getId(), command);
         return new ActionResult(result.success(), result.errorMessage());

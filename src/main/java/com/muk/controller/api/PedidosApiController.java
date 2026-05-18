@@ -1,5 +1,7 @@
 package com.muk.controller.api;
 
+import com.muk.dto.PedidoResumenDto;
+import com.muk.mapper.PedidoMapper;
 import com.muk.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +17,12 @@ import java.util.Map;
 public class PedidosApiController {
 
     private final PedidoService pedidoService;
+    private final PedidoMapper pedidoMapper;
 
     @Autowired
-    public PedidosApiController(PedidoService pedidoService) {
+    public PedidosApiController(PedidoService pedidoService, PedidoMapper pedidoMapper) {
         this.pedidoService = pedidoService;
+        this.pedidoMapper = pedidoMapper;
     }
 
     @PostMapping
@@ -42,11 +46,8 @@ public class PedidosApiController {
             @RequestParam(required = false) Long clienteId) {
 
         if (clienteId != null && clienteId > 0) {
-            List<ApiDtos.PedidoDto> pedidosCliente = pedidoService.findByClienteId(clienteId)
-                    .stream()
-                    .map(ApiMappers::toPedidoDto)
-                    .toList();
-
+            List<PedidoResumenDto> pedidosCliente = pedidoMapper.toDtoList(
+                    pedidoService.findByClienteId(clienteId));
             return ResponseEntity.ok(pedidosCliente);
         }
 

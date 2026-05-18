@@ -1,5 +1,7 @@
 package com.muk.controller.api;
 
+import com.muk.dto.OperadorResponseDto;
+import com.muk.mapper.OperadorMapper;
 import com.muk.service.OperadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,16 +10,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 @RestController
 @RequestMapping("/api/operadores")
 @CrossOrigin(origins = "*")
 public class OperadoresApiController {
 
     private final OperadorService operadorService;
+    private final OperadorMapper operadorMapper;
 
     @Autowired
-    public OperadoresApiController(OperadorService operadorService) {
+    public OperadoresApiController(OperadorService operadorService, OperadorMapper operadorMapper) {
         this.operadorService = operadorService;
+        this.operadorMapper = operadorMapper;
     }
 
     @PostMapping("/login")
@@ -27,18 +32,16 @@ public class OperadoresApiController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", result.errorMessage()));
         }
         return ResponseEntity.ok(new ApiDtos.OperarioLoginResponse(
-                        "Bienvenido operario",
-                        result.operador().getId(),
-                        result.operador().getUsuario(),
-                        result.operador().getNombre()
-                ));
+                "Bienvenido operario",
+                result.operador().getId(),
+                result.operador().getUsuario(),
+                result.operador().getNombre()
+        ));
     }
 
     @GetMapping
-    public List<ApiDtos.OperadorDto> operadores() {
-        return operadorService.findAllActive().operadores().stream()
-                .map(ApiMappers::toOperadorDto)
-                .toList();
+    public List<OperadorResponseDto> operadores() {
+        return operadorMapper.toDtoList(operadorService.findAllActive().operadores());
     }
 
     @GetMapping("/{id}")
@@ -47,7 +50,7 @@ public class OperadoresApiController {
         if (!result.success()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(ApiMappers.toOperadorDto(result.operador()));
+        return ResponseEntity.ok(operadorMapper.toDto(result.operador()));
     }
 
     @PostMapping
@@ -56,7 +59,7 @@ public class OperadoresApiController {
         if (!result.success()) {
             return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toOperadorDto(result.operador()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(operadorMapper.toDto(result.operador()));
     }
 
     @PutMapping("/{id}")
@@ -66,7 +69,7 @@ public class OperadoresApiController {
             HttpStatus status = "Operador no encontrado.".equals(result.errorMessage()) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
             return ResponseEntity.status(status).body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(ApiMappers.toOperadorDto(result.operador()));
+        return ResponseEntity.ok(operadorMapper.toDto(result.operador()));
     }
 
     @DeleteMapping("/{id}")

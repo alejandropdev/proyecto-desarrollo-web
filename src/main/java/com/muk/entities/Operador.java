@@ -1,5 +1,6 @@
 package com.muk.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,11 +25,16 @@ public class Operador {
     @Column(nullable = false, unique = true, length = 50)
     private String usuario;
 
-    @Column(nullable = false, length = 100, name = "contraseña_hash")
+    @Transient
     private String contrasenaHash;
 
     @Column(nullable = false)
     private Boolean activo = true;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     @OneToMany(mappedBy = "operador")
     private List<Pedido> pedidosGestionados;

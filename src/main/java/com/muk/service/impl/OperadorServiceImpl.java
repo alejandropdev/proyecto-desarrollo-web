@@ -1,22 +1,29 @@
 package com.muk.service.impl;
 
 import com.muk.entities.Operador;
+import com.muk.entities.Role;
+import com.muk.entities.UserEntity;
 import com.muk.repository.OperadorRepository;
+import com.muk.repository.RoleRepository;
 import com.muk.service.OperadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class OperadorServiceImpl implements OperadorService {
 
     private final OperadorRepository repository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public OperadorServiceImpl(OperadorRepository repository) {
+    public OperadorServiceImpl(OperadorRepository repository, RoleRepository roleRepository) {
         this.repository = repository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -49,11 +56,20 @@ public class OperadorServiceImpl implements OperadorService {
             return new OperadorResult(null, "El usuario ya está registrado.");
         }
 
+        Set<Role> roles = new HashSet<>();
+        roleRepository.findByName("ROLE_OPERADOR").ifPresent(roles::add);
+        UserEntity user = UserEntity.builder()
+                .username(usuario)
+                .password(command.contrasena().trim())
+                .roles(roles)
+                .build();
+
         Operador operador = new Operador();
         operador.setNombre(command.nombre().trim());
         operador.setUsuario(usuario);
-        operador.setContrasenaHash(command.contrasena().trim());
         operador.setActivo(true);
+        operador.setUserEntity(user);
+
         return new OperadorResult(repository.save(operador), null);
     }
 
@@ -79,9 +95,15 @@ public class OperadorServiceImpl implements OperadorService {
 
         existing.setNombre(command.nombre().trim());
         existing.setUsuario(usuario);
-        if (command.contrasena() != null && !command.contrasena().isBlank()) {
-            existing.setContrasenaHash(command.contrasena().trim());
+
+        UserEntity user = existing.getUserEntity();
+        if (user != null) {
+            user.setUsername(usuario);
+            if (command.contrasena() != null && !command.contrasena().isBlank()) {
+                user.setPassword(command.contrasena().trim());
+            }
         }
+
         return new OperadorResult(repository.save(existing), null);
     }
 
@@ -105,11 +127,16 @@ public class OperadorServiceImpl implements OperadorService {
         if (usuario == null || usuario.isBlank() || password == null || password.isBlank()) {
             return new LoginResult(null, "Usuario o contraseña incorrectos");
         }
-        Optional<Operador> operador = repository.findByUsuarioAndContrasenaHash(usuario.trim(), password);
-        if (operador.isEmpty() || !Boolean.TRUE.equals(operador.get().getActivo())) {
+        Optional<Operador> operadorOpt = repository.findByUsuario(usuario.trim());
+        if (operadorOpt.isEmpty() || !Boolean.TRUE.equals(operadorOpt.get().getActivo())) {
             return new LoginResult(null, "Usuario o contraseña incorrectos");
         }
-        return new LoginResult(operador.get(), null);
+        Operador operador = operadorOpt.get();
+        UserEntity user = operador.getUserEntity();
+        if (user == null || !password.equals(user.getPassword())) {
+            return new LoginResult(null, "Usuario o contraseña incorrectos");
+        }
+        return new LoginResult(operador, null);
     }
 
     private ValidationResult validateCommand(OperadorUpsertCommand command, boolean passwordRequired) {

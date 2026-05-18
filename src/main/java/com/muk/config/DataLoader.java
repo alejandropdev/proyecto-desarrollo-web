@@ -10,7 +10,9 @@ import com.muk.entities.ItemCarrito;
 import com.muk.entities.Operador;
 import com.muk.entities.Pedido;
 import com.muk.entities.Producto;
+import com.muk.entities.Role;
 import com.muk.entities.SeleccionAdicional;
+import com.muk.entities.UserEntity;
 import com.muk.repository.AdicionalRepository;
 import com.muk.repository.AdministradorRepository;
 import com.muk.repository.CarritoRepository;
@@ -21,22 +23,19 @@ import com.muk.repository.ItemCarritoRepository;
 import com.muk.repository.OperadorRepository;
 import com.muk.repository.PedidoRepository;
 import com.muk.repository.ProductoRepository;
+import com.muk.repository.RoleRepository;
 import com.muk.repository.SeleccionAdicionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Inicializa la base de datos H2 con datos de prueba al arrancar la aplicación.
- * Carga categorías, productos (con relación a categoría) y clientes.
- * Reemplaza la carga desde data.sql para seguir la arquitectura de la
- * aplicación.
- */
 @Component
 public class DataLoader implements CommandLineRunner {
 
@@ -51,6 +50,7 @@ public class DataLoader implements CommandLineRunner {
     private final ItemCarritoRepository itemCarritoRepository;
     private final SeleccionAdicionalRepository seleccionAdicionalRepository;
     private final PedidoRepository pedidoRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public DataLoader(
@@ -64,7 +64,8 @@ public class DataLoader implements CommandLineRunner {
             CarritoRepository carritoRepository,
             ItemCarritoRepository itemCarritoRepository,
             SeleccionAdicionalRepository seleccionAdicionalRepository,
-            PedidoRepository pedidoRepository) {
+            PedidoRepository pedidoRepository,
+            RoleRepository roleRepository) {
         this.categoriaRepository = categoriaRepository;
         this.adicionalRepository = adicionalRepository;
         this.productoRepository = productoRepository;
@@ -76,10 +77,12 @@ public class DataLoader implements CommandLineRunner {
         this.itemCarritoRepository = itemCarritoRepository;
         this.seleccionAdicionalRepository = seleccionAdicionalRepository;
         this.pedidoRepository = pedidoRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public void run(String... args) {
+        cargarRoles();
         if (categoriaRepository.count() == 0) {
             cargarCategorias();
         }
@@ -113,6 +116,18 @@ public class DataLoader implements CommandLineRunner {
         }
         if (pedidoRepository.count() == 0) {
             cargarPedidos();
+        }
+    }
+
+    private void cargarRoles() {
+        if (roleRepository.findByName("ROLE_CLIENTE").isEmpty()) {
+            roleRepository.save(Role.builder().name("ROLE_CLIENTE").build());
+        }
+        if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
+            roleRepository.save(Role.builder().name("ROLE_ADMIN").build());
+        }
+        if (roleRepository.findByName("ROLE_OPERADOR").isEmpty()) {
+            roleRepository.save(Role.builder().name("ROLE_OPERADOR").build());
         }
     }
 
@@ -291,54 +306,107 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void cargarClientes() {
-        List<Cliente> clientes = List.of(
-                new Cliente(null, "Sara", "Munoz", "sara@muk.com", "3001111111", "Bogota", "1234"),
-                new Cliente(null, "Juan", "Perez", "juan@muk.com", "3001111112", "Bogota", "1234"),
-                new Cliente(null, "Laura", "Gomez", "laura@muk.com", "3001111113", "Bogota", "1234"),
-                new Cliente(null, "Mateo", "Ruiz", "mateo@muk.com", "3001111114", "Bogota", "1234"),
-                new Cliente(null, "Ana", "Torres", "ana@muk.com", "3001111115", "Bogota", "1234"),
-                new Cliente(null, "Carlos", "Lopez", "carlos@muk.com", "3001111116", "Bogota", "1234"),
-                new Cliente(null, "Valentina", "Rojas", "valentina@muk.com", "3001111117", "Bogota", "1234"),
-                new Cliente(null, "Andres", "Castro", "andres@muk.com", "3001111118", "Bogota", "1234"),
-                new Cliente(null, "Camila", "Vargas", "camila@muk.com", "3001111119", "Bogota", "1234"),
-                new Cliente(null, "Daniel", "Moreno", "daniel@muk.com", "3001111120", "Bogota", "1234"));
+        Role roleCliente = roleRepository.findByName("ROLE_CLIENTE").orElseThrow();
 
-        clienteRepository.saveAll((Iterable<Cliente>) clientes);
+        Object[][] datos = {
+            {"Sara", "Munoz", "sara@muk.com", "3001111111", "Bogota", "1234"},
+            {"Juan", "Perez", "juan@muk.com", "3001111112", "Bogota", "1234"},
+            {"Laura", "Gomez", "laura@muk.com", "3001111113", "Bogota", "1234"},
+            {"Mateo", "Ruiz", "mateo@muk.com", "3001111114", "Bogota", "1234"},
+            {"Ana", "Torres", "ana@muk.com", "3001111115", "Bogota", "1234"},
+            {"Carlos", "Lopez", "carlos@muk.com", "3001111116", "Bogota", "1234"},
+            {"Valentina", "Rojas", "valentina@muk.com", "3001111117", "Bogota", "1234"},
+            {"Andres", "Castro", "andres@muk.com", "3001111118", "Bogota", "1234"},
+            {"Camila", "Vargas", "camila@muk.com", "3001111119", "Bogota", "1234"},
+            {"Daniel", "Moreno", "daniel@muk.com", "3001111120", "Bogota", "1234"}
+        };
+
+        for (Object[] d : datos) {
+            String email = (String) d[2];
+            String password = (String) d[5];
+            UserEntity user = UserEntity.builder()
+                    .username(email)
+                    .password(password)
+                    .roles(new HashSet<>(Set.of(roleCliente)))
+                    .build();
+            Cliente cliente = new Cliente();
+            cliente.setNombre((String) d[0]);
+            cliente.setApellido((String) d[1]);
+            cliente.setEmail(email);
+            cliente.setTelefono((String) d[3]);
+            cliente.setDireccion((String) d[4]);
+            cliente.setUserEntity(user);
+            clienteRepository.save(cliente);
+        }
     }
 
     private void cargarAdministradores() {
-        List<Administrador> admins = List.of(
-                new Administrador(null, "admin", "1234"),
-                new Administrador(null, "mukadmin", "admin123"),
-                new Administrador(null, "adminops", "ops1234"),
-                new Administrador(null, "adminventas", "ventas123"),
-                new Administrador(null, "adminqa", "qa12345"));
-        administradorRepository.saveAll((Iterable<Administrador>) admins);
+        Role roleAdmin = roleRepository.findByName("ROLE_ADMIN").orElseThrow();
+
+        Object[][] datos = {
+            {"admin", "1234"},
+            {"mukadmin", "admin123"},
+            {"adminops", "ops1234"},
+            {"adminventas", "ventas123"},
+            {"adminqa", "qa12345"}
+        };
+
+        for (Object[] d : datos) {
+            String usuario = (String) d[0];
+            String password = (String) d[1];
+            UserEntity user = UserEntity.builder()
+                    .username(usuario)
+                    .password(password)
+                    .roles(new HashSet<>(Set.of(roleAdmin)))
+                    .build();
+            Administrador admin = new Administrador();
+            admin.setUsuario(usuario);
+            admin.setUserEntity(user);
+            administradorRepository.save(admin);
+        }
     }
 
     private void cargarOperadores() {
-        List<Operador> operadores = List.of(
-                new Operador(null, "Julian Herrera", "operador1", "hash-op-001"),
-                new Operador(null, "Paula Medina", "operador2", "hash-op-002"),
-                new Operador(null, "Santiago Rios", "operador3", "hash-op-003"),
-                new Operador(null, "Daniela Cruz", "operador4", "hash-op-004"),
-                new Operador(null, "Nicolas Vega", "operador5", "hash-op-005"),
-                new Operador(null, "Mariana Lopez", "operador6", "hash-op-006"),
-                new Operador(null, "Esteban Ramirez", "operador7", "hash-op-007"),
-                new Operador(null, "Valeria Cardenas", "operador8", "hash-op-008"),
-                new Operador(null, "Sebastian Pineda", "operador9", "hash-op-009"),
-                new Operador(null, "Gabriela Molina", "operador10", "hash-op-010"),
-                new Operador(null, "Felipe Arias", "operador11", "hash-op-011"),
-                new Operador(null, "Natalia Ospina", "operador12", "hash-op-012"),
-                new Operador(null, "Juan David Suarez", "operador13", "hash-op-013"),
-                new Operador(null, "Laura Milena Prieto", "operador14", "hash-op-014"),
-                new Operador(null, "Andres Felipe Buitrago", "operador15", "hash-op-015"),
-                new Operador(null, "Catalina Mendez", "operador16", "hash-op-016"),
-                new Operador(null, "Kevin Alexander Forero", "operador17", "hash-op-017"),
-                new Operador(null, "Alejandra Tovar", "operador18", "hash-op-018"),
-                new Operador(null, "Miguel Angel Porras", "operador19", "hash-op-019"),
-                new Operador(null, "Diana Marcela Benitez", "operador20", "hash-op-020"));
-        operadorRepository.saveAll((Iterable<Operador>) operadores);
+        Role roleOperador = roleRepository.findByName("ROLE_OPERADOR").orElseThrow();
+
+        Object[][] datos = {
+            {"Julian Herrera", "operador1", "hash-op-001"},
+            {"Paula Medina", "operador2", "hash-op-002"},
+            {"Santiago Rios", "operador3", "hash-op-003"},
+            {"Daniela Cruz", "operador4", "hash-op-004"},
+            {"Nicolas Vega", "operador5", "hash-op-005"},
+            {"Mariana Lopez", "operador6", "hash-op-006"},
+            {"Esteban Ramirez", "operador7", "hash-op-007"},
+            {"Valeria Cardenas", "operador8", "hash-op-008"},
+            {"Sebastian Pineda", "operador9", "hash-op-009"},
+            {"Gabriela Molina", "operador10", "hash-op-010"},
+            {"Felipe Arias", "operador11", "hash-op-011"},
+            {"Natalia Ospina", "operador12", "hash-op-012"},
+            {"Juan David Suarez", "operador13", "hash-op-013"},
+            {"Laura Milena Prieto", "operador14", "hash-op-014"},
+            {"Andres Felipe Buitrago", "operador15", "hash-op-015"},
+            {"Catalina Mendez", "operador16", "hash-op-016"},
+            {"Kevin Alexander Forero", "operador17", "hash-op-017"},
+            {"Alejandra Tovar", "operador18", "hash-op-018"},
+            {"Miguel Angel Porras", "operador19", "hash-op-019"},
+            {"Diana Marcela Benitez", "operador20", "hash-op-020"}
+        };
+
+        for (Object[] d : datos) {
+            String usuario = (String) d[1];
+            String password = (String) d[2];
+            UserEntity user = UserEntity.builder()
+                    .username(usuario)
+                    .password(password)
+                    .roles(new HashSet<>(Set.of(roleOperador)))
+                    .build();
+            Operador operador = new Operador();
+            operador.setNombre((String) d[0]);
+            operador.setUsuario(usuario);
+            operador.setActivo(true);
+            operador.setUserEntity(user);
+            operadorRepository.save(operador);
+        }
     }
 
     private void cargarDomiciliarios() {
@@ -416,19 +484,15 @@ public class DataLoader implements CommandLineRunner {
             return;
         }
 
-        // Pedidos sin domiciliario asignado (esperan asignaciรณn manual)
         Pedido p1 = new Pedido(null, clientes.get(0), "PENDIENTE", LocalDateTime.now().minusHours(2));
         p1.setOperador(operadores.get(0));
-        // SIN domiciliario inicialmente
 
         Pedido p2 = new Pedido(null, clientes.get(1), "EN_PREPARACION", LocalDateTime.now().minusHours(1));
         p2.setOperador(operadores.get(1));
-        // SIN domiciliario inicialmente
 
-        // Con domiciliario porque ya está en camino
         Pedido p3 = new Pedido(null, clientes.get(2), "EN_CAMINO", LocalDateTime.now().minusMinutes(40));
         p3.setOperador(operadores.get(2));
-        p3.setDomiciliario(domiciliarios.get(2)); // Disponible = false automáticamente por ser EN_CAMINO
+        p3.setDomiciliario(domiciliarios.get(2));
 
         Pedido p4 = new Pedido(null, clientes.get(3), "ENTREGADO", LocalDateTime.now().minusDays(1));
         p4.setOperador(operadores.get(3));
@@ -441,11 +505,9 @@ public class DataLoader implements CommandLineRunner {
 
         Pedido p6 = new Pedido(null, clientes.get(5), "PENDIENTE", LocalDateTime.now().minusMinutes(25));
         p6.setOperador(operadores.get(5));
-        // SIN domiciliario inicialmente
 
         Pedido p7 = new Pedido(null, clientes.get(6), "EN_PREPARACION", LocalDateTime.now().minusHours(3));
         p7.setOperador(operadores.get(6));
-        // SIN domiciliario inicialmente
 
         Pedido p8 = new Pedido(null, clientes.get(7), "EN_CAMINO", LocalDateTime.now().minusMinutes(55));
         p8.setOperador(operadores.get(7));
@@ -462,7 +524,6 @@ public class DataLoader implements CommandLineRunner {
 
         Pedido p11 = new Pedido(null, clientes.get(0), "EN_PREPARACION", LocalDateTime.now().minusHours(4));
         p11.setOperador(operadores.get(10));
-        // SIN domiciliario inicialmente
 
         Pedido p12 = new Pedido(null, clientes.get(1), "EN_CAMINO", LocalDateTime.now().minusMinutes(70));
         p12.setOperador(operadores.get(11));
@@ -475,16 +536,14 @@ public class DataLoader implements CommandLineRunner {
 
         Pedido p14 = new Pedido(null, clientes.get(3), "PENDIENTE", LocalDateTime.now().minusMinutes(12));
         p14.setOperador(operadores.get(13));
-        // SIN domiciliario inicialmente
 
         Pedido p15 = new Pedido(null, clientes.get(4), "CANCELADO", LocalDateTime.now().minusHours(9));
         p15.setOperador(operadores.get(14));
         p15.setDomiciliario(domiciliarios.get(4));
 
-        // Con domiciliario porque ya está en camino
         Pedido p16 = new Pedido(null, clientes.get(5), "EN_CAMINO", LocalDateTime.now().minusMinutes(33));
         p16.setOperador(operadores.get(15));
-        p16.setDomiciliario(domiciliarios.get(0)); // Disponible = false automáticamente
+        p16.setDomiciliario(domiciliarios.get(0));
 
         Pedido p17 = new Pedido(null, clientes.get(6), "ENTREGADO", LocalDateTime.now().minusDays(4));
         p17.setOperador(operadores.get(16));
@@ -493,7 +552,6 @@ public class DataLoader implements CommandLineRunner {
 
         Pedido p18 = new Pedido(null, clientes.get(7), "PENDIENTE", LocalDateTime.now().minusMinutes(8));
         p18.setOperador(operadores.get(17));
-        // SIN domiciliario inicialmente
 
         Pedido p19 = new Pedido(null, clientes.get(8), "EN_PREPARACION", LocalDateTime.now().minusHours(6));
         p19.setOperador(operadores.get(18));
@@ -508,5 +566,4 @@ public class DataLoader implements CommandLineRunner {
                 p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,
                 p11, p12, p13, p14, p15, p16, p17, p18, p19, p20));
     }
-
 }

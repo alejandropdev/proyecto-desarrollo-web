@@ -10,6 +10,4 @@ import java.util.Optional;
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
 
     Optional<Administrador> findByUsuario(String usuario);
-
-    Optional<Administrador> findByUsuarioAndContrasenaHash(String usuario, String contrasenaHash);
 }

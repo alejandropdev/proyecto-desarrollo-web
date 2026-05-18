@@ -1,5 +1,6 @@
 package com.muk.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,8 +34,13 @@ public class Cliente {
     @Column(nullable = false, length = 150)
     private String direccion;
 
-    @Column(nullable = false, length = 100, name = "contraseña_hash")
+    @Transient
     private String contrasenaHash;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Carrito carrito;

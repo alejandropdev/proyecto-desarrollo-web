@@ -1,13 +1,13 @@
 package com.muk.repository;
 
-import com.muk.entities.Cliente;
+import com.muk.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    Optional<Cliente> findByEmail(String email);
+    Optional<UserEntity> findByUsername(String username);
 }
