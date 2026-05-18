@@ -42,9 +42,11 @@ public class Cliente {
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Carrito carrito;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedido> pedidos;
 

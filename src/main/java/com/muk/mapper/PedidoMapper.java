@@ -2,18 +2,35 @@ package com.muk.mapper;
 
 import com.muk.dto.PedidoResumenDto;
 import com.muk.entities.Pedido;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface PedidoMapper {
+@Component
+public class PedidoMapper {
 
-    @Mapping(target = "clienteId", source = "cliente.id")
-    @Mapping(target = "fechaCreacion", expression = "java(pedido.getFechaCreacion() != null ? pedido.getFechaCreacion().toString() : null)")
-    @Mapping(target = "fechaEntrega", expression = "java(pedido.getFechaEntrega() != null ? pedido.getFechaEntrega().toString() : null)")
-    PedidoResumenDto toDto(Pedido pedido);
+    public PedidoResumenDto toDto(Pedido pedido) {
+        if (pedido == null) {
+            return null;
+        }
+        PedidoResumenDto dto = new PedidoResumenDto();
+        dto.setId(pedido.getId());
+        if (pedido.getCliente() != null) {
+            dto.setClienteId(pedido.getCliente().getId());
+        }
+        dto.setCantidadProductos(pedido.getCantidadProductos());
+        dto.setCantidadAdiciones(pedido.getCantidadAdiciones());
+        dto.setEstado(pedido.getEstado());
+        dto.setFechaCreacion(pedido.getFechaCreacion() != null ? pedido.getFechaCreacion().toString() : null);
+        dto.setFechaEntrega(pedido.getFechaEntrega() != null ? pedido.getFechaEntrega().toString() : null);
+        return dto;
+    }
 
-    List<PedidoResumenDto> toDtoList(List<Pedido> pedidos);
+    public List<PedidoResumenDto> toDtoList(List<Pedido> pedidos) {
+        if (pedidos == null) {
+            return null;
+        }
+        return pedidos.stream().map(this::toDto).collect(Collectors.toList());
+    }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
@@ -24,9 +25,11 @@ public class Categoria {
     @Column(length = 255)
     private String description;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "categoria")
     private List<Adicional> adiciones;
 

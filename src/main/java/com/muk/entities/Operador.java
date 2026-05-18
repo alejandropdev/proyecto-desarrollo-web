@@ -36,6 +36,7 @@ public class Operador {
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "operador")
     private List<Pedido> pedidosGestionados;
 

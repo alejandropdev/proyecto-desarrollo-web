@@ -2,14 +2,32 @@ package com.muk.mapper;
 
 import com.muk.dto.ClienteResponseDto;
 import com.muk.entities.Cliente;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface ClienteMapper {
+@Component
+public class ClienteMapper {
 
-    ClienteResponseDto toDto(Cliente cliente);
+    public ClienteResponseDto toDto(Cliente cliente) {
+        if (cliente == null) {
+            return null;
+        }
+        ClienteResponseDto dto = new ClienteResponseDto();
+        dto.setId(cliente.getId());
+        dto.setNombre(cliente.getNombre());
+        dto.setApellido(cliente.getApellido());
+        dto.setEmail(cliente.getEmail());
+        dto.setTelefono(cliente.getTelefono());
+        dto.setDireccion(cliente.getDireccion());
+        return dto;
+    }
 
-    List<ClienteResponseDto> toDtoList(List<Cliente> clientes);
+    public List<ClienteResponseDto> toDtoList(List<Cliente> clientes) {
+        if (clientes == null) {
+            return null;
+        }
+        return clientes.stream().map(this::toDto).collect(Collectors.toList());
+    }
 }

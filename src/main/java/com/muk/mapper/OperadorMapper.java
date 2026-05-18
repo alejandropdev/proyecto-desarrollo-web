@@ -2,14 +2,30 @@ package com.muk.mapper;
 
 import com.muk.dto.OperadorResponseDto;
 import com.muk.entities.Operador;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface OperadorMapper {
+@Component
+public class OperadorMapper {
 
-    OperadorResponseDto toDto(Operador operador);
+    public OperadorResponseDto toDto(Operador operador) {
+        if (operador == null) {
+            return null;
+        }
+        OperadorResponseDto dto = new OperadorResponseDto();
+        dto.setId(operador.getId());
+        dto.setNombre(operador.getNombre());
+        dto.setUsuario(operador.getUsuario());
+        dto.setActivo(operador.getActivo());
+        return dto;
+    }
 
-    List<OperadorResponseDto> toDtoList(List<Operador> operadores);
+    public List<OperadorResponseDto> toDtoList(List<Operador> operadores) {
+        if (operadores == null) {
+            return null;
+        }
+        return operadores.stream().map(this::toDto).collect(Collectors.toList());
+    }
 }

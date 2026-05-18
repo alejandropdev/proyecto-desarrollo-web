@@ -2,14 +2,29 @@ package com.muk.mapper;
 
 import com.muk.dto.CategoriaResponseDto;
 import com.muk.entities.Categoria;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface CategoriaMapper {
+@Component
+public class CategoriaMapper {
 
-    CategoriaResponseDto toDto(Categoria categoria);
+    public CategoriaResponseDto toDto(Categoria categoria) {
+        if (categoria == null) {
+            return null;
+        }
+        CategoriaResponseDto dto = new CategoriaResponseDto();
+        dto.setId(categoria.getId());
+        dto.setNombre(categoria.getNombre());
+        dto.setDescription(categoria.getDescription());
+        return dto;
+    }
 
-    List<CategoriaResponseDto> toDtoList(List<Categoria> categorias);
+    public List<CategoriaResponseDto> toDtoList(List<Categoria> categorias) {
+        if (categorias == null) {
+            return null;
+        }
+        return categorias.stream().map(this::toDto).collect(Collectors.toList());
+    }
 }
