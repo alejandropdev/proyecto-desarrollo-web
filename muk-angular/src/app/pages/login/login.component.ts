@@ -19,11 +19,25 @@ export class LoginComponent {
 
   onSubmit(): void {
     this.error = '';
+    // Call our new auth service endpoint implicitly via http or create a method in clienteService
     this.clienteService.login(this.email, this.password).subscribe({
-      next: (cliente) => {
-        localStorage.setItem('clienteEmail', cliente.email);
-        localStorage.setItem('clienteId', cliente.id.toString());
-        this.router.navigate(['/clientes/perfil']);
+      next: (res: any) => {
+        // If we change ClienteService login to call /api/auth/login it returns a token
+        const token = res.token;
+        if (token) {
+          sessionStorage.setItem('AuthToken', token);
+          // Now fetch profile
+          this.clienteService.getPerfil(this.email).subscribe({
+            next: (cliente) => {
+              localStorage.setItem('clienteEmail', cliente.email);
+              localStorage.setItem('clienteId', cliente.id.toString());
+              this.router.navigate(['/clientes/perfil']);
+            },
+            error: () => {
+               this.error = 'Error obteniendo el perfil';
+            }
+          });
+        }
       },
       error: (err) => {
         this.error = err?.error?.message ?? 'No fue posible iniciar sesión.';

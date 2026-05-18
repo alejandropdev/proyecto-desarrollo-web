@@ -27,6 +27,7 @@ import com.muk.repository.RoleRepository;
 import com.muk.repository.SeleccionAdicionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -51,6 +52,7 @@ public class DataLoader implements CommandLineRunner {
     private final SeleccionAdicionalRepository seleccionAdicionalRepository;
     private final PedidoRepository pedidoRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public DataLoader(
@@ -65,7 +67,8 @@ public class DataLoader implements CommandLineRunner {
             ItemCarritoRepository itemCarritoRepository,
             SeleccionAdicionalRepository seleccionAdicionalRepository,
             PedidoRepository pedidoRepository,
-            RoleRepository roleRepository) {
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder) {
         this.categoriaRepository = categoriaRepository;
         this.adicionalRepository = adicionalRepository;
         this.productoRepository = productoRepository;
@@ -78,6 +81,7 @@ public class DataLoader implements CommandLineRunner {
         this.seleccionAdicionalRepository = seleccionAdicionalRepository;
         this.pedidoRepository = pedidoRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -326,7 +330,7 @@ public class DataLoader implements CommandLineRunner {
             String password = (String) d[5];
             UserEntity user = UserEntity.builder()
                     .username(email)
-                    .password(password)
+                    .password(passwordEncoder.encode(password))
                     .roles(new HashSet<>(Set.of(roleCliente)))
                     .build();
             Cliente cliente = new Cliente();
@@ -356,7 +360,7 @@ public class DataLoader implements CommandLineRunner {
             String password = (String) d[1];
             UserEntity user = UserEntity.builder()
                     .username(usuario)
-                    .password(password)
+                    .password(passwordEncoder.encode(password))
                     .roles(new HashSet<>(Set.of(roleAdmin)))
                     .build();
             Administrador admin = new Administrador();
@@ -397,7 +401,7 @@ public class DataLoader implements CommandLineRunner {
             String password = (String) d[2];
             UserEntity user = UserEntity.builder()
                     .username(usuario)
-                    .password(password)
+                    .password(passwordEncoder.encode(password))
                     .roles(new HashSet<>(Set.of(roleOperador)))
                     .build();
             Operador operador = new Operador();

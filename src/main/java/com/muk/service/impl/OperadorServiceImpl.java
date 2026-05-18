@@ -7,6 +7,7 @@ import com.muk.repository.OperadorRepository;
 import com.muk.repository.RoleRepository;
 import com.muk.service.OperadorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -19,11 +20,13 @@ public class OperadorServiceImpl implements OperadorService {
 
     private final OperadorRepository repository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public OperadorServiceImpl(OperadorRepository repository, RoleRepository roleRepository) {
+    public OperadorServiceImpl(OperadorRepository repository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -60,7 +63,7 @@ public class OperadorServiceImpl implements OperadorService {
         roleRepository.findByName("ROLE_OPERADOR").ifPresent(roles::add);
         UserEntity user = UserEntity.builder()
                 .username(usuario)
-                .password(command.contrasena().trim())
+                .password(passwordEncoder.encode(command.contrasena().trim()))
                 .roles(roles)
                 .build();
 
@@ -100,7 +103,7 @@ public class OperadorServiceImpl implements OperadorService {
         if (user != null) {
             user.setUsername(usuario);
             if (command.contrasena() != null && !command.contrasena().isBlank()) {
-                user.setPassword(command.contrasena().trim());
+                user.setPassword(passwordEncoder.encode(command.contrasena().trim()));
             }
         }
 
@@ -133,7 +136,7 @@ public class OperadorServiceImpl implements OperadorService {
         }
         Operador operador = operadorOpt.get();
         UserEntity user = operador.getUserEntity();
-        if (user == null || !password.equals(user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             return new LoginResult(null, "Usuario o contraseña incorrectos");
         }
         return new LoginResult(operador, null);

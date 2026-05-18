@@ -7,6 +7,7 @@ import com.muk.repository.ClienteRepository;
 import com.muk.repository.RoleRepository;
 import com.muk.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -19,11 +20,13 @@ public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository repository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ClienteServiceImpl(ClienteRepository repository, RoleRepository roleRepository) {
+    public ClienteServiceImpl(ClienteRepository repository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class ClienteServiceImpl implements ClienteService {
         roleRepository.findByName("ROLE_CLIENTE").ifPresent(roles::add);
         UserEntity user = UserEntity.builder()
                 .username(normalizedEmail)
-                .password(command.contrasena().trim())
+                .password(passwordEncoder.encode(command.contrasena().trim()))
                 .roles(roles)
                 .build();
         cliente.setUserEntity(user);
@@ -104,7 +107,7 @@ public class ClienteServiceImpl implements ClienteService {
         if (user != null) {
             user.setUsername(normalizedEmail);
             if (command.contrasena() != null && !command.contrasena().isBlank()) {
-                user.setPassword(command.contrasena().trim());
+                user.setPassword(passwordEncoder.encode(command.contrasena().trim()));
             }
         }
 
@@ -149,7 +152,7 @@ public class ClienteServiceImpl implements ClienteService {
 
         Cliente cliente = byEmail.get();
         UserEntity user = cliente.getUserEntity();
-        if (user == null || !password.equals(user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             return new LoginResult(null, "Credenciales inválidas.");
         }
 

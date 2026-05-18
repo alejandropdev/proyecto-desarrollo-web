@@ -20,8 +20,8 @@ export class ClienteService {
 
   constructor(private readonly http: HttpClient) {}
 
-  login(email: string, password: string): Observable<Cliente> {
-    return this.http.post<Cliente>(`${this.apiUrl}/login`, { email, password });
+  login(username: string, password: string): Observable<any> {
+    return this.http.post<any>(`/api/auth/login`, { username, password });
   }
 
   registro(payload: ClientePayload): Observable<Cliente> {

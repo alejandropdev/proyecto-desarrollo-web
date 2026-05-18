@@ -5,16 +5,19 @@ import com.muk.entities.UserEntity;
 import com.muk.repository.AdministradorRepository;
 import com.muk.service.AdministradorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AdministradorServiceImpl implements AdministradorService {
 
     private final AdministradorRepository administradorRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdministradorServiceImpl(AdministradorRepository administradorRepository) {
+    public AdministradorServiceImpl(AdministradorRepository administradorRepository, PasswordEncoder passwordEncoder) {
         this.administradorRepository = administradorRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class AdministradorServiceImpl implements AdministradorService {
         return administradorRepository.findByUsuario(usuario.trim())
                 .filter(admin -> {
                     UserEntity user = admin.getUserEntity();
-                    return user != null && password.equals(user.getPassword());
+                    return user != null && passwordEncoder.matches(password, user.getPassword());
                 })
                 .map(admin -> new LoginResult(admin, null))
                 .orElseGet(() -> new LoginResult(null, "Usuario o contraseña incorrectos"));

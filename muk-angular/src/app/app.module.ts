@@ -55,6 +55,8 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 registerLocaleData(localeEsCo);
 
+import { authInterceptorProviders } from './services/auth.interceptor';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -110,7 +112,10 @@ registerLocaleData(localeEsCo);
     RouterModule,
     AppRoutingModule,
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'es-CO' }],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es-CO' },
+    authInterceptorProviders
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
