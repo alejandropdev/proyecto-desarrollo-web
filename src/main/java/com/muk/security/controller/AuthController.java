@@ -49,7 +49,8 @@ public class AuthController {
         AuthSessionResponse session = new AuthSessionResponse(
                 authentication.getName(),
                 role,
-                redirectPathFor(role)
+                redirectPathFor(role),
+                jwt
         );
 
         return new ResponseEntity<>(session, HttpStatus.OK);
@@ -71,7 +72,8 @@ public class AuthController {
         return ResponseEntity.ok(new AuthSessionResponse(
                 authentication.getName(),
                 role,
-                redirectPathFor(role)
+                redirectPathFor(role),
+                null
         ));
     }
 
@@ -104,7 +106,7 @@ public class AuthController {
         return "/";
     }
 
-    public record AuthSessionResponse(String username, String role, String redirectPath) {
+    public record AuthSessionResponse(String username, String role, String redirectPath, String token) {
     }
 
     public record LogoutResponse(String message) {
