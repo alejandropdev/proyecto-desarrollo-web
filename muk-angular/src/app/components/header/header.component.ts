@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 import { CarritoService } from '../../services/carrito.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private readonly router: Router,
     private readonly carritoService: CarritoService,
+    private readonly authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +54,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
+    this.authService.logout().subscribe({
+      next: () => this.clearClientSession(),
+      error: () => this.clearClientSession(),
+    });
+  }
+
+  private clearClientSession(): void {
     localStorage.removeItem('clienteEmail');
     localStorage.removeItem('clienteId');
     this.carritoService.limpiar();

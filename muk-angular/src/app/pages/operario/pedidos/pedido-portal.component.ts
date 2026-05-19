@@ -132,8 +132,10 @@ export class PedidoPortalComponent implements OnInit {
   }
 
   cerrarSesion(): void {
-    this.operarioAuthService.logout();
-    this.router.navigate(['/operario/login']);
+    this.operarioAuthService.logout().subscribe({
+      next: () => this.router.navigate(['/operario/login']),
+      error: () => this.router.navigate(['/operario/login'])
+    });
   }
 
   getNombreCliente(clienteId: number): string {

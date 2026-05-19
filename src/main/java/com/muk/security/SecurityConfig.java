@@ -1,6 +1,7 @@
 package com.muk.security;
 
 import com.muk.security.jwt.JwtEntryPoint;
+import com.muk.security.jwt.JwtProvider;
 import com.muk.security.jwt.JwtTokenFilter;
 import com.muk.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class SecurityConfig {
     private JwtEntryPoint jwtEntryPoint;
 
     @Bean
-    public JwtTokenFilter jwtTokenFilter() {
-        return new JwtTokenFilter();
+    public JwtTokenFilter jwtTokenFilter(JwtProvider jwtProvider, AuthCookieService authCookieService) {
+        return new JwtTokenFilter(jwtProvider, userDetailsService, authCookieService);
     }
 
     @Bean
@@ -47,7 +48,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtTokenFilter jwtTokenFilter) throws Exception {
         http
                 .cors(cors -> cors.configure(http))
                 .csrf(AbstractHttpConfigurer::disable)
@@ -58,6 +59,7 @@ public class SecurityConfig {
                         // Public endpoints (adjust as needed for the app)
                         .requestMatchers(HttpMethod.GET, "/api/menu/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/platos/**").permitAll()
+                        .requestMatchers("/api/productos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/clientes").permitAll()
                         
                         // Roles
@@ -69,7 +71,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll() // like static files, angular routes
                 );
 
-        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

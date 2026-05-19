@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, UrlTree } from '@angular/router';
+import { Observable, map } from 'rxjs';
 import { OperarioAuthService } from '../services/operario-auth.service';
 
 @Injectable({
@@ -11,12 +12,11 @@ export class OperarioAuthGuard implements CanActivate {
     private readonly router: Router
   ) {}
 
-  canActivate(): boolean {
-    if (this.operarioAuthService.isAuthenticated()) {
-      return true;
-    }
-
-    this.router.navigate(['/operario/login']);
-    return false;
+  canActivate(): Observable<boolean | UrlTree> {
+    return this.operarioAuthService.isAuthenticated().pipe(
+      map((isAuthenticated) => {
+        return isAuthenticated ? true : this.router.createUrlTree(['/operario/login']);
+      })
+    );
   }
 }

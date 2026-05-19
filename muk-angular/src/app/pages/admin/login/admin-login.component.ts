@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AdminAuthService } from '../../../services/admin-auth.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -13,15 +13,15 @@ export class AdminLoginComponent {
   error = '';
 
   constructor(
-    private readonly authService: AdminAuthService,
+    private readonly authService: AuthService,
     private readonly router: Router
   ) {}
 
   onSubmit(): void {
     this.error = '';
     this.authService.login(this.usuario, this.password).subscribe({
-      next: () => {
-        this.router.navigate(['/admin/platos']);
+      next: (session) => {
+        this.router.navigate([session.redirectPath || this.authService.redirectPathFor(session.role)]);
       },
       error: (err) => {
         this.error = err?.error?.message ?? 'No fue posible iniciar sesión.';

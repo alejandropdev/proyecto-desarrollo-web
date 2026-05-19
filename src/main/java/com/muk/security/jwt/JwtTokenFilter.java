@@ -1,11 +1,11 @@
 package com.muk.security.jwt;
 
+import com.muk.security.AuthCookieService;
 import com.muk.security.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,11 +15,18 @@ import java.io.IOException;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthCookieService authCookieService;
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    public JwtTokenFilter(
+            JwtProvider jwtProvider,
+            UserDetailsServiceImpl userDetailsService,
+            AuthCookieService authCookieService) {
+        this.jwtProvider = jwtProvider;
+        this.userDetailsService = userDetailsService;
+        this.authCookieService = authCookieService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -43,6 +50,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             return header.replace("Bearer ", "");
         }
-        return null;
+        return authCookieService.readToken(request).orElse(null);
     }
 }

@@ -20,8 +20,8 @@ export class OperarioLoginComponent {
   onSubmit(): void {
     this.error = '';
     this.operarioAuthService.login(this.usuario, this.password).subscribe({
-      next: () => {
-        this.router.navigate(['/operario/pedidos']);
+      next: (session) => {
+        this.router.navigate([session.redirectPath || '/operario/pedidos']);
       },
       error: (err) => {
         this.error = err?.error?.message ?? 'No fue posible iniciar sesión.';
