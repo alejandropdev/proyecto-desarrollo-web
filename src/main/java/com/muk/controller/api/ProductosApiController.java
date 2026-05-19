@@ -22,10 +22,9 @@ public class ProductosApiController {
     }
 
     @GetMapping
-    public List<ApiDtos.ProductoDto> productos(@RequestParam(required = false) String category,
-                                               @RequestParam(required = false) String q) {
-        List<Producto> productos = productoService.findByFilters(category, q);
-        return productos.stream().map(ApiMappers::toProductoDto).toList();
+    public List<ApiDtos.MenuProductoDto> productos(@RequestParam(required = false) String category,
+                                                   @RequestParam(required = false) String q) {
+        return productoService.findByFilters(category, q).stream().map(ApiMappers::toMenuProductoDto).toList();
     }
 
     @GetMapping("/{id}")
