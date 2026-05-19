@@ -1,8 +1,6 @@
 package com.muk.controller.api;
 
-import com.muk.dto.CategoriaResponseDto;
 import com.muk.entities.Categoria;
-import com.muk.mapper.CategoriaMapper;
 import com.muk.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,17 +15,15 @@ import java.util.List;
 public class CategoriasApiController {
 
     private final CategoriaService categoriaService;
-    private final CategoriaMapper categoriaMapper;
 
     @Autowired
-    public CategoriasApiController(CategoriaService categoriaService, CategoriaMapper categoriaMapper) {
+    public CategoriasApiController(CategoriaService categoriaService) {
         this.categoriaService = categoriaService;
-        this.categoriaMapper = categoriaMapper;
     }
 
     @GetMapping
-    public List<CategoriaResponseDto> categorias() {
-        return categoriaMapper.toDtoList(categoriaService.findAll());
+    public List<ApiDtos.CategoriaDto> categorias() {
+        return categoriaService.findAll().stream().map(ApiMappers::toCategoriaDto).toList();
     }
 
     @PostMapping

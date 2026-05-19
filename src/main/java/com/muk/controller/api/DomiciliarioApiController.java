@@ -1,7 +1,5 @@
 package com.muk.controller.api;
 
-import com.muk.dto.DomiciliarioResponseDto;
-import com.muk.mapper.DomiciliarioMapper;
 import com.muk.service.DomiciliarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,22 +15,20 @@ import java.util.Map;
 public class DomiciliarioApiController {
 
     private final DomiciliarioService domiciliarioService;
-    private final DomiciliarioMapper domiciliarioMapper;
 
     @Autowired
-    public DomiciliarioApiController(DomiciliarioService domiciliarioService, DomiciliarioMapper domiciliarioMapper) {
+    public DomiciliarioApiController(DomiciliarioService domiciliarioService) {
         this.domiciliarioService = domiciliarioService;
-        this.domiciliarioMapper = domiciliarioMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<DomiciliarioResponseDto>> listarTodos() {
-        return ResponseEntity.ok(domiciliarioMapper.toDtoList(domiciliarioService.findAll()));
+    public ResponseEntity<List<ApiDtos.DomiciliarioDto>> listarTodos() {
+        return ResponseEntity.ok(domiciliarioService.findAll().stream().map(ApiMappers::toDomiciliarioDto).toList());
     }
 
     @GetMapping("/disponibles")
-    public ResponseEntity<List<DomiciliarioResponseDto>> listarDisponibles() {
-        return ResponseEntity.ok(domiciliarioMapper.toDtoList(domiciliarioService.findDisponibles()));
+    public ResponseEntity<List<ApiDtos.DomiciliarioDto>> listarDisponibles() {
+        return ResponseEntity.ok(domiciliarioService.findDisponibles().stream().map(ApiMappers::toDomiciliarioDto).toList());
     }
 
     @PostMapping
@@ -41,7 +37,7 @@ public class DomiciliarioApiController {
         if (!result.success()) {
             return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(domiciliarioMapper.toDto(result.domiciliario()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiMappers.toDomiciliarioDto(result.domiciliario()));
     }
 
     @PutMapping("/{id}")
@@ -52,7 +48,7 @@ public class DomiciliarioApiController {
         if (!result.success()) {
             return ResponseEntity.badRequest().body(Map.of("message", result.errorMessage()));
         }
-        return ResponseEntity.ok(domiciliarioMapper.toDto(result.domiciliario()));
+        return ResponseEntity.ok(ApiMappers.toDomiciliarioDto(result.domiciliario()));
     }
 
     @DeleteMapping("/{id}")
@@ -65,7 +61,7 @@ public class DomiciliarioApiController {
     public ResponseEntity<Object> activar(@PathVariable Long id) {
         domiciliarioService.activar(id);
         return domiciliarioService.findById(id)
-                .<ResponseEntity<Object>>map(d -> ResponseEntity.ok(domiciliarioMapper.toDto(d)))
+                .<ResponseEntity<Object>>map(d -> ResponseEntity.ok(ApiMappers.toDomiciliarioDto(d)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("message", "Domiciliario no encontrado.")));
     }
@@ -74,7 +70,7 @@ public class DomiciliarioApiController {
     public ResponseEntity<Object> desactivar(@PathVariable Long id) {
         domiciliarioService.desactivar(id);
         return domiciliarioService.findById(id)
-                .<ResponseEntity<Object>>map(d -> ResponseEntity.ok(domiciliarioMapper.toDto(d)))
+                .<ResponseEntity<Object>>map(d -> ResponseEntity.ok(ApiMappers.toDomiciliarioDto(d)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("message", "Domiciliario no encontrado.")));
     }

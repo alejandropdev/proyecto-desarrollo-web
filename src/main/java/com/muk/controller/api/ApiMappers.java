@@ -8,9 +8,20 @@ public final class ApiMappers {
     private ApiMappers() {}
 
     // ===================== PRODUCTOS =====================
+    public static ApiDtos.MenuProductoDto toMenuProductoDto(Producto producto) {
+        return new ApiDtos.MenuProductoDto(
+                producto.getId(),
+                producto.getNombre(),
+                producto.getDescripcion(),
+                producto.getPrecio(),
+                producto.getImagenUrl(),
+                Boolean.TRUE.equals(producto.getActivo()),
+                producto.getCategoria() == null ? null : producto.getCategoria().getId()
+        );
+    }
+
     public static ApiDtos.ProductoDto toProductoDto(Producto producto) {
-        ApiDtos.CategoriaDto categoria =
-                producto.getCategoria() == null ? null : toCategoriaDto(producto.getCategoria());
+        Long categoriaId = producto.getCategoria() == null ? null : producto.getCategoria().getId();
 
         List<Long> adicionalesIds = producto.getAdicionalesPermitidos() == null
                 ? List.of()
@@ -23,7 +34,7 @@ public final class ApiMappers {
                 producto.getPrecio(),
                 producto.getImagenUrl(),
                 Boolean.TRUE.equals(producto.getActivo()),
-                categoria,
+                categoriaId,
                 adicionalesIds
         );
     }
@@ -37,15 +48,14 @@ public final class ApiMappers {
     }
 
     public static ApiDtos.AdicionalDto toAdicionalDto(Adicional adicional) {
-        ApiDtos.CategoriaDto categoria =
-                adicional.getCategoria() == null ? null : toCategoriaDto(adicional.getCategoria());
+        Long categoriaId = adicional.getCategoria() == null ? null : adicional.getCategoria().getId();
 
         return new ApiDtos.AdicionalDto(
                 adicional.getId(),
                 adicional.getNombre(),
                 adicional.getPrecio(),
                 Boolean.TRUE.equals(adicional.getActivo()),
-                categoria
+                categoriaId
         );
     }
 
@@ -119,9 +129,12 @@ public final class ApiMappers {
     }
 
     public static ApiDtos.ItemPedidoDto toItemPedidoDto(ItemPedido itemPedido) {
+        Producto p = itemPedido.getProducto();
         return new ApiDtos.ItemPedidoDto(
                 itemPedido.getId(),
-                toProductoDto(itemPedido.getProducto()),
+                p == null ? null : p.getId(),
+                p == null ? null : p.getNombre(),
+                p == null ? null : p.getPrecio(),
                 itemPedido.getCantidad(),
                 itemPedido.getPrecioUnitario(),
                 itemPedido.getSelecciones() != null
@@ -135,9 +148,11 @@ public final class ApiMappers {
     public static ApiDtos.SeleccionAdicionalPedidoDto toSeleccionAdicionalPedidoDto(
             SeleccionAdicionalPedido seleccion
     ) {
+        Adicional a = seleccion.getAdicional();
         return new ApiDtos.SeleccionAdicionalPedidoDto(
                 seleccion.getId(),
-                toAdicionalDto(seleccion.getAdicional()),
+                a == null ? null : a.getId(),
+                a == null ? null : a.getNombre(),
                 seleccion.getPrecio()
         );
     }

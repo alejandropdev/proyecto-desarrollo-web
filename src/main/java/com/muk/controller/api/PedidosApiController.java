@@ -1,7 +1,5 @@
 package com.muk.controller.api;
 
-import com.muk.dto.PedidoResumenDto;
-import com.muk.mapper.PedidoMapper;
 import com.muk.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +15,10 @@ import java.util.Map;
 public class PedidosApiController {
 
     private final PedidoService pedidoService;
-    private final PedidoMapper pedidoMapper;
 
     @Autowired
-    public PedidosApiController(PedidoService pedidoService, PedidoMapper pedidoMapper) {
+    public PedidosApiController(PedidoService pedidoService) {
         this.pedidoService = pedidoService;
-        this.pedidoMapper = pedidoMapper;
     }
 
     @PostMapping
@@ -42,19 +38,15 @@ public class PedidosApiController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> listaPedidos(
-            @RequestParam(required = false) Long clienteId) {
-
+    public ResponseEntity<Object> listaPedidos(@RequestParam(required = false) Long clienteId) {
         if (clienteId != null && clienteId > 0) {
-            List<PedidoResumenDto> pedidosCliente = pedidoMapper.toDtoList(
-                    pedidoService.findByClienteId(clienteId));
+            List<ApiDtos.PedidoDto> pedidosCliente = pedidoService.findByClienteId(clienteId)
+                    .stream().map(ApiMappers::toPedidoDto).toList();
             return ResponseEntity.ok(pedidosCliente);
         }
 
         List<ApiDtos.PedidoOperadorDto> pedidosOperario = pedidoService.findAll()
-                .stream()
-                .map(ApiMappers::toPedidoOperadorDto)
-                .toList();
+                .stream().map(ApiMappers::toPedidoOperadorDto).toList();
 
         return ResponseEntity.ok(pedidosOperario);
     }
@@ -76,9 +68,7 @@ public class PedidosApiController {
     @GetMapping("/sin-completar/lista")
     public ResponseEntity<Object> obtenerPedidosNoCompletados() {
         List<ApiDtos.PedidoOperadorDto> pedidosNoCompletados = pedidoService.findPedidosNoCompletados()
-                .stream()
-                .map(ApiMappers::toPedidoOperadorDto)
-                .toList();
+                .stream().map(ApiMappers::toPedidoOperadorDto).toList();
 
         return ResponseEntity.ok(pedidosNoCompletados);
     }

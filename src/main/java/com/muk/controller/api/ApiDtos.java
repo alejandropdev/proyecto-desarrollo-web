@@ -14,7 +14,7 @@ public final class ApiDtos {
             Double precio,
             String imagenUrl,
             boolean activo,
-            CategoriaDto categoria,
+            Long categoriaId,
             List<Long> adicionalesPermitidosIds
     ) {}
 
@@ -25,7 +25,7 @@ public final class ApiDtos {
             String nombre,
             Double precio,
             boolean activo,
-            CategoriaDto categoria
+            Long categoriaId
     ) {}
 
     // ===================== CLIENTES =====================
@@ -41,8 +41,18 @@ public final class ApiDtos {
     // ===================== OPERADORES =====================
     public record OperadorDto(Long id, String nombre, String usuario, boolean activo) {}
 
+    public record MenuProductoDto(
+            Long id,
+            String nombre,
+            String descripcion,
+            Double precio,
+            String imagenUrl,
+            boolean activo,
+            Long categoriaId
+    ) {}
+
     public record MenuResponse(
-            List<ProductoDto> productos,
+            List<MenuProductoDto> productos,
             List<CategoriaDto> categorias,
             List<AdicionalDto> adiciones
     ) {}
@@ -150,7 +160,9 @@ public final class ApiDtos {
 
     public record ItemPedidoDto(
             Long id,
-            ProductoDto producto,
+            Long productoId,
+            String productoNombre,
+            Double productoPrecio,
             Integer cantidad,
             Double precioUnitario,
             List<SeleccionAdicionalPedidoDto> selecciones
@@ -158,7 +170,8 @@ public final class ApiDtos {
 
     public record SeleccionAdicionalPedidoDto(
             Long id,
-            AdicionalDto adicional,
+            Long adicionalId,
+            String adicionalNombre,
             Double precio
     ) {}
 

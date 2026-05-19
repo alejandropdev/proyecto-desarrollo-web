@@ -43,7 +43,7 @@ public class MenuApiController {
                 .map(ApiMappers::toAdicionalDto)
                 .toList();
 
-        return new ApiDtos.MenuResponse(productos.stream().map(ApiMappers::toProductoDto).toList(), categorias, adiciones);
+        return new ApiDtos.MenuResponse(productos.stream().map(ApiMappers::toMenuProductoDto).toList(), categorias, adiciones);
     }
 
     @GetMapping("/{id}")
