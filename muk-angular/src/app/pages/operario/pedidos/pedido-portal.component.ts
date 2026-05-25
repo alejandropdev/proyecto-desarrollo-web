@@ -167,4 +167,28 @@ export class PedidoPortalComponent implements OnInit {
         return 'estado';
     }
   }
+    contarPedidosPorEstado(estado: string): number {
+    return this.todosPedidos.filter(
+      (pedido) => pedido.estado?.toUpperCase() === estado
+    ).length;
+  }
+
+  get totalPedidosActivos(): number {
+    return this.todosPedidos.filter(
+      (pedido) =>
+        !['COMPLETADO', 'CANCELADO'].includes(pedido.estado?.toUpperCase())
+    ).length;
+  }
+
+  get totalEnCamino(): number {
+    return this.contarPedidosPorEstado('EN_CAMINO');
+  }
+
+  get totalPendientes(): number {
+    return this.contarPedidosPorEstado('PENDIENTE');
+  }
+
+  get totalEntregados(): number {
+    return this.contarPedidosPorEstado('COMPLETADO');
+  }
 }

@@ -9,6 +9,31 @@
       Cerrar sesión
     </button>
   </header>
+    <section class="resumen-operativo">
+    <article class="resumen-card">
+      <span class="resumen-label">Pedidos activos</span>
+      <strong>{{ totalPedidosActivos }}</strong>
+      <p>Pendientes, en preparación, listos o en camino.</p>
+    </article>
+
+    <article class="resumen-card">
+      <span class="resumen-label">Pendientes</span>
+      <strong>{{ totalPendientes }}</strong>
+      <p>Pedidos que aún deben iniciar proceso.</p>
+    </article>
+
+    <article class="resumen-card">
+      <span class="resumen-label">En camino</span>
+      <strong>{{ totalEnCamino }}</strong>
+      <p>Pedidos que están en proceso de entrega.</p>
+    </article>
+
+    <article class="resumen-card">
+      <span class="resumen-label">Entregados</span>
+      <strong>{{ totalEntregados }}</strong>
+      <p>Pedidos completados correctamente.</p>
+    </article>
+  </section>
 
   <section *ngIf="mensajeExito" class="alerta exito">
     {{ mensajeExito }}

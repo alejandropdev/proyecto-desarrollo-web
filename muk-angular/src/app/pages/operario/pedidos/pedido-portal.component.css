@@ -236,3 +236,145 @@
     font-size: 30px;
   }
 }
+.resumen-operativo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.resumen-card {
+  background: #fffaf0;
+  border: 2px solid #f2b705;
+  border-left: 7px solid #8c0e03;
+  border-radius: 1.25rem;
+  padding: 1rem;
+  box-shadow: 0 10px 24px rgba(52, 16, 11, 0.08);
+}
+
+.resumen-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8c0e03;
+}
+
+.resumen-card strong {
+  display: block;
+  margin: 0.35rem 0;
+  font-size: 2rem;
+  color: #34100b;
+}
+
+.resumen-card p {
+  margin: 0;
+  color: #6b4e3d;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 115px;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.estado.pendiente {
+  background: #f2b705;
+  color: #34100b;
+}
+
+.estado.preparacion {
+  background: #2563eb;
+}
+
+.estado.listo {
+  background: #f97316;
+}
+
+.estado.camino {
+  background: #7c3aed;
+}
+
+.estado.completado {
+  background: #16a34a;
+}
+
+.estado.cancelado {
+  background: #dc2626;
+}
+
+.select-estado {
+  width: 100%;
+  min-width: 150px;
+  padding: 0.55rem 0.75rem;
+  border: 2px solid #f2b705;
+  border-radius: 0.85rem;
+  background: #fff;
+  color: #34100b;
+  font-weight: 800;
+}
+
+.nota {
+  display: block;
+  margin-top: 0.35rem;
+  color: #8c0e03;
+  font-weight: 800;
+}
+
+@media (max-width: 768px) {
+  .portal-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .panel-titulo {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .filtros-lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tabla-wrapper {
+    overflow-x: auto;
+  }
+
+  .tabla-pedidos {
+    min-width: 850px;
+  }
+
+  .acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .acciones .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .filtros-lista {
+    grid-template-columns: 1fr;
+  }
+
+  .resumen-card strong {
+    font-size: 1.6rem;
+  }
+}
