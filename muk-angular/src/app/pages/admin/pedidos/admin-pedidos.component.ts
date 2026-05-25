@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { PedidoService } from '../../../services/pedido.service';
 import { ClienteService } from '../../../services/cliente.service';
 import { ProductoService } from '../../../services/producto.service';
+import { DomiciliarioService } from '../../../services/domiciliario.service';
 import { Pedido } from '../../../models/pedido';
 import { Cliente } from '../../../models/cliente';
 import { Producto } from '../../../models/producto';
+import { Domiciliario } from '../../../models/domiciliario';
 
 @Component({
   selector: 'app-admin-pedidos',
@@ -18,6 +20,7 @@ export class AdminPedidosComponent implements OnInit {
 
   clientesMap: Map<number, Cliente> = new Map();
   productos: Producto[] = [];
+  domiciliarios: Domiciliario[] = [];
 
   isLoading: boolean = true;
 
@@ -29,14 +32,30 @@ export class AdminPedidosComponent implements OnInit {
 
   readonly estados = ['PENDIENTE', 'EN_PREPARACION', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO'];
 
+  // Dashboard - Estadísticas
+  totalPedidos: number = 0;
+  pedidosPendientes: number = 0;
+  pedidosEnPreparacion: number = 0;
+  pedidosEnCamino: number = 0;
+  pedidosEntregados: number = 0;
+  pedidosCancelados: number = 0;
+  totalDomiciliarios: number = 0;
+  domiciliariosDisponibles: number = 0;
+  domiciliariosOcupados: number = 0;
+  domiciliariosActivos: number = 0;
+  porcentajeCompletados: number = 0;
+  porcentajeOcupacion: number = 0;
+
   constructor(
     private readonly pedidoService: PedidoService,
     private readonly clienteService: ClienteService,
     private readonly productoService: ProductoService,
+    private readonly domiciliarioService: DomiciliarioService,
   ) {}
 
   ngOnInit(): void {
     this.cargarProductos();
+    this.cargarDomiciliarios();
     this.cargarPedidos();
   }
 
@@ -44,6 +63,19 @@ export class AdminPedidosComponent implements OnInit {
     this.productoService.getProductos().subscribe({
       next: (data) => { this.productos = data; },
       error: () => { this.productos = []; }
+    });
+  }
+
+  cargarDomiciliarios(): void {
+    this.domiciliarioService.listarTodos().subscribe({
+      next: (data) => {
+        this.domiciliarios = data;
+        this.calcularEstadisticasDomiciliarios();
+      },
+      error: () => {
+        this.domiciliarios = [];
+        this.calcularEstadisticasDomiciliarios();
+      }
     });
   }
 
@@ -56,6 +88,7 @@ export class AdminPedidosComponent implements OnInit {
     obs.subscribe({
       next: (data) => {
         this.todosPedidos = data;
+        this.calcularEstadisticas();
         this.aplicarFiltros();
         this.cargarNombresClientes(data);
       },
@@ -144,5 +177,70 @@ export class AdminPedidosComponent implements OnInit {
       dateStyle: 'short',
       timeStyle: 'short',
     });
+  }
+
+  private calcularEstadisticas(): void {
+    this.totalPedidos = this.todosPedidos.length;
+    this.pedidosPendientes = this.todosPedidos.filter(p => p.estado === 'PENDIENTE').length;
+    this.pedidosEnPreparacion = this.todosPedidos.filter(p => p.estado === 'EN_PREPARACION').length;
+    this.pedidosEnCamino = this.todosPedidos.filter(p => p.estado === 'EN_CAMINO').length;
+    this.pedidosEntregados = this.todosPedidos.filter(p => p.estado === 'ENTREGADO').length;
+    this.pedidosCancelados = this.todosPedidos.filter(p => p.estado === 'CANCELADO').length;
+    
+    this.porcentajeCompletados = this.totalPedidos > 0 
+      ? Math.round((this.pedidosEntregados / this.totalPedidos) * 100) 
+      : 0;
+  }
+
+  private calcularEstadisticasDomiciliarios(): void {
+    this.totalDomiciliarios = this.domiciliarios.length;
+    this.domiciliariosActivos = this.domiciliarios.filter(d => d.activo === true).length;
+    this.domiciliariosDisponibles = this.domiciliarios.filter(d => d.disponible === true).length;
+    this.domiciliariosOcupados = this.domiciliariosActivos - this.domiciliariosDisponibles;
+    
+    this.porcentajeOcupacion = this.domiciliariosActivos > 0
+      ? Math.round((this.domiciliariosOcupados / this.domiciliariosActivos) * 100)
+      : 0;
+  }
+
+  descargarCSV(): void {
+    const timestamp = new Date().toLocaleString('es-CO', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).replace(/\//g, '-').replace(/,/g, '').replace(/:/g, '');
+
+    const csvContent = [
+      'Metrica;Valor',
+      `Total de pedidos;${this.totalPedidos}`,
+      `Pendientes;${this.pedidosPendientes}`,
+      `En preparacion;${this.pedidosEnPreparacion}`,
+      `En camino;${this.pedidosEnCamino}`,
+      `Entregados;${this.pedidosEntregados}`,
+      `Cancelados;${this.pedidosCancelados}`,
+      `Porcentaje completados;${this.porcentajeCompletados}%`,
+      `Total domiciliarios;${this.totalDomiciliarios}`,
+      `Domiciliarios activos;${this.domiciliariosActivos}`,
+      `Domiciliarios disponibles;${this.domiciliariosDisponibles}`,
+      `Domiciliarios ocupados;${this.domiciliariosOcupados}`,
+      `Porcentaje ocupacion;${this.porcentajeOcupacion}%`,
+    ].join('\n');
+
+    // Agregar BOM UTF-8 para compatibilidad con Excel
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', `muk-dashboard-${timestamp}.csv`);
+    link.style.visibility = 'hidden';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

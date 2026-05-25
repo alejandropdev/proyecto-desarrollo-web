@@ -4,6 +4,123 @@
   title="Historial de pedidos"
   subtitle="Consulta todos los pedidos activos y completados del sistema."
 >
+  <!-- DASHBOARD DE REPORTES -->
+  <div class="mb-12" style="background-color: #faf8f3; border-radius: 1.5rem; padding: 2rem; border: 2px solid #f2b70530">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-xl font-black uppercase" style="color: #34100b; letter-spacing: 0.05em">
+        📊 Resumen Operativo
+      </h2>
+      <button
+        type="button"
+        (click)="descargarCSV()"
+        class="px-5 py-2 rounded-full text-xs font-black uppercase transition-all"
+        style="background-color: #f2b705; color: #34100b; border: 2px solid #34100b; hover: opacity-80"
+      >
+        ⬇️ Descargar CSV
+      </button>
+    </div>
+    
+    <!-- Grid de tarjetas de estadísticas - Paleta Muk cálida -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      
+      <!-- Tarjeta: Total de Pedidos -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #f2b705; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">Total de Pedidos</div>
+        <div class="text-5xl font-black mt-3" style="color: #34100b">{{ totalPedidos }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Pedidos en el sistema</div>
+      </div>
+
+      <!-- Tarjeta: Pedidos Pendientes -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #f2b705; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">Pendientes</div>
+        <div class="text-5xl font-black mt-3" style="color: #f2b705">{{ pedidosPendientes }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Esperando confirmación</div>
+      </div>
+
+      <!-- Tarjeta: En Preparación -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #8c0e03; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">En Prep.</div>
+        <div class="text-5xl font-black mt-3" style="color: #34100b">{{ pedidosEnPreparacion }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Se está preparando</div>
+      </div>
+
+      <!-- Tarjeta: En Camino -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #f2b705; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">En Camino</div>
+        <div class="text-5xl font-black mt-3" style="color: #34100b">{{ pedidosEnCamino }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">En ruta hacia cliente</div>
+      </div>
+
+      <!-- Tarjeta: Entregados -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #8c0e03; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">Entregados</div>
+        <div class="text-5xl font-black mt-3" style="color: #34100b">{{ pedidosEntregados }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Completados exitosamente</div>
+      </div>
+
+      <!-- Tarjeta: Cancelados -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #34100b; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">Cancelados</div>
+        <div class="text-5xl font-black mt-3" style="color: #34100b">{{ pedidosCancelados }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Órdenes canceladas</div>
+      </div>
+
+      <!-- Tarjeta: % Completados -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #f2b705; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">% Completados</div>
+        <div class="text-5xl font-black mt-3" style="color: #f2b705">{{ porcentajeCompletados }}<span style="font-size: 0.6em">%</span></div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Tasa de efectividad</div>
+      </div>
+
+      <!-- Tarjeta: Total Domiciliarios -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #8c0e03; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">Total Domiciliarios</div>
+        <div class="text-5xl font-black mt-3" style="color: #34100b">{{ totalDomiciliarios }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Repartidores en sistema</div>
+      </div>
+
+      <!-- Tarjeta: Domiciliarios Activos -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #f2b705; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">Activos</div>
+        <div class="text-5xl font-black mt-3" style="color: #f2b705">{{ domiciliariosActivos }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">En el sistema actualmente</div>
+      </div>
+
+      <!-- Tarjeta: Domiciliarios Disponibles -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #8c0e03; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">Disponibles</div>
+        <div class="text-5xl font-black mt-3" style="color: #34100b">{{ domiciliariosDisponibles }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Listos para asignación</div>
+      </div>
+
+      <!-- Tarjeta: Domiciliarios Ocupados -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #f2b705; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">Ocupados</div>
+        <div class="text-5xl font-black mt-3" style="color: #f2b705">{{ domiciliariosOcupados }}</div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">En una entrega activa</div>
+      </div>
+
+      <!-- Tarjeta: % Ocupación -->
+      <div class="rounded-xl p-6 border-2" style="background-color: white; border-color: #34100b; box-shadow: 0 4px 6px rgba(0,0,0,0.05)">
+        <div class="text-xs font-black uppercase tracking-wide" style="color: #8c0e03; letter-spacing: 0.05em">% Ocupación</div>
+        <div class="text-5xl font-black mt-3" style="color: #34100b">{{ porcentajeOcupacion }}<span style="font-size: 0.6em">%</span></div>
+        <div class="text-xs mt-3 font-semibold" style="color: #6b7280">Utilización de flota</div>
+      </div>
+    </div>
+
+    <!-- Botón de recargar dashboard -->
+    <div class="flex justify-end">
+      <button
+        type="button"
+        (click)="cargarPedidos(); cargarDomiciliarios()"
+        class="px-5 py-2 rounded-full text-xs font-black uppercase transition-all"
+        style="background-color: transparent; color: #34100b; border: 2px solid #34100b"
+      >
+        🔄 Recargar Datos
+      </button>
+    </div>
+  </div>
+
   <!-- Panel de filtros -->
   <div class="rounded-2xl bg-white shadow p-6 mb-8 border" style="border-color: #f2b70540">
     <h2 class="font-black uppercase text-sm mb-4" style="color: #34100b">Filtros</h2>
