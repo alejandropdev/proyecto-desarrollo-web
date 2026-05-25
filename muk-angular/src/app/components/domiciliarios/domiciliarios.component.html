@@ -31,7 +31,31 @@
       {{ cargando ? 'Cargando...' : 'Recargar' }}
     </button>
   </div>
+<div class="resumen-domiciliarios" *ngIf="domiciliarios.length > 0">
+  <div class="resumen-card">
+    <span>Total domiciliarios</span>
+    <strong>{{ domiciliarios.length }}</strong>
+    <p>Repartidores registrados en el sistema.</p>
+  </div>
 
+  <div class="resumen-card">
+    <span>Activos</span>
+    <strong>{{ domiciliariosActivos() }}</strong>
+    <p>Domiciliarios habilitados para operar.</p>
+  </div>
+
+  <div class="resumen-card">
+    <span>Disponibles</span>
+    <strong>{{ domiciliariosDisponibles() }}</strong>
+    <p>Repartidores listos para recibir pedidos.</p>
+  </div>
+
+  <div class="resumen-card">
+    <span>Ocupados</span>
+    <strong>{{ domiciliariosOcupados() }}</strong>
+    <p>Domiciliarios no disponibles actualmente.</p>
+  </div>
+</div>
   <app-domiciliario-form
     *ngIf="mostrarFormulario"
     [editando]="editandoDomiciliario"

@@ -263,4 +263,57 @@
     align-items: flex-start;
     flex-direction: column;
   }
+} .resumen-domiciliarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  max-width: 1280px;
+  margin: 0 0 24px;
+}
+
+.resumen-card {
+  background: #fffaf3;
+  border: 2px solid #f2b705;
+  border-left: 7px solid #a31600;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 14px 28px rgba(59, 13, 7, 0.1);
+}
+
+.resumen-card span {
+  display: block;
+  color: #a31600;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resumen-card strong {
+  display: block;
+  margin: 8px 0;
+  color: #230804;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.resumen-card p {
+  margin: 0;
+  color: #6b4423;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .resumen-domiciliarios {
+    grid-template-columns: 1fr;
+  }
+
+  .actions .btn {
+    width: 100%;
+  }
+
+  .tabla-container {
+    border-radius: 16px;
+  }
 }

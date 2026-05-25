@@ -202,4 +202,15 @@ export class DomiciliariosComponent implements OnInit {
   getDisponibleColor(disponible: boolean): string {
     return disponible ? '#007bff' : '#ffc107';
   }
+  domiciliariosActivos(): number {
+  return this.domiciliarios.filter((dom) => dom.activo).length;
+}
+
+domiciliariosDisponibles(): number {
+  return this.domiciliarios.filter((dom) => dom.disponible).length;
+}
+
+domiciliariosOcupados(): number {
+  return this.domiciliarios.filter((dom) => !dom.disponible).length;
+}
 }
