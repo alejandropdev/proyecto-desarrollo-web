@@ -10,13 +10,13 @@
   }
 
   /* Subrayado decorativo bajo los títulos */
-  h2 {
+  :is(h2) {
     position: relative;
     display: inline-block;
   }
 
   /* Mejorar la diferenciación visual de tablas */
-  thead {
+  :is(thead) {
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
   }
@@ -47,13 +47,13 @@
   }
 
   /* Filas alternadas en tablas */
-  tbody tr:nth-child(even) {
+  :is(tbody tr:nth-child(even)) {
     background-color: rgba(242, 183, 5, 0.05);
   }
 
   /* Responsive: asegurar que el contenido sea legible */
   @media (max-width: 768px) {
-    h2 {
+    :is(h2) {
       font-size: 1.5rem;
     }
 
