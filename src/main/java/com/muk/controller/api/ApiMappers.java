@@ -137,6 +137,7 @@ public final class ApiMappers {
                 p == null ? null : p.getId(),
                 p == null ? null : p.getNombre(),
                 p == null ? null : p.getPrecio(),
+                p == null ? null : p.getImagenUrl(),
                 itemPedido.getCantidad(),
                 itemPedido.getPrecioUnitario(),
                 itemPedido.getSelecciones() != null

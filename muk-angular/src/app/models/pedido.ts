@@ -1,6 +1,4 @@
-import { Producto } from './producto';
 import { Cliente } from './cliente';
-import { Adicional } from './adicional';
 
 export interface Pedido {
   id: number;
@@ -29,7 +27,10 @@ export interface PedidoDetalle {
 
 export interface ItemPedido {
   id: number;
-  producto: Producto;
+  productoId: number;
+  productoNombre: string;
+  productoPrecio: number;
+  productoImagenUrl?: string;
   cantidad: number;
   precioUnitario: number;
   selecciones: SeleccionAdicional[];
@@ -37,7 +38,8 @@ export interface ItemPedido {
 
 export interface SeleccionAdicional {
   id: number;
-  adicional: Adicional;
+  adicionalId: number;
+  adicionalNombre: string;
   precio: number;
 }
 

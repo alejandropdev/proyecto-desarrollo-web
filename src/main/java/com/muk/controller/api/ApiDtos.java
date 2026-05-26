@@ -164,6 +164,7 @@ public final class ApiDtos {
             Long productoId,
             String productoNombre,
             Double productoPrecio,
+            String productoImagenUrl,
             Integer cantidad,
             Double precioUnitario,
             List<SeleccionAdicionalPedidoDto> selecciones

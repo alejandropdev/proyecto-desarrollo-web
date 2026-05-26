@@ -103,23 +103,15 @@
             <!-- Producto -->
             <div class="flex gap-4 mb-4">
               <img
-                [src]="item.producto.imagenUrl"
-                [alt]="item.producto.nombre"
+                *ngIf="item.productoImagenUrl"
+                [src]="item.productoImagenUrl"
+                [alt]="item.productoNombre"
                 class="w-20 h-20 rounded-xl object-cover shadow-md"
               />
               <div class="flex-1">
                 <h3 class="font-black text-lg uppercase" style="color: #34100b" data-testid="detalle-item-nombre">
-                  {{ item.producto.nombre }}
+                  {{ item.productoNombre }}
                 </h3>
-                <p class="font-bold mt-1" style="color: #8c0e03">
-                  {{ item.producto?.categoria?.nombre }}
-                </p>
-                <p
-                  class="text-sm font-semibold mt-2"
-                  style="color: #34100b; opacity: 0.8"
-                >
-                  {{ item.producto.descripcion }}
-                </p>
               </div>
             </div>
 
@@ -166,7 +158,7 @@
                 style="color: #34100b"
               >
                 <p class="font-semibold" data-testid="detalle-adicion-nombre">
-                  {{ adicion.adicional.nombre }} - ${{ adicion.precio }} x
+                  {{ adicion.adicionalNombre }} - ${{ adicion.precio }} x
                   {{ item.cantidad }} =
                   <span class="font-black" style="color: #f27405"
                     >${{
