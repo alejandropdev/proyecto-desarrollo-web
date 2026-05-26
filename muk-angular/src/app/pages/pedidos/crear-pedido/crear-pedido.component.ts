@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PedidoService } from '../../../services/pedido.service';
 import { ProductoService } from '../../../services/producto.service';
-import { AdicionalService } from '../../../services/adicional.service';
 import { CarritoService } from '../../../services/carrito.service';
 import {
   CrearPedidoRequest,
@@ -30,7 +29,6 @@ interface LineaPedido {
 })
 export class CrearPedidoComponent implements OnInit {
   productos: Producto[] = [];
-  todosLosAdicionales: Adicional[] = [];
 
   lineas: LineaPedido[] = [];
 
@@ -41,13 +39,11 @@ export class CrearPedidoComponent implements OnInit {
 
   private uidCounter: number = 0;
   private productosCargados: boolean = false;
-  private adicionalesCargados: boolean = false;
   private cacheAdicionesPermitidas: Map<number, Adicional[]> = new Map();
 
   constructor(
     private readonly pedidoService: PedidoService,
     private readonly productoService: ProductoService,
-    private readonly adicionalService: AdicionalService,
     private readonly carritoService: CarritoService,
     private readonly router: Router,
   ) {}
@@ -61,7 +57,6 @@ export class CrearPedidoComponent implements OnInit {
     }
 
     this.cargarProductos();
-    this.cargarAdicionales();
   }
 
   // === Carga inicial de datos ===
@@ -79,21 +74,8 @@ export class CrearPedidoComponent implements OnInit {
     });
   }
 
-  cargarAdicionales(): void {
-    this.adicionalService.getAdiciones().subscribe({
-      next: (data) => {
-        this.todosLosAdicionales = data;
-        this.adicionalesCargados = true;
-        this.intentarInicializarLineas();
-      },
-      error: () => {
-        this.error = 'No fue posible cargar adicionales.';
-      },
-    });
-  }
-
   private intentarInicializarLineas(): void {
-    if (!this.productosCargados || !this.adicionalesCargados) {
+    if (!this.productosCargados) {
       return;
     }
     if (this.lineas.length > 0) {
@@ -226,11 +208,7 @@ export class CrearPedidoComponent implements OnInit {
         linea.adicionalesFiltrados =
           this.cacheAdicionesPermitidas.get(productoId) ?? [];
       } else {
-        // Fallback: filtrar por categoría si no hay cache
-        const catId = linea.producto.categoria?.id;
-        linea.adicionalesFiltrados = this.todosLosAdicionales.filter(
-          (a) => a.categoria?.id === catId,
-        );
+        linea.adicionalesFiltrados = [];
       }
     } else {
       linea.adicionalesFiltrados = [];
@@ -263,7 +241,7 @@ export class CrearPedidoComponent implements OnInit {
 
   precioAdicionalesLinea(linea: LineaPedido): number {
     return linea.adicionalesSeleccionados.reduce((total, adicionId) => {
-      const adicional = this.todosLosAdicionales.find(
+      const adicional = linea.adicionalesFiltrados.find(
         (a) => a.id === adicionId,
       );
       return total + (adicional?.precio ?? 0);
@@ -319,7 +297,7 @@ export class CrearPedidoComponent implements OnInit {
     const items: ItemPedidoRequest[] = lineasValidas.map((l) => {
       const adiciones: SeleccionAdicionalRequest[] =
         l.adicionalesSeleccionados.map((id) => {
-          const adicional = this.todosLosAdicionales.find((a) => a.id === id);
+          const adicional = l.adicionalesFiltrados.find((a) => a.id === id);
           return {
             adicionalId: id,
             precio: adicional?.precio ?? 0,

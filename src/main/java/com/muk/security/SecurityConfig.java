@@ -62,6 +62,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/platos/**").permitAll()
                         .requestMatchers("/api/productos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/clientes").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/clientes/registro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/clientes/login").permitAll()
                         
                         // Roles
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

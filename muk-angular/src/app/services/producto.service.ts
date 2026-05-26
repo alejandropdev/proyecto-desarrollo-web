@@ -46,7 +46,7 @@ export class ProductoService {
       descripcion: producto.descripcion,
       precio: producto.precio,
       imagenUrl: producto.imagenUrl,
-      categoriaId: producto.categoria.id,
+      categoriaId: producto.categoria?.id ?? producto.categoriaId ?? 0,
       adicionalesPermitidosIds: producto.adicionalesPermitidosIds ? [...producto.adicionalesPermitidosIds] : [],
     };
   }

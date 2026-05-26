@@ -7,7 +7,7 @@ export interface Producto {
   precio: number;
   imagenUrl: string;
   activo: boolean;
-  categoria: Categoria;
+  categoria?: Categoria;
   categoriaId?: number;
   categoriaNombre?: string;
   adicionalesPermitidosIds?: number[];

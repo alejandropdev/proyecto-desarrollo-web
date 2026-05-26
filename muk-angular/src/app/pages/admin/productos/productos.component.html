@@ -40,7 +40,7 @@
       <tbody>
         <tr *ngFor="let p of productos" class="border-t">
           <td class="px-6 py-4 font-bold">{{ p.nombre }}</td>
-          <td class="px-6 py-4 font-bold">{{ p.categoria.nombre }}</td>
+          <td class="px-6 py-4 font-bold">{{ p.categoria?.nombre }}</td>
           <td class="px-6 py-4 font-bold">{{ p.precio }}</td>
           <td class="px-6 py-4">
             <div class="flex justify-end gap-2">
