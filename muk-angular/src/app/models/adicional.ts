@@ -6,6 +6,7 @@ export interface Adicional {
   precio: number;
   activo?: boolean;
   categoria?: Categoria | null;
+  categoriaId?: number | null;
 }
 
 export interface Domiciliario {

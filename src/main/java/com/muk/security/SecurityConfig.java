@@ -65,9 +65,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/clientes/registro").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/clientes/login").permitAll()
                         
+                        // Operador login es público (sin sesión previa)
+                        .requestMatchers(HttpMethod.POST, "/api/operadores/login").permitAll()
+
                         // Roles
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/operadores/**").hasRole("OPERADOR")
+                        .requestMatchers("/api/operadores/**").hasAnyRole("ADMIN", "OPERADOR")
                         
                         // Other endpoints require authentication
                         .requestMatchers("/api/**").authenticated()

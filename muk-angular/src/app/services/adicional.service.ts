@@ -48,7 +48,7 @@ export class AdicionalService {
     return {
       id: adicion.id,
       nombre: adicion.nombre,
-      categoriaId: adicion.categoria?.id ?? null,
+      categoriaId: adicion.categoria?.id ?? adicion.categoriaId ?? null,
       precio: adicion.precio
     };
   }
