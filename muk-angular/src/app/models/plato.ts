@@ -7,5 +7,6 @@ export interface Plato {
   precio: number;
   imagenUrl: string;
   activo: boolean;
-  categoria: Categoria | null;
+  categoria?: Categoria | null;
+  categoriaId?: number | null;
 }

@@ -48,7 +48,7 @@ export class PlatoService {
     return {
       id: plato.id,
       nombre: plato.nombre,
-      categoriaId: plato.categoria?.id ?? null,
+      categoriaId: plato.categoria?.id ?? plato.categoriaId ?? null,
       precio: plato.precio,
       imagenUrl: plato.imagenUrl,
       descripcion: plato.descripcion,
