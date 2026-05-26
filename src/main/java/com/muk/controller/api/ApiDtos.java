@@ -48,7 +48,8 @@ public final class ApiDtos {
             Double precio,
             String imagenUrl,
             boolean activo,
-            Long categoriaId
+            Long categoriaId,
+            String categoriaNombre
     ) {}
 
     public record MenuResponse(

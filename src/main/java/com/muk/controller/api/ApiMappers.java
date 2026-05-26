@@ -9,6 +9,7 @@ public final class ApiMappers {
 
     // ===================== PRODUCTOS =====================
     public static ApiDtos.MenuProductoDto toMenuProductoDto(Producto producto) {
+        Categoria cat = producto.getCategoria();
         return new ApiDtos.MenuProductoDto(
                 producto.getId(),
                 producto.getNombre(),
@@ -16,7 +17,8 @@ public final class ApiMappers {
                 producto.getPrecio(),
                 producto.getImagenUrl(),
                 Boolean.TRUE.equals(producto.getActivo()),
-                producto.getCategoria() == null ? null : producto.getCategoria().getId()
+                cat == null ? null : cat.getId(),
+                cat == null ? null : cat.getNombre()
         );
     }
 
